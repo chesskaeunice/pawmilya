@@ -1,0 +1,151 @@
+/* Motion for the landing page, Adoptable Pets, Missing Pets (and their details
+   pages), the header/footer and the new modals. Imported once by UserLayout.
+   Every rule is scoped to those parts; other pages are not touched.
+   All movement is turned off under prefers-reduced-motion. */
+
+/* ---------- BUTTONS: hover scale 1.02 + shadow, pressed 0.98 ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  body .home__primary-button,
+  body .home__secondary-button,
+  body .landing-section__button,
+  body .adoptable__empty button,
+  body .missing-pets__report,
+  body .missing-pets__filter-button,
+  body .missing-pets__reset,
+  body .missing-pets__empty button,
+  body .missing-pets__page-arrow,
+  body .missing-pets__page-number,
+  body .pagination__page,
+  body .pagination__step,
+  body .filter-dropdown__button,
+  body .filter-dropdown__reset,
+  body .back-button,
+  body .pet-details__apply,
+  body .missing-detail__back,
+  body .strip__pause,
+  body .mform__primary,
+  body .mform__secondary {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  body .home__primary-button:hover,
+  body .home__secondary-button:hover,
+  body .landing-section__button:hover,
+  body .adoptable__empty button:hover,
+  body .missing-pets__report:hover,
+  body .missing-pets__filter-button:hover,
+  body .missing-pets__reset:hover,
+  body .missing-pets__empty button:hover,
+  body .missing-pets__page-arrow:hover:not(:disabled),
+  body .missing-pets__page-number:hover,
+  body .pagination__page:hover,
+  body .pagination__step:hover:not(:disabled),
+  body .filter-dropdown__button:hover,
+  body .filter-dropdown__reset:hover,
+  body .back-button:hover,
+  body .pet-details__apply:hover,
+  body .missing-detail__back:hover,
+  body .strip__pause:hover,
+  body .mform__primary:hover:not(:disabled),
+  body .mform__secondary:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(77, 42, 0, 0.18);
+  }
+
+  body .home__primary-button:active,
+  body .home__secondary-button:active,
+  body .landing-section__button:active,
+  body .adoptable__empty button:active,
+  body .missing-pets__report:active,
+  body .missing-pets__filter-button:active,
+  body .missing-pets__reset:active,
+  body .missing-pets__empty button:active,
+  body .missing-pets__page-arrow:active:not(:disabled),
+  body .missing-pets__page-number:active,
+  body .pagination__page:active,
+  body .pagination__step:active:not(:disabled),
+  body .filter-dropdown__button:active,
+  body .filter-dropdown__reset:active,
+  body .back-button:active,
+  body .pet-details__apply:active,
+  body .missing-detail__back:active,
+  body .strip__pause:active,
+  body .mform__primary:active:not(:disabled),
+  body .mform__secondary:active:not(:disabled) {
+    transform: scale(0.98);
+    box-shadow: none;
+  }
+
+  /* ---------- CARDS: thumbnail zoom on the Missing Pets page
+     (lift and shadow already exist there) ---------- */
+
+  body .missing-pets__image img {
+    transition: transform 0.35s ease;
+  }
+
+  body .missing-pets__card:hover .missing-pets__image img {
+    transform: scale(1.05);
+  }
+
+  /* ---------- PAGE NAVIGATION: soft fade ---------- */
+
+  body .page-fade {
+    animation: page-fade 0.35s ease both;
+  }
+
+  /* ---------- SCROLL REVEAL ---------- */
+
+  body .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+  }
+
+  body .reveal.reveal--visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes page-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------- REDUCED MOTION: no movement at all ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+  body .home__primary-button:hover,
+  body .home__secondary-button:hover,
+  body .landing-section__button:hover,
+  body .missing-pets__report:hover,
+  body .missing-pets__filter-button:hover,
+  body .missing-pets__page-arrow:hover,
+  body .missing-pets__page-number:hover,
+  body .missing-pets__card:hover,
+  body .missing-pets__alphabet-button:hover,
+  body .adoptable__card:hover,
+  body .pet-details__apply:hover,
+  body .mform__primary:hover,
+  body .home__hero-placeholder:hover img,
+  body .missing-pets__card:hover .missing-pets__image img {
+    transform: none;
+  }
+
+  body .page-fade,
+  body .reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

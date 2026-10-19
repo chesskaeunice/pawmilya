@@ -1,0 +1,55 @@
+.settings__grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 14px;
+}
+
+.settings__fields {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 14px;
+}
+
+.settings__fields label {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.settings__fields input,
+.settings__textarea {
+  width: 100%;
+
+  padding: 10px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+
+  font: inherit;
+}
+
+.settings__actions {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 14px;
+}
+
+@media (max-width: 850px) {
+  .settings__grid,
+  .settings__fields {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,34 @@
+.adoption-applications__filters {
+  grid-template-columns:
+    minmax(260px, 1fr)
+    170px
+    150px;
+}
+
+.adoption-applications__actions {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+}
+
+.adoption-applications__actions a {
+  color: var(--color-orange);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.adoption-applications__actions button {
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  border: none;
+
+  background: transparent;
+
+  color: var(--color-muted);
+}

@@ -1,0 +1,473 @@
+.add-animal {
+  max-width: 880px;
+
+  margin: 0 auto;
+  padding: 8px 0 40px;
+
+  color: var(--color-brown);
+}
+
+.add-animal__back {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 4px;
+
+  margin-bottom: 12px;
+  padding: 0;
+
+  border: none;
+
+  background: none;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+
+  cursor: pointer;
+}
+
+.add-animal__back:hover {
+  color: var(--color-orange);
+}
+
+.add-animal__header {
+  margin-bottom: 16px;
+}
+
+.add-animal__eyebrow {
+  margin: 0 0 4px;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+}
+
+.add-animal__header h1 {
+  margin: 0 0 6px;
+
+  font-size: 26px;
+}
+
+.add-animal__header p:last-child {
+  margin: 0;
+
+  color: #5c534a;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.add-animal__required {
+  color: #b3392c;
+}
+
+.add-animal__form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.add-animal__section {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  padding: 20px;
+
+  background: white;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.add-animal__section h2 {
+  margin: 0;
+
+  font-size: 16px;
+}
+
+.add-animal__grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 14px;
+}
+
+.add-animal label,
+.add-animal__field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  font-size: 11px;
+}
+
+.add-animal label > span,
+.add-animal__field > label > span {
+  font-weight: 600;
+}
+
+.add-animal input[type="text"],
+.add-animal input[type="number"],
+.add-animal input[type="date"],
+.add-animal select,
+.add-animal textarea {
+  min-height: 40px;
+
+  padding: 0 11px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  background: white;
+
+  color: inherit;
+
+  font: inherit;
+  font-size: 12px;
+}
+
+.add-animal textarea {
+  padding: 10px 11px;
+
+  line-height: 1.5;
+
+  resize: vertical;
+}
+
+.add-animal input:focus,
+.add-animal select:focus,
+.add-animal textarea:focus {
+  border-color: var(--color-orange);
+
+  outline: none;
+
+  box-shadow: 0 0 0 3px rgba(214, 154, 58, 0.2);
+}
+
+.add-animal__age {
+  display: grid;
+
+  grid-template-columns: 1fr 110px;
+
+  gap: 8px;
+}
+
+.add-animal__hint {
+  margin: 0;
+
+  color: var(--color-muted);
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.add-animal__counter {
+  align-self: flex-end;
+
+  color: var(--color-muted);
+
+  font-size: 10px;
+}
+
+.add-animal__error {
+  margin: 0;
+
+  color: #b3392c;
+
+  font-size: 10px;
+}
+
+/* photo upload */
+.add-animal__upload {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.add-animal__upload input[type="file"] {
+  padding: 9px;
+
+  border: 1px dashed var(--color-border);
+  border-radius: 8px;
+
+  background: #faf7f1;
+
+  font-size: 11px;
+}
+
+.add-animal__photos {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 10px;
+
+  margin: 6px 0 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.add-animal__photos li {
+  position: relative;
+
+  aspect-ratio: 1;
+
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+
+  background: #faf7f1;
+}
+
+.add-animal__photos img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.add-animal__main-badge,
+.add-animal__make-main {
+  position: absolute;
+
+  left: 6px;
+  bottom: 6px;
+
+  padding: 3px 8px;
+
+  border: none;
+  border-radius: 999px;
+
+  font-size: 9px;
+}
+
+.add-animal__main-badge {
+  background: #f5a800;
+
+  color: var(--color-brown);
+
+  font-weight: 700;
+}
+
+.add-animal__make-main {
+  background: rgba(255, 255, 255, 0.92);
+
+  color: var(--color-brown);
+
+  cursor: pointer;
+}
+
+.add-animal__make-main:hover {
+  color: var(--color-orange);
+}
+
+.add-animal__photo-remove {
+  position: absolute;
+
+  top: 6px;
+  right: 6px;
+
+  width: 22px;
+  height: 22px;
+
+  display: grid;
+  place-items: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  color: #b3392c;
+
+  cursor: pointer;
+}
+
+/* personality tags */
+.add-animal__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 6px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  background: white;
+}
+
+.add-animal__tags:focus-within {
+  border-color: var(--color-orange);
+
+  box-shadow: 0 0 0 3px rgba(214, 154, 58, 0.2);
+}
+
+.add-animal .add-animal__tags input[type="text"] {
+  flex: 1;
+
+  min-width: 120px;
+  min-height: 28px;
+
+  padding: 0 4px;
+
+  border: none;
+
+  box-shadow: none;
+}
+
+.add-animal__tag {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 4px 6px 4px 11px;
+
+  border-radius: 999px;
+
+  background: #fdecc2;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.add-animal__tag button {
+  display: grid;
+  place-items: center;
+
+  width: 16px;
+  height: 16px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: var(--color-brown);
+
+  cursor: pointer;
+}
+
+.add-animal__tag button:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.add-animal__tag-add {
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #faf7f1;
+
+  color: var(--color-brown);
+
+  cursor: pointer;
+}
+
+.add-animal__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 6px;
+}
+
+.add-animal__suggestions button {
+  padding: 4px 10px;
+
+  border: 1px dashed var(--color-border);
+  border-radius: 999px;
+
+  background: white;
+
+  color: var(--color-muted);
+
+  font-size: 10px;
+
+  cursor: pointer;
+}
+
+.add-animal__suggestions button:hover {
+  border-color: var(--color-orange);
+
+  color: var(--color-orange);
+}
+
+/* actions */
+.add-animal__actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+}
+
+.add-animal__submit,
+.add-animal__cancel {
+  min-height: 42px;
+
+  padding: 0 22px;
+
+  border-radius: 9px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.add-animal__submit {
+  border: none;
+
+  background: #f5a800;
+
+  color: var(--color-brown);
+}
+
+.add-animal__submit:hover {
+  filter: brightness(0.95);
+}
+
+.add-animal__cancel {
+  border: 1px solid var(--color-border);
+
+  background: white;
+
+  color: var(--color-brown);
+}
+
+.add-animal button:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  .add-animal__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-animal__photos {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .add-animal__actions {
+    flex-direction: column-reverse;
+  }
+}

@@ -1,0 +1,285 @@
+/* PET / REPORT PREVIEW CARD */
+
+.preview-card {
+  position: relative;
+
+  height: 100%;
+  overflow: hidden;
+
+  background-color: var(--color-white);
+
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.preview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+}
+
+.preview-card__image {
+  height: 220px;
+  overflow: hidden;
+
+  background-color: var(--color-cream);
+}
+
+.preview-card__image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: transform 0.35s ease;
+}
+
+.preview-card:hover .preview-card__image img {
+  transform: scale(1.05);
+}
+
+.preview-card__body {
+  padding: 18px;
+}
+
+.preview-card__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.preview-card__heading h3 {
+  margin: 0 0 6px;
+
+  font-size: 20px;
+}
+
+.preview-card__meta {
+  margin: 0;
+
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.preview-card__facts {
+  display: grid;
+  gap: 6px;
+
+  margin: 14px 0 0;
+  padding: 0;
+
+  list-style: none;
+
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.preview-card__facts li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-card__facts svg {
+  flex-shrink: 0;
+  color: var(--color-orange);
+}
+
+.preview-card__link {
+  display: inline-flex;
+  align-items: center;
+
+  margin-top: 18px;
+  padding: 9px 18px;
+
+  border-radius: 999px;
+
+  background-color: var(--color-brown);
+  color: var(--color-white);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: background-color 0.2s ease;
+}
+
+.preview-card:hover .preview-card__link {
+  background-color: var(--color-orange);
+}
+
+/* makes the whole card clickable.
+   Never transform .preview-card__link (no scale on hover): a transform would
+   shrink this layer back to the size of the button. */
+.preview-card__link::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+}
+
+.preview-card__link:focus-visible {
+  outline: none;
+}
+
+.preview-card:has(.preview-card__link:focus-visible) {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* ARTICLE CARD */
+
+.article-card {
+  position: relative;
+
+  height: 360px;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  border-radius: 18px;
+
+  background-color: #3a2a14;
+  color: #ffffff;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+}
+
+.article-card__image {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: transform 0.35s ease;
+}
+
+.article-card:hover .article-card__image {
+  transform: scale(1.05);
+}
+
+/* strong at the bottom where the text sits, so any image stays readable */
+.article-card__overlay {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(25, 15, 5, 0.95) 0%,
+      rgba(25, 15, 5, 0.86) 45%,
+      rgba(25, 15, 5, 0.5) 75%,
+      rgba(25, 15, 5, 0.12) 100%
+    );
+}
+
+/* not positioned on purpose: the title link's ::after must cover the whole
+   card. z-index works here because this is a flex item. */
+.article-card__content {
+  z-index: 1;
+
+  padding: 20px;
+}
+
+.article-card__tags {
+  margin: 0 0 8px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.article-card__title {
+  margin: 0 0 8px;
+
+  color: #ffffff;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.article-card__title a::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+}
+
+.article-card__title a:focus-visible {
+  outline: none;
+}
+
+.article-card:has(.article-card__title a:focus-visible) {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.article-card__excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  margin: 0 0 10px;
+
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.article-card__time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+
+  .article-card {
+    height: 340px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .preview-card,
+  .article-card,
+  .preview-card__image img,
+  .article-card__image {
+    transition: none;
+  }
+
+  .preview-card:hover,
+  .article-card:hover {
+    transform: none;
+  }
+
+  .preview-card:hover .preview-card__image img,
+  .article-card:hover .article-card__image {
+    transform: none;
+  }
+}

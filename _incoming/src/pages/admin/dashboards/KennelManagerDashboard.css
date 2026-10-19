@@ -1,0 +1,807 @@
+/* =========================================
+   PAGE
+========================================= */
+
+.manager-dashboard {
+  width: 100%;
+}
+
+
+.manager-dashboard__header {
+  margin-bottom: 22px;
+}
+
+
+/* =========================================
+   STAT CARDS
+========================================= */
+
+.manager-dashboard__stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 14px;
+
+  margin-bottom: 16px;
+}
+
+
+.manager-dashboard__stat {
+  min-height: 112px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 18px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+
+  background: white;
+
+  color: inherit;
+  text-decoration: none;
+
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+
+.manager-dashboard__stat:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(204, 111, 0, 0.3);
+
+  box-shadow:
+    0 6px 18px
+    rgba(77, 42, 0, 0.07);
+}
+
+
+.manager-dashboard__stat-icon {
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+}
+
+
+.manager-dashboard__stat > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.manager-dashboard__stat-label {
+  color: var(--color-muted);
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.manager-dashboard__stat strong {
+  color: var(--color-brown);
+
+  font-size: 27px;
+  line-height: 1;
+}
+
+
+.manager-dashboard__stat small {
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.manager-dashboard__stat--animals
+.manager-dashboard__stat-icon {
+  background: #fff0df;
+  color: var(--color-orange);
+}
+
+
+.manager-dashboard__stat--applications
+.manager-dashboard__stat-icon {
+  background: #fff0bf;
+  color: #996600;
+}
+
+
+.manager-dashboard__stat--missing
+.manager-dashboard__stat-icon {
+  background: #e2f1ef;
+  color: #23786e;
+}
+
+
+.manager-dashboard__stat--vaccinations
+.manager-dashboard__stat-icon {
+  background: #fde5e2;
+  color: #bd4d43;
+}
+
+
+/* =========================================
+   MAIN WORKSPACE
+========================================= */
+
+.manager-dashboard__workspace {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 14px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.manager-dashboard__card {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: white;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius: 13px;
+}
+
+
+.manager-dashboard__card-header {
+  min-height: 78px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 15px 18px;
+
+  border-bottom:
+    1px solid
+    #f0e8dc;
+}
+
+
+.manager-dashboard__card-header h2 {
+  margin: 0;
+
+  color: var(--color-brown);
+
+  font-size: 17px;
+}
+
+
+.manager-dashboard__card-header p {
+  margin: 5px 0 0;
+
+  color: var(--color-muted);
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+.manager-dashboard__card-header > a {
+  display: inline-flex;
+  align-items: center;
+
+  flex-shrink: 0;
+
+  gap: 5px;
+
+  color: var(--color-orange);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+
+.manager-dashboard__card-header > a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   LIST ROWS
+   (applications + vaccinations)
+========================================= */
+
+.manager-dashboard__rows,
+.manager-dashboard__missing-list {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.manager-dashboard__row {
+  min-height: 78px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    auto;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px 18px;
+
+  border-bottom:
+    1px solid
+    #f1e9de;
+}
+
+
+.manager-dashboard__row:last-child {
+  border-bottom: none;
+}
+
+
+.manager-dashboard__row:hover {
+  background: #fffaf2;
+}
+
+
+.manager-dashboard__row-user {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+
+.manager-dashboard__avatar {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background:
+    var(--color-cream);
+
+  color:
+    var(--color-brown);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+.manager-dashboard__row-user > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.manager-dashboard__row-user strong {
+  color: var(--color-text);
+
+  font-size: 13px;
+}
+
+
+.manager-dashboard__row-user span {
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.manager-dashboard__row-user b {
+  color: var(--color-brown);
+}
+
+
+.manager-dashboard__row-user .manager-dashboard__date {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+}
+
+
+.manager-dashboard__row-user .manager-dashboard__date--overdue {
+  color: #ad4439;
+
+  font-weight: 700;
+}
+
+
+.manager-dashboard__row-action {
+  min-height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  padding: 0 11px;
+
+  border:
+    1px solid
+    rgba(204, 111, 0, 0.35);
+
+  border-radius: 7px;
+
+  background: #fffaf1;
+
+  color: var(--color-orange);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+
+.manager-dashboard__row-action:hover {
+  background:
+    var(--color-orange);
+
+  border-color:
+    var(--color-orange);
+
+  color: white;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.manager-dashboard__status {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+.manager-dashboard__status--pending,
+.manager-dashboard__status--due-soon {
+  background: #ffefb8;
+  color: #896100;
+}
+
+
+.manager-dashboard__status--approved,
+.manager-dashboard__status--up-to-date {
+  background: #def0e1;
+  color: #33723d;
+}
+
+
+.manager-dashboard__status--rejected,
+.manager-dashboard__status--overdue {
+  background: #fbdedb;
+  color: #ad4439;
+}
+
+
+/* =========================================
+   ANIMAL OVERVIEW
+========================================= */
+
+.manager-dashboard__overview {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  padding: 16px 18px 18px;
+}
+
+
+.manager-dashboard__breakdown {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.manager-dashboard__breakdown h3 {
+  margin: 0;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+
+.manager-dashboard__breakdown-row {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+.manager-dashboard__breakdown-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  font-size: 12px;
+}
+
+
+.manager-dashboard__breakdown-label span {
+  color: var(--color-text);
+}
+
+
+.manager-dashboard__breakdown-label strong {
+  color: var(--color-brown);
+}
+
+
+.manager-dashboard__bar {
+  height: 7px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #f4ede3;
+}
+
+
+.manager-dashboard__bar span {
+  height: 100%;
+
+  display: block;
+
+  border-radius: inherit;
+
+  background: var(--color-orange);
+}
+
+
+.manager-dashboard__health-note {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 10px 12px;
+
+  border-radius: 9px;
+
+  background: #e3f3e5;
+
+  color: #33723d;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+.manager-dashboard__health-note--alert {
+  background: #fde5e2;
+
+  color: #ad4439;
+}
+
+
+/* =========================================
+   MISSING PETS
+========================================= */
+
+.manager-dashboard__missing {
+  min-height: 100px;
+
+  display: grid;
+
+  grid-template-columns:
+    62px
+    1fr;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 17px;
+
+  border-bottom:
+    1px solid
+    #f1e9de;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+
+.manager-dashboard__missing:last-child {
+  border-bottom: none;
+}
+
+
+.manager-dashboard__missing:hover {
+  background: #fffaf2;
+}
+
+
+.manager-dashboard__missing-photo {
+  width: 62px;
+  height: 62px;
+
+  overflow: hidden;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff3d7,
+      #faf7f1
+    );
+
+  color: var(--color-orange);
+}
+
+
+.manager-dashboard__missing-photo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+.manager-dashboard__missing-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.manager-dashboard__missing-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+}
+
+
+.manager-dashboard__missing-title strong {
+  color: var(--color-brown);
+
+  font-size: 14px;
+}
+
+
+.manager-dashboard__missing-info > span {
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.manager-dashboard__missing-info p {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  margin: 0;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+}
+
+
+.manager-dashboard__missing-info small {
+  color: #9b9186;
+
+  font-size: 10px;
+}
+
+
+/* MISSING STATUS */
+
+.manager-dashboard__missing-status {
+  flex-shrink: 0;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  color: white;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+
+.manager-dashboard__missing-status--lost {
+  background: #d90429;
+}
+
+
+.manager-dashboard__missing-status--sighted {
+  background: #f4a261;
+  color: #4d2a00;
+}
+
+
+.manager-dashboard__missing-status--found {
+  background: #2a9d8f;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.manager-dashboard__empty {
+  flex: 1;
+
+  min-height: 160px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 25px;
+
+  color: var(--color-muted);
+
+  text-align: center;
+}
+
+
+.manager-dashboard__empty strong {
+  color: var(--color-brown);
+
+  font-size: 14px;
+}
+
+
+.manager-dashboard__empty p {
+  max-width: 350px;
+
+  margin: 0;
+
+  font-size: 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1200px) {
+
+  .manager-dashboard__stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 1000px) {
+
+  .manager-dashboard__workspace {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .manager-dashboard__stats {
+    grid-template-columns: 1fr;
+  }
+
+
+  .manager-dashboard__card-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+
+  .manager-dashboard__row {
+    grid-template-columns: 1fr;
+  }
+
+
+  .manager-dashboard__row-action {
+    width: fit-content;
+  }
+
+}

@@ -1,0 +1,140 @@
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-dropdown__button {
+  position: relative;
+
+  height: 100%;
+  min-height: 52px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 0 22px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+
+  background-color: var(--color-white);
+  color: var(--color-brown);
+
+  font-size: 15px;
+  font-weight: 700;
+
+  transition: background-color 0.2s ease;
+}
+
+.filter-dropdown__button:hover,
+.filter-dropdown__button[aria-expanded="true"] {
+  background-color: var(--color-cream);
+}
+
+.filter-dropdown__dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+  background-color: var(--color-orange);
+}
+
+.filter-dropdown__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+
+  width: 300px;
+
+  display: grid;
+  gap: 14px;
+
+  padding: 18px;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-soft);
+}
+
+.filter-dropdown__field {
+  display: grid;
+  gap: 6px;
+}
+
+.filter-dropdown__field span {
+  color: var(--color-brown);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.filter-dropdown__field select,
+.filter-dropdown__field input {
+  width: 100%;
+
+  padding: 11px 12px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+
+  background-color: var(--color-white);
+  color: var(--color-text);
+
+  font-size: 15px;
+}
+
+.filter-dropdown__dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.filter-dropdown__reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+
+  background-color: transparent;
+  color: var(--color-brown);
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.filter-dropdown__reset:hover {
+  background-color: var(--color-background);
+}
+
+.filter-dropdown button:focus-visible,
+.filter-dropdown select:focus-visible,
+.filter-dropdown input:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+
+  .filter-dropdown__button {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .filter-dropdown__panel {
+    width: 100%;
+    left: 0;
+    right: auto;
+  }
+}

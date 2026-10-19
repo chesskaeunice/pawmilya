@@ -1,0 +1,123 @@
+.my-reports__header {
+  width: min(1180px, calc(100% - 40px));
+
+  margin: 0 auto;
+
+  padding: 55px 0 25px;
+}
+
+.my-reports__eyebrow {
+  color: var(--color-orange);
+
+  text-transform: uppercase;
+
+  letter-spacing: 2px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.my-reports__header h1 {
+  margin: 8px 0;
+
+  font-size: 42px;
+}
+
+.my-reports__header p:last-child {
+  color: var(--color-muted);
+}
+
+.my-reports__container {
+  width: min(1180px, calc(100% - 40px));
+
+  margin: 0 auto;
+
+  padding-bottom: 70px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.my-reports__card {
+  display: grid;
+
+  grid-template-columns:
+    90px
+    1fr
+    auto
+    auto
+    auto;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 14px;
+
+  background: white;
+
+  border: 1px solid var(--color-border);
+
+  border-radius: 14px;
+}
+
+.my-reports__image {
+  height: 75px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: var(--color-cream);
+
+  border-radius: 8px;
+
+  font-size: 11px;
+}
+
+.my-reports__card h2 {
+  margin: 0;
+}
+
+.my-reports__card p {
+  margin: 4px 0;
+
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+/* The badge look comes from the Missing Pets page (.missing-pets__status);
+   this class only places it in the card (and keeps it from stretching). */
+.my-reports__status {
+  justify-self: start;
+}
+
+.my-reports__card button {
+  border: 1px solid var(--color-orange);
+
+  background: white;
+
+  color: var(--color-orange);
+
+  padding: 8px 12px;
+
+  border-radius: 999px;
+}
+
+@media (max-width: 800px) {
+  .my-reports__card {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .my-reports__status,
+  .my-reports__card button {
+    grid-column: 2;
+  }
+}

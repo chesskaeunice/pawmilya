@@ -1,0 +1,92 @@
+/* Search + Filter row used on list pages */
+
+.list-toolbar {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.list-toolbar .search-bar {
+  flex: 1;
+}
+
+.search-bar {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  background-color: var(--color-white);
+
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.search-bar:focus-within {
+  border-color: var(--color-orange);
+  box-shadow: 0 0 0 3px rgba(204, 111, 0, 0.12);
+}
+
+.search-bar__input {
+  width: 100%;
+  min-width: 0;
+
+  padding: 15px 8px 15px 18px;
+
+  border: 0;
+  outline: none;
+  background: transparent;
+
+  color: var(--color-text);
+
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.search-bar__input::placeholder {
+  color: #7d7266;
+  opacity: 1;
+}
+
+.search-bar__icon {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 4px;
+
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+
+  color: var(--color-brown);
+
+  transition: background-color 0.2s ease;
+}
+
+.search-bar__icon:hover {
+  background-color: var(--color-background);
+}
+
+.search-bar__icon:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: -2px;
+}
+
+@media (max-width: 520px) {
+
+  .list-toolbar {
+    flex-direction: column;
+  }
+}

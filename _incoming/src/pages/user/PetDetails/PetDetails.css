@@ -1,0 +1,302 @@
+.pet-details {
+  background-color: var(--color-background);
+
+  padding: 30px 0 80px;
+}
+
+.pet-details__container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+
+/* BREADCRUMB */
+
+.pet-details__breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 9px;
+
+  margin-bottom: 28px;
+
+  color: var(--color-muted);
+
+  font-size: 13px;
+}
+
+.pet-details__breadcrumb a:hover {
+  color: var(--color-orange);
+}
+
+
+/* LAYOUT */
+
+.pet-details__layout {
+  display: grid;
+
+  grid-template-columns:
+    1.15fr
+    0.9fr
+    0.72fr;
+
+  gap: 30px;
+
+  align-items: start;
+}
+
+
+/* GALLERY */
+
+.pet-details__main-image {
+  min-height: 430px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(249, 230, 168, 0.8),
+      rgba(242, 169, 0, 0.12)
+    );
+
+  color: var(--color-brown);
+
+  font-weight: 600;
+}
+
+.pet-details__thumbnail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 10px;
+
+  margin-top: 10px;
+}
+
+.pet-details__thumbnail-grid div {
+  min-height: 95px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--color-cream);
+
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+/* INFORMATION */
+
+.pet-details__eyebrow {
+  margin: 0 0 10px;
+
+  color: var(--color-orange);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.pet-details__info h1 {
+  margin: 0;
+
+  color: var(--color-brown);
+
+  font-size: 52px;
+
+  letter-spacing: -2px;
+}
+
+.pet-details__summary {
+  margin: 9px 0 0;
+
+  color: var(--color-muted);
+
+  font-size: 15px;
+}
+
+.pet-details__description {
+  margin: 22px 0;
+
+  color: var(--color-muted);
+
+  line-height: 1.7;
+}
+
+
+/* DATA */
+
+.pet-details__data {
+  border-top: 1px solid var(--color-border);
+}
+
+.pet-details__data div {
+  display: grid;
+
+  grid-template-columns: 135px 1fr;
+
+  gap: 12px;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pet-details__data span {
+  color: var(--color-muted);
+
+  font-size: 13px;
+}
+
+.pet-details__data strong {
+  color: var(--color-text);
+
+  font-size: 13px;
+}
+
+
+/* PERSONALITY */
+
+.pet-details__personality {
+  margin-top: 25px;
+}
+
+.pet-details__personality h3 {
+  margin: 0 0 12px;
+
+  color: var(--color-brown);
+}
+
+.pet-details__personality div {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+.pet-details__personality span {
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  background-color: var(--color-cream);
+
+  color: var(--color-brown);
+
+  font-size: 12px;
+}
+
+
+/* ADOPTION BOX */
+
+.pet-details__adoption {
+  position: sticky;
+  top: 95px;
+
+  padding: 28px;
+
+  background-color: var(--color-white);
+
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+
+  box-shadow: var(--shadow-soft);
+}
+
+.pet-details__adoption h2 {
+  margin: 5px 0 12px;
+
+  color: var(--color-brown);
+
+  font-size: 26px;
+}
+
+.pet-details__adoption > p:not(.pet-details__eyebrow) {
+  margin: 0 0 22px;
+
+  color: var(--color-muted);
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.pet-details__apply {
+  width: 100%;
+
+  min-height: 47px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  background-color: var(--color-orange);
+
+  color: var(--color-white);
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pet-details__apply:hover {
+  background-color: var(--color-brown);
+}
+
+
+/* NOT FOUND */
+
+.pet-details__not-found {
+  min-height: 60vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+  .pet-details__layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pet-details__adoption {
+    grid-column: 1 / -1;
+
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .pet-details__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pet-details__main-image {
+    min-height: 320px;
+  }
+
+  .pet-details__info h1 {
+    font-size: 42px;
+  }
+
+  .pet-details__adoption {
+    grid-column: auto;
+  }
+}

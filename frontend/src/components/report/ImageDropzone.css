@@ -1,0 +1,175 @@
+.dropzone-wrap {
+  display: grid;
+  gap: 10px;
+}
+
+.dropzone {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+
+  padding: 26px 16px;
+
+  border: 2px dashed rgba(77, 42, 0, 0.35);
+  border-radius: 14px;
+
+  background-color: var(--color-background);
+  color: var(--color-brown);
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.dropzone:hover,
+.dropzone--active {
+  border-color: var(--color-orange);
+  background-color: var(--color-cream);
+}
+
+.dropzone:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+.dropzone span {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.dropzone__thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.dropzone__thumb {
+  position: relative;
+
+  width: 92px;
+  height: 92px;
+}
+
+.dropzone__thumb img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.dropzone__thumb button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+
+  width: 26px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid var(--color-white);
+  border-radius: 50%;
+
+  background-color: var(--color-brown);
+  color: var(--color-white);
+}
+
+.dropzone__thumb button:hover {
+  background-color: #c62828;
+}
+
+/* ---------- single photo slot (maxFiles={1}) ---------- */
+
+.dropzone-slot {
+  position: relative;
+
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+
+  align-content: center;
+}
+
+.dropzone-slot small {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.dropzone-slot--filled {
+  overflow: hidden;
+
+  border: 2px solid var(--color-border);
+  border-radius: 14px;
+
+  background-color: var(--color-background);
+}
+
+.dropzone-slot--filled img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.dropzone-slot__tag {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+
+  padding: 4px 10px;
+
+  border-radius: 999px;
+
+  background-color: rgba(47, 39, 31, 0.75);
+  color: var(--color-white);
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dropzone-slot__remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid var(--color-white);
+  border-radius: 50%;
+
+  background-color: var(--color-brown);
+  color: var(--color-white);
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.dropzone-slot__remove:hover {
+  background-color: #c62828;
+}
+
+.dropzone-slot__remove:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+.dropzone-slot[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}

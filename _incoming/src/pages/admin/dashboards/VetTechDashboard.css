@@ -1,0 +1,977 @@
+/* =========================================
+   PAGE
+========================================= */
+
+.vettech-dashboard {
+  width: 100%;
+}
+
+
+.vettech-dashboard__header {
+  margin-bottom: 22px;
+}
+
+
+/* =========================================
+   STAT CARDS
+========================================= */
+
+.vettech-dashboard__stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 14px;
+
+  margin-bottom: 16px;
+}
+
+
+.vettech-dashboard__stat {
+  min-height: 112px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 18px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+
+  background: white;
+
+  color: inherit;
+  text-decoration: none;
+
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+
+.vettech-dashboard__stat:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(204, 111, 0, 0.3);
+
+  box-shadow:
+    0 6px 18px
+    rgba(77, 42, 0, 0.07);
+}
+
+
+.vettech-dashboard__stat-icon {
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+}
+
+
+.vettech-dashboard__stat > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.vettech-dashboard__stat-label {
+  color: var(--color-muted);
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.vettech-dashboard__stat strong {
+  color: var(--color-brown);
+
+  font-size: 27px;
+  line-height: 1;
+}
+
+
+.vettech-dashboard__stat small {
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.vettech-dashboard__stat--due-soon
+.vettech-dashboard__stat-icon {
+  background: #fff0bf;
+  color: #996600;
+}
+
+
+.vettech-dashboard__stat--completed
+.vettech-dashboard__stat-icon {
+  background: #e3f3e5;
+  color: #3f8148;
+}
+
+
+.vettech-dashboard__stat--overdue
+.vettech-dashboard__stat-icon {
+  background: #fde5e2;
+  color: #bd4d43;
+}
+
+
+.vettech-dashboard__stat--attention
+.vettech-dashboard__stat-icon {
+  background: #fff0df;
+  color: var(--color-orange);
+}
+
+
+/* =========================================
+   MAIN WORKSPACE
+========================================= */
+
+.vettech-dashboard__workspace {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.45fr)
+    minmax(360px, 0.85fr);
+
+  gap: 16px;
+
+  align-items: start;
+}
+
+
+.vettech-dashboard__column {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.vettech-dashboard__card,
+.vettech-dashboard__quick {
+  overflow: hidden;
+
+  background: white;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius: 13px;
+}
+
+
+.vettech-dashboard__card-header {
+  min-height: 78px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 15px 18px;
+
+  border-bottom:
+    1px solid
+    #f0e8dc;
+}
+
+
+.vettech-dashboard__card-header h2,
+.vettech-dashboard__quick-header h2 {
+  margin: 0;
+
+  color: var(--color-brown);
+
+  font-size: 17px;
+}
+
+
+.vettech-dashboard__card-header p,
+.vettech-dashboard__quick-header p {
+  margin: 5px 0 0;
+
+  color: var(--color-muted);
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+.vettech-dashboard__card-header > a {
+  display: inline-flex;
+  align-items: center;
+
+  flex-shrink: 0;
+
+  gap: 5px;
+
+  color: var(--color-orange);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+
+.vettech-dashboard__card-header > a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   APPLICATIONS NEEDING REVIEW
+========================================= */
+
+.vettech-dashboard__vaccinations {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.vettech-dashboard__vaccination {
+  min-height: 78px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(230px, 1fr)
+    135px
+    92px
+    auto;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px 18px;
+
+  border-bottom:
+    1px solid
+    #f1e9de;
+}
+
+
+.vettech-dashboard__vaccination:last-child {
+  border-bottom: none;
+}
+
+
+.vettech-dashboard__vaccination:hover {
+  background: #fffaf2;
+}
+
+
+.vettech-dashboard__vaccination-user {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+
+.vettech-dashboard__avatar {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background:
+    var(--color-cream);
+
+  color:
+    var(--color-brown);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+.vettech-dashboard__vaccination-user > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.vettech-dashboard__vaccination-user strong {
+  color: var(--color-text);
+
+  font-size: 13px;
+}
+
+
+.vettech-dashboard__vaccination-user span {
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.vettech-dashboard__vaccination-user b {
+  color: var(--color-brown);
+}
+
+
+.vettech-dashboard__date {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+}
+
+
+.vettech-dashboard__date--overdue {
+  color: #ad4439;
+
+  font-weight: 700;
+}
+
+
+.vettech-dashboard__record {
+  min-height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  padding: 0 11px;
+
+  border:
+    1px solid
+    rgba(204, 111, 0, 0.35);
+
+  border-radius: 7px;
+
+  background: #fffaf1;
+
+  color: var(--color-orange);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+
+.vettech-dashboard__record:hover {
+  background:
+    var(--color-orange);
+
+  border-color:
+    var(--color-orange);
+
+  color: white;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.vettech-dashboard__status {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+
+.vettech-dashboard__status--due-soon {
+  background: #ffefb8;
+  color: #896100;
+}
+
+
+.vettech-dashboard__status--completed {
+  background: #def0e1;
+  color: #33723d;
+}
+
+
+.vettech-dashboard__status--overdue {
+  background: #fbdedb;
+  color: #ad4439;
+}
+
+
+/* =========================================
+   RECENT ACTIVITY
+========================================= */
+
+.vettech-dashboard__activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.vettech-dashboard__activity {
+  min-height: 76px;
+
+  display: grid;
+
+  grid-template-columns:
+    40px
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 12px 18px;
+
+  border-bottom:
+    1px solid
+    #f1e9de;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+
+.vettech-dashboard__activity:last-child {
+  border-bottom: none;
+}
+
+
+.vettech-dashboard__activity:hover {
+  background: #fffaf2;
+}
+
+
+.vettech-dashboard__activity-icon {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 9px;
+}
+
+
+.vettech-dashboard__activity-icon--due-soon {
+  background: #fff1c7;
+  color: #996600;
+}
+
+
+.vettech-dashboard__activity-icon--completed {
+  background: #e3f3e5;
+  color: #3f8148;
+}
+
+
+.vettech-dashboard__activity-icon--overdue {
+  background: #fde5e2;
+  color: #bd4d43;
+}
+
+
+.vettech-dashboard__activity-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.vettech-dashboard__activity-info strong {
+  color: var(--color-text);
+
+  font-size: 13px;
+}
+
+
+.vettech-dashboard__activity-info span {
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.vettech-dashboard__activity-info b {
+  color: var(--color-brown);
+}
+
+
+.vettech-dashboard__activity-meta {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 5px;
+}
+
+
+.vettech-dashboard__activity-meta > span:last-child {
+  color: var(--color-muted);
+
+  font-size: 10px;
+}
+
+
+/* =========================================
+   MISSING PETS
+========================================= */
+
+.vettech-dashboard__attention-list {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.vettech-dashboard__attention {
+  min-height: 100px;
+
+  display: grid;
+
+  grid-template-columns:
+    62px
+    1fr;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 17px;
+
+  border-bottom:
+    1px solid
+    #f1e9de;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+
+.vettech-dashboard__attention:last-child {
+  border-bottom: none;
+}
+
+
+.vettech-dashboard__attention:hover {
+  background: #fffaf2;
+}
+
+
+.vettech-dashboard__attention-photo {
+  width: 62px;
+  height: 62px;
+
+  overflow: hidden;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff3d7,
+      #faf7f1
+    );
+
+  color: var(--color-orange);
+}
+
+
+.vettech-dashboard__attention-photo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+.vettech-dashboard__attention-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.vettech-dashboard__attention-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+}
+
+
+.vettech-dashboard__attention-title strong {
+  color: var(--color-brown);
+
+  font-size: 14px;
+}
+
+
+.vettech-dashboard__attention-info > span {
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.vettech-dashboard__attention-info p {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  margin: 0;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+}
+
+
+.vettech-dashboard__attention-info small {
+  color: #9b9186;
+
+  font-size: 10px;
+}
+
+
+/* HEALTH STATUS */
+
+.vettech-dashboard__health-status {
+  flex-shrink: 0;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  color: white;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+
+.vettech-dashboard__health-status--critical {
+  background: #d90429;
+}
+
+
+.vettech-dashboard__health-status--under-treatment {
+  background: #e76f51;
+}
+
+
+.vettech-dashboard__health-status--needs-checkup {
+  background: #f4a261;
+  color: #4d2a00;
+}
+
+
+.vettech-dashboard__health-status--healthy {
+  background: #2a9d8f;
+}
+
+
+/* =========================================
+   QUICK ACTIONS - FULL WIDTH
+========================================= */
+
+.vettech-dashboard__quick {
+  margin-top: 16px;
+}
+
+
+.vettech-dashboard__quick-header {
+  padding: 15px 18px;
+
+  border-bottom:
+    1px solid
+    #f0e8dc;
+}
+
+
+.vettech-dashboard__quick-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+}
+
+
+.vettech-dashboard__quick-action {
+  min-height: 92px;
+
+  display: grid;
+
+  grid-template-columns:
+    46px
+    1fr
+    auto;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 16px 18px;
+
+  color: inherit;
+  text-decoration: none;
+}
+
+
+.vettech-dashboard__quick-action:not(:last-child) {
+  border-right:
+    1px solid
+    #f0e8dc;
+}
+
+
+.vettech-dashboard__quick-action:hover {
+  background: #fffaf2;
+}
+
+
+.vettech-dashboard__quick-icon {
+  width: 44px;
+  height: 44px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 10px;
+
+  background: #fff1d1;
+
+  color: var(--color-orange);
+}
+
+
+.vettech-dashboard__quick-action > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.vettech-dashboard__quick-action strong {
+  color: var(--color-brown);
+
+  font-size: 14px;
+}
+
+
+.vettech-dashboard__quick-action span {
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.vettech-dashboard__quick-action > svg {
+  color: var(--color-orange);
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.vettech-dashboard__empty {
+  min-height: 160px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 25px;
+
+  color: var(--color-muted);
+
+  text-align: center;
+}
+
+
+.vettech-dashboard__empty strong {
+  color: var(--color-brown);
+
+  font-size: 14px;
+}
+
+
+.vettech-dashboard__empty p {
+  max-width: 350px;
+
+  margin: 0;
+
+  font-size: 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1200px) {
+
+  .vettech-dashboard__stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 1000px) {
+
+  .vettech-dashboard__workspace {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 760px) {
+
+  .vettech-dashboard__vaccination {
+    grid-template-columns:
+      1fr
+      auto;
+  }
+
+
+  .vettech-dashboard__date {
+    grid-column: 1;
+  }
+
+
+  .vettech-dashboard__record {
+    grid-column: 2;
+
+    grid-row:
+      1 / span 2;
+  }
+
+
+  .vettech-dashboard__quick-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .vettech-dashboard__quick-action:not(:last-child) {
+    border-right: none;
+
+    border-bottom:
+      1px solid
+      #f0e8dc;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .vettech-dashboard__stats {
+    grid-template-columns: 1fr;
+  }
+
+
+  .vettech-dashboard__card-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+
+  .vettech-dashboard__vaccination {
+    grid-template-columns: 1fr;
+  }
+
+
+  .vettech-dashboard__record {
+    grid-column: auto;
+    grid-row: auto;
+
+    width: fit-content;
+  }
+
+
+  .vettech-dashboard__activity {
+    grid-template-columns:
+      38px
+      1fr;
+  }
+
+
+  .vettech-dashboard__activity-meta {
+    grid-column: 2;
+
+    align-items: flex-start;
+  }
+
+}

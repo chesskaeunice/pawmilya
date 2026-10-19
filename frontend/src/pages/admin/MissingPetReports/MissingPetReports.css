@@ -1,0 +1,27 @@
+.missing-admin__actions {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+}
+
+.missing-admin__actions a {
+  color: var(--color-orange);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.missing-admin__actions button {
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  border: none;
+
+  background: transparent;
+
+  color: var(--color-muted);
+}

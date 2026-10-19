@@ -1,0 +1,204 @@
+.site-footer {
+  margin-top: 70px;
+
+  background-color: var(--color-brown);
+  color: #e9dfd0;
+}
+
+.site-footer__container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 56px 0 40px;
+
+  /* Donate | In-Kind | Explore | Legal | Contact Us — equal gaps, top-aligned */
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1.1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1.4fr);
+  align-items: start;
+  gap: 40px;
+}
+
+.site-footer__column {
+  min-width: 0;
+}
+
+.site-footer__text {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.5;
+  color: #d9ccb8;
+}
+
+.site-footer__heading {
+  margin: 0 0 14px;
+
+  color: var(--color-cream);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.site-footer__list {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  display: grid;
+  gap: 10px;
+
+  font-size: 14px;
+}
+
+.site-footer__list a {
+  color: #e9dfd0;
+  transition: color 0.2s ease;
+}
+
+.site-footer__list a:hover {
+  color: var(--color-gold);
+}
+
+.site-footer__contact li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.site-footer__contact svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--color-gold);
+}
+
+/* DONATION QR */
+
+.site-footer__qr {
+  width: 120px;
+  height: 120px;
+
+  padding: 6px;
+
+  border-radius: var(--radius-medium);
+  background-color: var(--color-white);
+}
+
+.site-footer__qr-caption {
+  margin: 10px 0 0;
+
+  font-size: 13px;
+  line-height: 1.4;
+  color: #d9ccb8;
+}
+
+/* DONATE IN-KIND (opens the wishlist pop-up) */
+
+.site-footer__inkind {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 14px;
+  padding: 8px 14px;
+
+  border: 1px solid rgba(249, 230, 168, 0.6);
+  border-radius: 999px;
+
+  background-color: transparent;
+  color: var(--color-cream);
+
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.site-footer__inkind:hover {
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+}
+
+.site-footer__inkind:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* BOTTOM BAR */
+
+.site-footer__bottom {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 18px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  font-size: 13px;
+  color: #d9ccb8;
+}
+
+.site-footer__bottom p {
+  margin: 0;
+}
+
+.site-footer a:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* TABLET: 3 columns — Donate, In-Kind, Explore / Legal, Contact Us (wide) */
+
+@media (max-width: 1050px) {
+
+  .site-footer__container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 36px;
+  }
+
+  .site-footer__column--contact {
+    grid-column: span 2;
+  }
+}
+
+/* PHONE */
+
+@media (max-width: 700px) {
+
+  .site-footer {
+    margin-top: 50px;
+  }
+
+  .site-footer__container,
+  .site-footer__bottom {
+    width: min(100% - 24px, 1180px);
+  }
+
+  /* PHONE: 2 columns — Donate, In-Kind / Explore, Legal / Contact Us (full) */
+  .site-footer__container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    padding: 40px 0 28px;
+  }
+
+  .site-footer__column--contact {
+    grid-column: 1 / -1;
+  }
+
+  /* keeps the fixed emergency button from covering the copyright line */
+  .site-footer__bottom {
+    padding-bottom: 84px;
+  }
+}

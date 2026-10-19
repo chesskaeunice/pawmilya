@@ -1,0 +1,47 @@
+.staff-form__grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 15px;
+}
+
+.staff-form__field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.staff-form__field label {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.staff-form__field input,
+.staff-form__field select,
+.staff-form__field textarea {
+  padding: 10px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+
+  background: white;
+
+  font-size: 11px;
+}
+
+.staff-form__field--full {
+  grid-column: 1 / -1;
+}
+
+.staff-form__actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-top: 20px;
+}

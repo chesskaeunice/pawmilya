@@ -1,0 +1,205 @@
+.emergency__type {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+}
+
+.emergency__type legend {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 0;
+}
+
+.emergency__choice {
+  flex: 1;
+  min-width: 180px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px 16px;
+
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.emergency__choice--on {
+  border-color: #c62828;
+  background-color: rgba(198, 40, 40, 0.06);
+}
+
+.emergency__choice input {
+  accent-color: #c62828;
+}
+
+.emergency__heading {
+  margin: 8px 0 0;
+
+  font-size: 16px;
+}
+
+.emergency__summary {
+  width: 100%;
+
+  display: grid;
+  gap: 8px;
+
+  margin: 8px 0;
+  padding: 14px 16px;
+
+  border-radius: 12px;
+
+  background-color: var(--color-background);
+
+  text-align: left;
+}
+
+.emergency__summary div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.emergency__summary dt {
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.emergency__summary dd {
+  margin: 0;
+
+  color: var(--color-brown);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.emergency__done-actions {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ---------- 2 steps ---------- */
+
+.emergency__steps {
+  display: grid;
+  gap: 8px;
+}
+
+.emergency__step-label {
+  margin: 0;
+
+  color: var(--color-orange);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.emergency__progress {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.emergency__progress-part {
+  height: 6px;
+
+  border-radius: 999px;
+
+  background-color: var(--color-border);
+
+  transition: background-color 0.3s ease;
+}
+
+.emergency__progress-part--done {
+  background-color: var(--color-orange);
+}
+
+.emergency__step {
+  display: grid;
+  gap: 16px;
+
+  min-width: 0;
+}
+
+/* display: grid above would otherwise override the hidden attribute */
+.emergency__step[hidden] {
+  display: none;
+}
+
+.emergency__step-title {
+  margin: 0;
+
+  font-size: 20px;
+}
+
+.emergency__photo-slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.emergency__hint {
+  margin: 0;
+
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.emergency__step .mform__primary,
+.emergency__nav .mform__secondary {
+  gap: 8px;
+}
+
+.emergency__nav {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+}
+
+@media (max-width: 480px) {
+
+  .emergency__done-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .emergency__photo-slots {
+    grid-template-columns: 1fr;
+  }
+
+  .emergency__nav {
+    grid-template-columns: 1fr;
+  }
+
+  /* Submit first on phones, Back below it */
+  .emergency__nav .mform__primary {
+    order: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .emergency__progress-part {
+    transition: none;
+  }
+}

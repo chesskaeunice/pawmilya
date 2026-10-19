@@ -1,0 +1,121 @@
+.inkind__intro {
+  margin: 0 0 18px;
+
+  color: var(--color-muted);
+  font-size: 15px;
+}
+
+/* two wishlists side by side, stacked on phones */
+.inkind__lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.inkind__card {
+  min-width: 0;
+  padding: 18px;
+
+  background-color: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  box-shadow: var(--shadow-card);
+}
+
+.inkind__card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 0 0 12px;
+
+  color: var(--color-brown);
+  font-size: 17px;
+}
+
+.inkind__card-icon {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+}
+
+.inkind__items {
+  display: grid;
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.inkind__items li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.inkind__items svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+
+  color: var(--color-orange);
+}
+
+.inkind__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin: 18px 0 0;
+  padding: 12px 14px;
+
+  border-radius: var(--radius-small);
+
+  background-color: rgba(249, 230, 168, 0.45);
+  color: var(--color-brown);
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.inkind__note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.inkind__how {
+  margin: 14px 0 0;
+
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
+}
+
+.inkind__how strong {
+  color: var(--color-brown);
+}
+
+@media (max-width: 600px) {
+
+  .inkind__lists {
+    grid-template-columns: 1fr;
+  }
+}

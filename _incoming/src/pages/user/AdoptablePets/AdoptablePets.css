@@ -1,0 +1,253 @@
+.adoptable {
+  background-color: var(--color-background);
+}
+
+.adoptable__header {
+  min-height: 340px;
+
+  display: flex;
+  align-items: center;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  padding: 0 20px;
+}
+
+.adoptable__header-content {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+
+  color: var(--color-white);
+}
+
+.adoptable__eyebrow {
+  margin: 0 0 10px;
+
+  color: var(--color-cream);
+
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.adoptable__header h1 {
+  margin: 0 0 18px;
+
+  color: var(--color-white);
+
+  font-size: clamp(44px, 5vw, 72px);
+  line-height: 1.05;
+}
+
+.adoptable__header p:last-child {
+  max-width: 720px;
+
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.adoptable__container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+
+  padding: 44px 0 70px;
+}
+
+.adoptable__filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 14px;
+
+  margin-bottom: 24px;
+  padding: 18px;
+
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+}
+
+.adoptable__filters input,
+.adoptable__filters select {
+  min-height: 52px;
+
+  padding: 0 16px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  background-color: var(--color-white);
+  color: var(--color-brown);
+
+  font-size: 15px;
+}
+
+.adoptable__result-count {
+  margin: 0 0 20px;
+
+  color: var(--color-muted);
+  font-size: 15px;
+}
+
+.adoptable__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.adoptable__card {
+  overflow: hidden;
+
+  background-color: var(--color-white);
+
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.adoptable__card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-soft);
+}
+
+.adoptable__image-placeholder {
+  height: 250px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(249, 230, 168, 0.72),
+      rgba(242, 169, 0, 0.14)
+    );
+
+  color: var(--color-brown);
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.adoptable__card-content {
+  padding: 18px;
+}
+
+.adoptable__card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.adoptable__card-heading h2 {
+  margin: 0 0 6px;
+
+  color: var(--color-brown);
+  font-size: 21px;
+}
+
+.adoptable__card-heading p {
+  margin: 0;
+
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.adoptable__status {
+  display: inline-flex;
+
+  padding: 7px 10px;
+
+  border-radius: 999px;
+
+  background-color: rgba(249, 230, 168, 0.5);
+  color: var(--color-brown);
+
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.adoptable__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+.adoptable__tags span {
+  padding: 6px 10px;
+
+  border: 1px solid rgba(204, 111, 0, 0.18);
+  border-radius: 999px;
+
+  background-color: rgba(249, 230, 168, 0.34);
+  color: var(--color-brown);
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.adoptable__details-link {
+  display: inline-block;
+
+  margin-top: 18px;
+
+  color: var(--color-orange);
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.adoptable__details-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 980px) {
+  .adoptable__filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .adoptable__filters input {
+    grid-column: 1 / -1;
+  }
+
+  .adoptable__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .adoptable__header {
+    min-height: 280px;
+  }
+
+  .adoptable__header h1 {
+    font-size: 42px;
+  }
+
+  .adoptable__header p:last-child {
+    font-size: 15px;
+  }
+
+  .adoptable__filters {
+    grid-template-columns: 1fr;
+  }
+
+  .adoptable__grid {
+    grid-template-columns: 1fr;
+  }
+}
