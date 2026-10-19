@@ -1,22 +1,11 @@
 import {
   Bell,
   ChevronDown,
-  Search,
 } from "lucide-react";
 
 function AdminHeader() {
   return (
     <header className="staff-header">
-
-      <div className="staff-header__search">
-        <Search size={14} />
-
-        <input
-          type="text"
-          placeholder="Search animals, applications, or reports..."
-        />
-      </div>
-
 
       <div className="staff-header__actions">
 

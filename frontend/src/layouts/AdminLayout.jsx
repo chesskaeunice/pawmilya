@@ -1,26 +1,42 @@
-import { Outlet } from "react-router-dom";
+import {
+  Outlet,
+} from "react-router-dom";
 
 import AdminSidebar from "../components/admin/AdminSidebar.jsx";
 import AdminHeader from "../components/admin/AdminHeader.jsx";
 
+import {
+  StaffAuthProvider,
+} from "../context/StaffAuthContext.jsx";
+
+
 function AdminLayout() {
   return (
-    <div className="staff-layout">
+    <StaffAuthProvider>
 
-      <AdminSidebar />
+      <div className="staff-layout">
 
-      <div className="staff-layout__main">
+        <AdminSidebar />
 
-        <AdminHeader />
 
-        <main className="staff-layout__content">
-          <Outlet />
-        </main>
+        <div className="staff-layout__main">
+
+          <AdminHeader />
+
+
+          <main className="staff-layout__content">
+
+            <Outlet />
+
+          </main>
+
+        </div>
 
       </div>
 
-    </div>
+    </StaffAuthProvider>
   );
 }
+
 
 export default AdminLayout;

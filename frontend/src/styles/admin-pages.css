@@ -388,9 +388,96 @@
   font-size: 11px;
 }
 
+/* =========================================
+   ADMIN / STAFF TYPOGRAPHY SIZE IMPROVEMENTS
+========================================= */
+
+/* PAGE HEADER */
+
+.staff-page__breadcrumb {
+  font-size: 12px;
+}
+
+.staff-page__title {
+  font-size: 30px;
+}
+
+.staff-page__subtitle {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* BUTTONS */
+
+.staff-button,
+.staff-page button {
+  font-size: 12px;
+}
+
+
+/* FILTERS */
+
+.staff-filters input,
+.staff-filters select {
+  font-size: 13px;
+}
+
+
+/* TABLE */
+
+.staff-table th {
+  font-size: 11px;
+}
+
+.staff-table td {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.staff-table td strong {
+  font-size: 13px;
+}
+
+
+/* STATUS BADGES */
+
+.staff-status {
+  font-size: 11px;
+}
+
+
+/* DETAIL CARDS */
+
+.staff-detail-card__title,
+.staff-detail-card h2 {
+  font-size: 17px;
+}
+
+.staff-detail-row span {
+  font-size: 12px;
+}
+
+.staff-detail-row strong {
+  font-size: 13px;
+}
+
+
+/* PAGINATION */
+
+.staff-pagination,
+.staff-pagination span {
+  font-size: 11px;
+}
+
+.staff-pagination__pages button {
+  font-size: 11px;
+}
+
 
 @media (max-width: 950px) {
   .staff-filters {
     grid-template-columns: 1fr 1fr;
   }
 }
+

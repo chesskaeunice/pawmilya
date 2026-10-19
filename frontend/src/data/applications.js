@@ -1,6 +1,11 @@
 const applications = [
   {
     id: 1,
+
+    /* =====================================
+       SELECTED PET
+    ====================================== */
+
     petId: 1,
     petName: "Milo",
     petType: "Dog",
@@ -8,48 +13,150 @@ const applications = [
     petAge: "3 years old",
     petSex: "Male",
     petLocation: "Main Shelter",
+    petImage: null,
 
-    applicantName: "Maria Santos",
+    petPersonality: [
+      "Friendly",
+      "Playful",
+    ],
+
+
+    /* =====================================
+       PERSONAL INFORMATION
+    ====================================== */
+
     firstName: "Maria",
     lastName: "Santos",
-    sex: "Female",
-    age: 27,
-    email: "maria@email.com",
-    phone: "0917 555 0187",
-    address: "142 Pine Street, San Francisco",
+    applicantName: "Maria Santos",
 
-    residence: "House",
-    householdMembers: 4,
-    currentPets: "2 cats",
-    petExperience: "Experienced pet owner",
+    address:
+      "142 Pine Street, San Francisco",
 
-    employmentStatus: "Employed",
-    occupation: "Marketing Specialist",
-    employer: "Sample Company",
-    monthlyIncome: "₱30,000 - ₱50,000",
+    phone:
+      "0917 555 0187",
 
-    idType: "Philippine National ID",
-    idNumber: "XXXX-XXXX-XXXX",
-    idVerificationStatus: "Pending Verification",
+    email:
+      "maria@email.com",
 
-    incomeProofType: "Payslip",
-    incomeVerificationStatus: "Pending Verification",
+    birthDate:
+      "1999-05-14",
 
-    reason:
+    occupation:
+      "Employed",
+
+    company:
+      "Sample Company",
+
+    socialMedia:
+      "https://facebook.com/maria.sample",
+
+    civilStatus:
+      "Single",
+
+    pronouns:
+      "She/her",
+
+    prompt:
+      "Social Media",
+
+    adoptedBefore:
+      "No",
+
+
+    /* =====================================
+       VALID ID
+    ====================================== */
+
+    validId: {
+      name:
+        "maria-national-id.jpg",
+
+      url: null,
+    },
+
+    idVerificationStatus:
+      "Pending Verification",
+
+
+    /* =====================================
+       HOME AND PET EXPERIENCE
+    ====================================== */
+
+    residence:
+      "House",
+
+    householdMembers:
+      4,
+
+    hasPets:
+      "Yes",
+
+    petCount:
+      2,
+
+    petExperience:
+      "Experienced pet owner",
+
+
+    /* =====================================
+       HOME PHOTOS
+    ====================================== */
+
+    homePhotos: [
+      {
+        name:
+          "maria-home-collage-1.jpg",
+
+        url: null,
+      },
+      {
+        name:
+          "maria-home-collage-2.jpg",
+
+        url: null,
+      },
+    ],
+
+
+    /* =====================================
+       ADOPTION QUESTIONS
+    ====================================== */
+
+    whyAdopt:
       "I have been looking for a loving companion for our family and believe Milo would be a good fit.",
 
-    carePlan:
+    howCare:
       "Milo will stay inside our home and will receive proper food, exercise, vaccination, and veterinary care.",
 
-    additionalInfo:
-      "Our household has experience caring for dogs.",
 
-    date: "Sep 27, 2026",
-    status: "Pending",
+    /* =====================================
+       TERMS
+    ====================================== */
+
+    termsAccepted:
+      true,
+
+
+    /* =====================================
+       APPLICATION METADATA
+    ====================================== */
+
+    date:
+      "Sep 27, 2026",
+
+    status:
+      "Pending",
+
+    rejectionReason:
+      "",
   },
+
 
   {
     id: 2,
+
+    /* PET */
+
     petId: 2,
     petName: "Luna",
     petType: "Cat",
@@ -57,92 +164,269 @@ const applications = [
     petAge: "1 year old",
     petSex: "Female",
     petLocation: "Main Shelter",
+    petImage: null,
 
-    applicantName: "John Reyes",
+    petPersonality: [
+      "Calm",
+      "Affectionate",
+    ],
+
+
+    /* PERSONAL INFORMATION */
+
     firstName: "John",
     lastName: "Reyes",
-    sex: "Male",
-    age: 30,
-    email: "john@email.com",
-    phone: "0918 222 0192",
-    address: "Quezon City",
+    applicantName: "John Reyes",
 
-    residence: "Condominium",
-    householdMembers: 2,
-    currentPets: "None",
-    petExperience: "Some experience",
+    address:
+      "Quezon City",
 
-    employmentStatus: "Employed",
-    occupation: "Software Developer",
-    employer: "Sample Tech",
-    monthlyIncome: "₱50,000 - ₱70,000",
+    phone:
+      "0918 222 0192",
 
-    idType: "Driver's License",
-    idNumber: "NXX-XX-XXXXXX",
-    idVerificationStatus: "Verified",
+    email:
+      "john@email.com",
 
-    incomeProofType: "Certificate of Employment",
-    incomeVerificationStatus: "Verified",
+    birthDate:
+      "1996-03-22",
 
-    reason:
+    occupation:
+      "Employed",
+
+    company:
+      "Sample Tech",
+
+    socialMedia:
+      "https://facebook.com/john.sample",
+
+    civilStatus:
+      "Single",
+
+    pronouns:
+      "He/him",
+
+    prompt:
+      "Website",
+
+    adoptedBefore:
+      "No",
+
+
+    /* VALID ID */
+
+    validId: {
+      name:
+        "john-drivers-license.jpg",
+
+      url: null,
+    },
+
+    idVerificationStatus:
+      "Verified",
+
+
+    /* HOME AND PET EXPERIENCE */
+
+    residence:
+      "Apartment / Condominium",
+
+    householdMembers:
+      2,
+
+    hasPets:
+      "No",
+
+    petCount:
+      0,
+
+    petExperience:
+      "Some experience",
+
+
+    /* HOME PHOTOS */
+
+    homePhotos: [
+      {
+        name:
+          "john-home-collage.jpg",
+
+        url: null,
+      },
+    ],
+
+
+    /* QUESTIONS */
+
+    whyAdopt:
       "I would like to provide Luna with a permanent and safe home.",
 
-    carePlan:
-      "She will live indoors and receive regular veterinary care.",
+    howCare:
+      "She will live indoors and receive proper food, enrichment, and regular veterinary care.",
 
-    additionalInfo: "",
 
-    date: "Sep 25, 2026",
-    status: "Approved",
+    /* TERMS */
+
+    termsAccepted:
+      true,
+
+
+    /* APPLICATION */
+
+    date:
+      "Sep 25, 2026",
+
+    status:
+      "Approved",
+
+    rejectionReason:
+      "",
   },
+
 
   {
     id: 3,
+
+    /* PET */
+
     petId: 3,
     petName: "Buddy",
     petType: "Dog",
     petBreed: "Aspin Mix",
     petAge: "2 years old",
     petSex: "Male",
-    petLocation: "North Holding Area",
+    petLocation:
+      "North Holding Area",
 
-    applicantName: "Ana Cruz",
-    firstName: "Ana",
-    lastName: "Cruz",
-    sex: "Female",
-    age: 25,
-    email: "ana@email.com",
-    phone: "0919 333 8821",
-    address: "Makati City",
+    petImage:
+      null,
 
-    residence: "Apartment",
-    householdMembers: 3,
-    currentPets: "1 dog",
-    petExperience: "Experienced pet owner",
+    petPersonality: [
+      "Energetic",
+      "Friendly",
+    ],
 
-    employmentStatus: "Self-employed",
-    occupation: "Online Seller",
-    employer: "Self-employed",
-    monthlyIncome: "₱20,000 - ₱30,000",
 
-    idType: "Passport",
-    idNumber: "PXXXXXXXX",
-    idVerificationStatus: "Verified",
+    /* PERSONAL INFORMATION */
 
-    incomeProofType: "Bank Statement",
-    incomeVerificationStatus: "Pending Verification",
+    firstName:
+      "Ana",
 
-    reason:
+    lastName:
+      "Cruz",
+
+    applicantName:
+      "Ana Cruz",
+
+    address:
+      "Makati City",
+
+    phone:
+      "0919 333 8821",
+
+    email:
+      "ana@email.com",
+
+    birthDate:
+      "2001-07-09",
+
+    occupation:
+      "Self-Employed",
+
+    company:
+      "Ana's Online Shop",
+
+    socialMedia:
+      "https://facebook.com/ana.sample",
+
+    civilStatus:
+      "Single",
+
+    pronouns:
+      "She/her",
+
+    prompt:
+      "Friends",
+
+    adoptedBefore:
+      "No",
+
+
+    /* VALID ID */
+
+    validId: {
+      name:
+        "ana-passport.jpg",
+
+      url: null,
+    },
+
+    idVerificationStatus:
+      "Verified",
+
+
+    /* HOME AND PET EXPERIENCE */
+
+    residence:
+      "Apartment / Condominium",
+
+    householdMembers:
+      3,
+
+    hasPets:
+      "Yes",
+
+    petCount:
+      1,
+
+    petExperience:
+      "Experienced pet owner",
+
+
+    /* HOME PHOTOS */
+
+    homePhotos: [
+      {
+        name:
+          "ana-home-collage-1.jpg",
+
+        url: null,
+      },
+      {
+        name:
+          "ana-home-collage-2.jpg",
+
+        url: null,
+      },
+    ],
+
+
+    /* QUESTIONS */
+
+    whyAdopt:
       "I would like another companion for our current dog.",
 
-    carePlan:
-      "Buddy will have daily exercise and regular veterinary care.",
+    howCare:
+      "Buddy will receive daily exercise, proper food, regular veterinary care, and will live safely inside our home.",
 
-    additionalInfo: "",
 
-    date: "Sep 23, 2026",
-    status: "Rejected",
+    /* TERMS */
+
+    termsAccepted:
+      true,
+
+
+    /* APPLICATION */
+
+    date:
+      "Sep 23, 2026",
+
+    status:
+      "Rejected",
+
+    rejectionReason:
+      "The current living arrangement did not meet the required space and home-safety requirements.",
   },
 ];
+
 
 export default applications;

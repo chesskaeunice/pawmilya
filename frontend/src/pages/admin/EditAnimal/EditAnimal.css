@@ -1,1 +1,203 @@
-/* Uses shared admin form styles. */
+/* =========================================
+   EDIT ANIMAL FORM
+   (the staff-form classes had no styles)
+========================================= */
+
+.staff-form {
+  max-width: 860px;
+
+  overflow: hidden;
+
+  background: white;
+
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+}
+
+
+.staff-form__section {
+  padding: 20px 24px 24px;
+
+  border-bottom: 1px solid #f0e8dc;
+}
+
+
+.staff-form__section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+
+  gap: 4px 12px;
+
+  margin-bottom: 16px;
+}
+
+
+.staff-form__section-header h2 {
+  margin: 0;
+
+  color: var(--color-brown);
+
+  font-size: 16px;
+}
+
+
+.staff-form__section-header p {
+  flex-basis: 100%;
+
+  margin: 0;
+
+  color: var(--color-muted);
+
+  font-size: 12px;
+}
+
+
+.staff-form__grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 16px 20px;
+}
+
+
+.staff-form__field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+
+.staff-form__field--full {
+  grid-column: 1 / -1;
+}
+
+
+.staff-form__field label {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: var(--color-brown);
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.staff-form__field input,
+.staff-form__field select,
+.staff-form__field textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  background: #fffdf9;
+
+  color: var(--color-text);
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.staff-form__field input,
+.staff-form__field select {
+  min-height: 42px;
+}
+
+
+.staff-form__field textarea {
+  min-height: 120px;
+
+  resize: vertical;
+
+  line-height: 1.5;
+}
+
+
+.staff-form__field input:focus,
+.staff-form__field select:focus,
+.staff-form__field textarea:focus {
+  outline: none;
+
+  border-color: var(--color-orange);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(204, 111, 0, 0.14);
+}
+
+
+.staff-form__field input:disabled,
+.staff-form__field select:disabled,
+.staff-form__field textarea:disabled {
+  background: #f6f2ea;
+
+  color: var(--color-muted);
+
+  cursor: not-allowed;
+}
+
+
+.staff-form__lock {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 3px 8px;
+
+  border-radius: 999px;
+
+  background: #f0ebe3;
+
+  color: #6f6252;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+
+.staff-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 16px 24px;
+
+  background: #fffaf2;
+}
+
+
+@media (max-width: 640px) {
+
+  .staff-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .staff-form__section {
+    padding: 16px;
+  }
+
+  .staff-form__actions {
+    padding: 14px 16px;
+  }
+
+}

@@ -1,34 +1,1142 @@
-.adoption-applications__filters {
-  grid-template-columns:
-    minmax(260px, 1fr)
-    170px
-    150px;
+/* =========================================
+   PAGE
+========================================= */
+
+.adoption-applications {
+  width: 100%;
 }
 
-.adoption-applications__actions {
+
+/* =========================================
+   EXPORT
+========================================= */
+
+.adoption-applications__export {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 17px;
+
+  border:
+    1px solid
+    var(--color-orange);
+
+  border-radius: 9px;
+
+  background-color: white;
+
+  color:
+    var(--color-orange);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.adoption-applications__export:hover:not(:disabled) {
+  background-color:
+    var(--color-orange);
+
+  color: white;
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 5px 16px
+    rgba(
+      204,
+      111,
+      0,
+      0.16
+    );
+}
+
+
+.adoption-applications__export:disabled {
+  opacity: 0.4;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   SUMMARY CARDS
+========================================= */
+
+.adoption-applications__summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+
+  margin:
+    22px 0 18px;
+}
+
+
+.adoption-applications__summary-card {
+  min-width: 0;
+
+  min-height: 86px;
+
   display: flex;
   align-items: center;
 
-  gap: 5px;
+  gap: 13px;
+
+  padding:
+    16px 17px;
+
+  background:
+    white;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    12px;
+
+  box-shadow:
+    0 2px 7px
+    rgba(
+      77,
+      42,
+      0,
+      0.025
+    );
 }
 
-.adoption-applications__actions a {
-  color: var(--color-orange);
 
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.adoption-applications__actions button {
-  width: 26px;
-  height: 26px;
+.adoption-applications__summary-icon {
+  width: 38px;
+  height: 38px;
 
   display: grid;
   place-items: center;
 
+  flex-shrink: 0;
+
+  border-radius: 10px;
+
+  background:
+    #f8f4ed;
+
+  color:
+    var(--color-brown);
+}
+
+
+.adoption-applications__summary-card > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+.adoption-applications__summary-card span {
+  overflow: hidden;
+
+  color:
+    var(--color-muted);
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.adoption-applications__summary-card strong {
+  color:
+    var(--color-brown);
+
+  font-size: 22px;
+  line-height: 1;
+}
+
+
+.adoption-applications__summary-card--pending
+.adoption-applications__summary-icon {
+  background:
+    #fff4ce;
+
+  color:
+    #9c6c00;
+}
+
+
+.adoption-applications__summary-card--approved
+.adoption-applications__summary-icon {
+  background:
+    #e4f4e7;
+
+  color:
+    #377a42;
+}
+
+
+.adoption-applications__summary-card--rejected
+.adoption-applications__summary-icon {
+  background:
+    #fde6e3;
+
+  color:
+    #bd4b42;
+}
+
+
+/* =========================================
+   FILTER CARD
+========================================= */
+
+.adoption-applications__filter-card {
+  display: grid;
+
+  grid-template-columns:
+    minmax(280px, 1fr)
+    170px
+    170px;
+
+  gap: 10px;
+
+  margin-bottom:
+    16px;
+
+  padding:
+    12px;
+
+  background:
+    white;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    12px;
+}
+
+
+/* SEARCH */
+
+.adoption-applications__search {
+  min-height: 43px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding:
+    0 13px;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    8px;
+
+  background:
+    white;
+
+  color:
+    var(--color-muted);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.adoption-applications__search:focus-within {
+  border-color:
+    var(--color-orange);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(
+      204,
+      111,
+      0,
+      0.07
+    );
+}
+
+
+.adoption-applications__search input {
+  width: 100%;
+
+  min-width: 0;
+
   border: none;
+  outline: none;
 
-  background: transparent;
+  background:
+    transparent;
 
-  color: var(--color-muted);
+  color:
+    var(--color-text);
+
+  font-family: inherit;
+
+  font-size: 11px;
+}
+
+
+.adoption-applications__search input::placeholder {
+  color:
+    #a49b90;
+}
+
+
+/* FILTER SELECT */
+
+.adoption-applications__filter-card select {
+  min-height: 43px;
+
+  padding:
+    0 11px;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    8px;
+
+  background:
+    white;
+
+  color:
+    var(--color-text);
+
+  font-family:
+    inherit;
+
+  font-size:
+    11px;
+
+  outline:
+    none;
+}
+
+
+.adoption-applications__filter-card select:focus {
+  border-color:
+    var(--color-orange);
+}
+
+
+/* =========================================
+   TABLE CARD
+========================================= */
+
+.adoption-applications__table-card {
+  overflow: visible;
+
+  background:
+    white;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    12px;
+}
+
+
+.adoption-applications__table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding:
+    15px 16px;
+
+  border-bottom:
+    1px solid
+    var(--color-border);
+}
+
+
+.adoption-applications__table-header > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.adoption-applications__table-header strong {
+  color:
+    var(--color-brown);
+
+  font-size:
+    12px;
+}
+
+
+.adoption-applications__table-header span {
+  color:
+    var(--color-muted);
+
+  font-size:
+    9px;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.adoption-applications__table-wrap {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+.adoption-applications__table {
+  min-width:
+    980px;
+}
+
+
+.adoption-applications__table thead th {
+  padding:
+    12px 15px;
+
+  background:
+    #fffdf9;
+
+  color:
+    var(--color-orange);
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.25px;
+}
+
+
+.adoption-applications__table tbody td {
+  padding:
+    14px 15px;
+
+  vertical-align:
+    middle;
+}
+
+
+.adoption-applications__table tbody tr {
+  transition:
+    background-color 0.16s ease;
+}
+
+
+.adoption-applications__table tbody tr:hover {
+  background-color:
+    #fffaf1;
+}
+
+
+/* =========================================
+   APPLICATION ID
+========================================= */
+
+.adoption-applications__id {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+.adoption-applications__id-icon {
+  width: 31px;
+  height: 31px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius:
+    8px;
+
+  background:
+    #fff5dd;
+
+  color:
+    var(--color-orange);
+}
+
+
+.adoption-applications__id > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+
+.adoption-applications__id strong {
+  color:
+    var(--color-brown);
+
+  font-size:
+    10px;
+}
+
+
+.adoption-applications__id > div > span {
+  color:
+    var(--color-muted);
+
+  font-size:
+    8px;
+}
+
+
+/* =========================================
+   APPLICANT
+========================================= */
+
+.adoption-applications__applicant {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+.adoption-applications__avatar {
+  width: 30px;
+  height: 30px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius:
+    50%;
+
+  background:
+    var(--color-cream);
+
+  color:
+    var(--color-brown);
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+}
+
+
+.adoption-applications__applicant strong {
+  color:
+    var(--color-text);
+
+  font-size:
+    10px;
+}
+
+
+/* =========================================
+   PET
+========================================= */
+
+.adoption-applications__pet {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.adoption-applications__pet strong {
+  color:
+    var(--color-brown);
+
+  font-size:
+    10px;
+}
+
+
+.adoption-applications__pet span {
+  color:
+    var(--color-muted);
+
+  font-size:
+    9px;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.adoption-applications__actions-heading {
+  text-align:
+    right;
+}
+
+
+.adoption-applications__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 5px;
+}
+
+
+.adoption-applications__review {
+  min-height:
+    29px;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  padding:
+    0 10px;
+
+  border:
+    1px solid
+    rgba(
+      204,
+      111,
+      0,
+      0.3
+    );
+
+  border-radius:
+    7px;
+
+  background:
+    #fffaf1;
+
+  color:
+    var(--color-orange);
+
+  font-size:
+    9px;
+
+  font-weight:
+    700;
+
+  text-decoration:
+    none;
+
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+
+.adoption-applications__review:hover {
+  border-color:
+    var(--color-orange);
+
+  background:
+    var(--color-orange);
+
+  color:
+    white;
+}
+
+
+/* =========================================
+   MORE MENU
+========================================= */
+
+.adoption-applications__more {
+  position:
+    relative;
+}
+
+
+.adoption-applications__more-button {
+  width:
+    29px;
+
+  height:
+    29px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  border:
+    none;
+
+  border-radius:
+    7px;
+
+  background:
+    transparent;
+
+  color:
+    var(--color-muted);
+
+  cursor:
+    pointer;
+}
+
+
+.adoption-applications__more-button:hover {
+  background:
+    #f7f1e8;
+
+  color:
+    var(--color-brown);
+}
+
+
+.adoption-applications__menu {
+  position:
+    absolute;
+
+  top:
+    calc(100% + 5px);
+
+  right:
+    0;
+
+  z-index:
+    50;
+
+  width:
+    175px;
+
+  padding:
+    5px;
+
+  background:
+    white;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    9px;
+
+  box-shadow:
+    0 12px 30px
+    rgba(
+      77,
+      42,
+      0,
+      0.14
+    );
+}
+
+
+.adoption-applications__menu a,
+.adoption-applications__menu button {
+  width:
+    100%;
+
+  min-height:
+    35px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    8px;
+
+  padding:
+    0 9px;
+
+  border:
+    none;
+
+  border-radius:
+    6px;
+
+  background:
+    transparent;
+
+  color:
+    var(--color-text);
+
+  font-family:
+    inherit;
+
+  font-size:
+    10px;
+
+  text-align:
+    left;
+
+  text-decoration:
+    none;
+
+  cursor:
+    pointer;
+}
+
+
+.adoption-applications__menu a:hover,
+.adoption-applications__menu button:hover {
+  background:
+    #fff8ec;
+
+  color:
+    var(--color-orange);
+}
+
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.adoption-applications__empty {
+  height:
+    190px;
+
+  text-align:
+    center !important;
+}
+
+
+.adoption-applications__empty-icon {
+  width:
+    42px;
+
+  height:
+    42px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  margin:
+    0 auto 10px;
+
+  border-radius:
+    50%;
+
+  background:
+    #f8f3ea;
+
+  color:
+    var(--color-muted);
+}
+
+
+.adoption-applications__empty strong {
+  display:
+    block;
+
+  margin-bottom:
+    5px;
+
+  color:
+    var(--color-brown);
+
+  font-size:
+    13px;
+}
+
+
+.adoption-applications__empty span {
+  color:
+    var(--color-muted);
+
+  font-size:
+    10px;
+}
+
+
+/* =========================================
+   PAGINATION
+========================================= */
+
+.adoption-applications__pagination {
+  min-height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 12px 16px;
+
+  border-top:
+    1px solid
+    var(--color-border);
+}
+
+
+.adoption-applications__pagination > span {
+  color:
+    var(--color-muted);
+
+  font-size: 10px;
+}
+
+
+/* NUMBERED NAV */
+
+.adoption-applications__pages {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+
+.adoption-applications__pages button {
+  min-width: 34px;
+  height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 8px;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius: 8px;
+
+  background-color:
+    white;
+
+  color:
+    var(--color-brown);
+
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+
+.adoption-applications__pages button:hover:not(:disabled) {
+  border-color:
+    var(--color-orange);
+
+  color:
+    var(--color-orange);
+
+  transform:
+    translateY(-1px);
+}
+
+
+.adoption-applications__pages button.active {
+  border-color:
+    var(--color-orange);
+
+  background-color:
+    var(--color-orange);
+
+  color:
+    white;
+
+  font-weight: 700;
+}
+
+
+.adoption-applications__pages button:disabled {
+  opacity: 0.35;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+/* =========================================
+   BIGGER TEXT - APPLICATION LIST
+========================================= */
+
+.adoption-applications__summary-card span {
+  font-size: 11px;
+}
+
+.adoption-applications__summary-card strong {
+  font-size: 24px;
+}
+
+.adoption-applications__search input,
+.adoption-applications__filter-card select {
+  font-size: 12px;
+}
+
+.adoption-applications__table-header strong {
+  font-size: 14px;
+}
+
+.adoption-applications__table-header span {
+  font-size: 11px;
+}
+
+.adoption-applications__table thead th {
+  font-size: 10px;
+}
+
+.adoption-applications__table tbody td {
+  font-size: 12px;
+}
+
+.adoption-applications__id strong,
+.adoption-applications__applicant strong,
+.adoption-applications__pet strong {
+  font-size: 12px;
+}
+
+.adoption-applications__id > div > span,
+.adoption-applications__pet span {
+  font-size: 10px;
+}
+
+.adoption-applications__review {
+  font-size: 11px;
+}
+
+.adoption-applications__pagination > span {
+  font-size: 11px;
+}
+
+.adoption-applications__pages button {
+  font-size: 11px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1050px) {
+
+  .adoption-applications__summary {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .adoption-applications__filter-card {
+    grid-template-columns:
+      1fr
+      160px
+      160px;
+  }
+
+}
+
+
+@media (max-width: 760px) {
+
+  .adoption-applications__summary {
+    grid-template-columns:
+      1fr
+      1fr;
+  }
+
+
+  .adoption-applications__filter-card {
+    grid-template-columns:
+      1fr
+      1fr;
+  }
+
+
+  .adoption-applications__search {
+    grid-column:
+      1 / -1;
+  }
+
+
+  .adoption-applications__pagination {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+}
+
+
+@media (max-width: 520px) {
+
+  .adoption-applications__summary {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .adoption-applications__filter-card {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .adoption-applications__search {
+    grid-column:
+      auto;
+  }
+
 }

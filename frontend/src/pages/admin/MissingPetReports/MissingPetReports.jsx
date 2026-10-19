@@ -1,16 +1,37 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+import {
+  Link,
+} from "react-router-dom";
 
 import {
   ChevronLeft,
   ChevronRight,
-  MoreVertical,
-  Plus,
+  Search,
 } from "lucide-react";
 
 import missingPets from "../../../data/missingPets.js";
 
 import "./MissingPetReports.css";
+
+
+const REPORTS_PER_PAGE = 9;
+
+const STATUS_OPTIONS = [
+  "All",
+  "Lost",
+  "Sighted",
+  "Found",
+  "Reunited",
+  "Adopted",
+  "Transfer",
+  "Adoptable",
+];
+
 
 function MissingPetReports() {
   const [search, setSearch] =
@@ -22,73 +43,261 @@ function MissingPetReports() {
   const [status, setStatus] =
     useState("All");
 
+  const [sort, setSort] =
+    useState("Newest");
+
+  const [currentPage, setCurrentPage] =
+    useState(1);
+
+
+  /* =========================================
+     SEARCH + FILTER + SORT
+  ========================================= */
+
   const filteredPets =
-    missingPets.filter((pet) => {
+    useMemo(() => {
       const query =
-        search.toLowerCase();
+        search
+          .trim()
+          .toLowerCase();
 
-      const matchesSearch =
-        pet.name
-          .toLowerCase()
-          .includes(query) ||
-        pet.breed
-          .toLowerCase()
-          .includes(query) ||
-        pet.location
-          .toLowerCase()
-          .includes(query);
 
-      const matchesType =
-        type === "All" ||
-        pet.type === type;
+      const filtered =
+        missingPets.filter(
+          (pet) => {
 
-      const matchesStatus =
-        status === "All" ||
-        pet.status === status;
+            const reportId =
+              `MPR-${String(
+                pet.id
+              ).padStart(
+                3,
+                "0"
+              )}`;
 
-      return (
-        matchesSearch &&
-        matchesType &&
-        matchesStatus
+
+            const searchableText = [
+              reportId,
+              pet.name,
+              pet.breed,
+              pet.location,
+              pet.type,
+              pet.color,
+              pet.status,
+            ]
+              .filter(Boolean)
+              .join(" ")
+              .toLowerCase();
+
+
+            const matchesSearch =
+              !query ||
+              searchableText.includes(
+                query
+              );
+
+
+            const matchesType =
+              type === "All" ||
+              (
+                type === "Other"
+                  ? ![
+                      "Dog",
+                      "Cat",
+                      "Bird",
+                    ].includes(
+                      pet.type
+                    )
+                  : pet.type ===
+                    type
+              );
+
+
+            const matchesStatus =
+              status === "All" ||
+              pet.status ===
+                status;
+
+
+            return (
+              matchesSearch &&
+              matchesType &&
+              matchesStatus
+            );
+          }
+        );
+
+
+      return [...filtered].sort(
+        (a, b) => {
+
+          if (
+            sort === "Oldest"
+          ) {
+            return (
+              getReportedDate(a) -
+              getReportedDate(b)
+            );
+          }
+
+
+          if (
+            sort === "Name A-Z"
+          ) {
+            return a.name.localeCompare(
+              b.name
+            );
+          }
+
+
+          if (
+            sort === "Name Z-A"
+          ) {
+            return b.name.localeCompare(
+              a.name
+            );
+          }
+
+
+          return (
+            getReportedDate(b) -
+            getReportedDate(a)
+          );
+        }
       );
-    });
+
+    }, [
+      search,
+      type,
+      status,
+      sort,
+    ]);
+
+
+  /* =========================================
+     RESET PAGE
+  ========================================= */
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    search,
+    type,
+    status,
+    sort,
+  ]);
+
+
+  /* =========================================
+     PAGINATION
+  ========================================= */
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(
+      filteredPets.length /
+        REPORTS_PER_PAGE
+    )
+  );
+
+
+  useEffect(() => {
+    if (
+      currentPage >
+      totalPages
+    ) {
+      setCurrentPage(
+        totalPages
+      );
+    }
+  }, [
+    currentPage,
+    totalPages,
+  ]);
+
+
+  const startIndex =
+    (currentPage - 1) *
+    REPORTS_PER_PAGE;
+
+
+  const endIndex =
+    Math.min(
+      startIndex +
+        REPORTS_PER_PAGE,
+      filteredPets.length
+    );
+
+
+  const visiblePets =
+    filteredPets.slice(
+      startIndex,
+      endIndex
+    );
+
 
   return (
-    <div className="staff-page">
+    <div className="staff-page missing-admin">
+
+      {/* =====================================
+          HEADER
+      ====================================== */}
+
       <div className="staff-page__top">
+
         <div>
-          <p className="staff-page__breadcrumb">
-            Missing Pets
-          </p>
+
 
           <h1 className="staff-page__title">
             Missing Pet Reports
           </h1>
 
+
           <p className="staff-page__subtitle">
-            View and manage all missing pet reports in Pawmilya.
+            Review reported pets,
+            last-seen information, and
+            their current status.
           </p>
+
         </div>
+
       </div>
 
-      <div className="staff-filters">
-        <input
-          type="text"
-          placeholder="Search by name, ID, or breed..."
-          value={search}
-          onChange={(event) =>
-            setSearch(event.target.value)
-          }
-        />
+
+      {/* =====================================
+          FILTERS
+      ====================================== */}
+
+      <div className="missing-admin__filters">
+
+        <div className="missing-admin__search">
+
+          <Search size={17} />
+
+
+          <input
+            type="text"
+            placeholder="Search name, report ID, breed, location, color, or status..."
+            value={search}
+            onChange={(event) =>
+              setSearch(
+                event.target.value
+              )
+            }
+          />
+
+        </div>
+
 
         <select
           value={type}
           onChange={(event) =>
-            setType(event.target.value)
+            setType(
+              event.target.value
+            )
           }
         >
           <option value="All">
-            All Types
+            All Animals
           </option>
 
           <option value="Dog">
@@ -98,156 +307,501 @@ function MissingPetReports() {
           <option value="Cat">
             Cat
           </option>
+
+          <option value="Bird">
+            Bird
+          </option>
+
+          <option value="Other">
+            Other
+          </option>
         </select>
+
 
         <select
           value={status}
           onChange={(event) =>
-            setStatus(event.target.value)
+            setStatus(
+              event.target.value
+            )
           }
         >
-          <option value="All">
-            All Statuses
-          </option>
 
-          <option value="Active">
-            Active
-          </option>
+          {STATUS_OPTIONS.map(
+            (option) => (
+              <option
+                key={option}
+                value={option}
+              >
+                {option === "All"
+                  ? "All Statuses"
+                  : option}
+              </option>
+            )
+          )}
 
-          <option value="Reunited">
-            Reunited
-          </option>
         </select>
 
-        <select>
-          <option>
+
+        <select
+          value={sort}
+          onChange={(event) =>
+            setSort(
+              event.target.value
+            )
+          }
+        >
+          <option value="Newest">
             Newest First
           </option>
 
-          <option>
+          <option value="Oldest">
             Oldest First
+          </option>
+
+          <option value="Name A-Z">
+            Pet Name A-Z
+          </option>
+
+          <option value="Name Z-A">
+            Pet Name Z-A
           </option>
         </select>
 
-        <button className="staff-button">
-          <Plus size={13} />
-          Add Animal
-        </button>
       </div>
 
-      <div className="staff-table-card">
-        <table className="staff-table">
-          <thead>
-            <tr>
-              <th>Report ID</th>
-              <th>Photo</th>
-              <th>Pet Name</th>
-              <th>Type</th>
-              <th>Last Seen / Location</th>
-              <th>Date Reported</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
 
-          <tbody>
-            {filteredPets.map((pet) => (
-              <tr key={pet.id}>
-                <td>
-                  MPR-
-                  {String(
-                    pet.id
-                  ).padStart(3, "0")}
-                </td>
+      {/* =====================================
+          TABLE
+      ====================================== */}
 
-                <td>
-                  <div className="staff-table__photo">
-                    Photo
-                  </div>
-                </td>
+      <div className="missing-admin__table-card">
 
-                <td>
-                  <strong>
-                    {pet.name}
-                  </strong>
-                </td>
+        <div className="missing-admin__table-heading">
 
-                <td>
-                  {pet.type}
-                </td>
+          <div>
 
-                <td>
-                  {pet.location}
-                </td>
+            <strong>
+              Report Records
+            </strong>
 
-                <td>
-                  {pet.dateReported}
-                </td>
 
-                <td>
-                  <span
-                    className={`staff-status ${
-                      pet.status ===
-                      "Reunited"
-                        ? "staff-status--approved"
-                        : "staff-status--active"
-                    }`}
-                  >
-                    {pet.status}
-                  </span>
-                </td>
+            <span>
+              {filteredPets.length}{" "}
+              {filteredPets.length === 1
+                ? "report"
+                : "reports"}{" "}
+              found
+            </span>
 
-                <td>
-                  <div className="missing-admin__actions">
-                    <Link
-                      to={`/admin/missing-pets/${pet.id}`}
-                    >
-                      View
-                    </Link>
+          </div>
 
-                    <button type="button">
-                      <MoreVertical
-                        size={14}
-                      />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
 
-        <div className="staff-pagination">
           <span>
-            Showing 1-
-            {filteredPets.length} of{" "}
-            {filteredPets.length} animals
+            Page {currentPage} of{" "}
+            {totalPages}
           </span>
 
-          <div className="staff-pagination__pages">
-            <button>
-              <ChevronLeft size={12} />
-            </button>
+        </div>
 
-            <button className="active">
-              1
-            </button>
 
-            <button>2</button>
-            <button>3</button>
-            <button>4</button>
-            <button>5</button>
+        <div className="missing-admin__table-wrap">
 
-            <button>
-              <ChevronRight
-                size={12}
+          <table className="staff-table missing-admin__table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Report ID
+                </th>
+
+                <th>
+                  Photo
+                </th>
+
+                <th>
+                  Pet
+                </th>
+
+                <th>
+                  Type
+                </th>
+
+                <th>
+                  Last Seen
+                </th>
+
+                <th>
+                  Reported
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th>
+                  Action
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              {visiblePets.length >
+              0 ? (
+
+                visiblePets.map(
+                  (pet) => {
+
+                    const reportId =
+                      `MPR-${String(
+                        pet.id
+                      ).padStart(
+                        3,
+                        "0"
+                      )}`;
+
+
+                    const photo =
+                      pet.petImages?.[0] ||
+                      pet.image;
+
+
+                    return (
+                      <tr key={pet.id}>
+
+                        <td>
+
+                          <strong className="missing-admin__report-id">
+                            {reportId}
+                          </strong>
+
+                        </td>
+
+
+                        <td>
+
+                          <div className="missing-admin__photo">
+
+                            {photo ? (
+                              <img
+                                src={photo}
+                                alt={pet.name}
+                              />
+                            ) : (
+                              <span>
+                                Pet
+                              </span>
+                            )}
+
+                          </div>
+
+                        </td>
+
+
+                        <td>
+
+                          <div className="missing-admin__pet">
+
+                            <strong>
+                              {pet.name}
+                            </strong>
+
+                            <span>
+                              {pet.breed}
+                            </span>
+
+                          </div>
+
+                        </td>
+
+
+                        <td>
+                          {pet.type}
+                        </td>
+
+
+                        <td>
+
+                          <div className="missing-admin__last-seen">
+
+                            <strong>
+                              {pet.location}
+                            </strong>
+
+                            <span>
+                              {formatTimestamp(
+                                pet.lastSeen
+                              )}
+                            </span>
+
+                          </div>
+
+                        </td>
+
+
+                        <td>
+                          {formatTimestamp(
+                            pet.reportedAt
+                          )}
+                        </td>
+
+
+                        <td>
+
+                          <StatusBadge
+                            status={
+                              pet.status
+                            }
+                          />
+
+                        </td>
+
+
+                        <td>
+
+                          <Link
+                            to={`/admin/missing-pets/${pet.id}`}
+                            className="missing-admin__review"
+                          >
+                            Review
+                          </Link>
+
+                        </td>
+
+                      </tr>
+                    );
+                  }
+                )
+
+              ) : (
+
+                <tr>
+
+                  <td
+                    colSpan="8"
+                    className="missing-admin__empty"
+                  >
+                    <strong>
+                      No reports found
+                    </strong>
+
+                    <span>
+                      Try changing your
+                      search or filters.
+                    </span>
+                  </td>
+
+                </tr>
+
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        {/* =====================================
+            NUMBERED PAGINATION
+        ====================================== */}
+
+        <div className="missing-admin__pagination">
+
+          <span>
+
+            {filteredPets.length > 0
+              ? `Showing ${
+                  startIndex + 1
+                }-${endIndex} of ${
+                  filteredPets.length
+                } reports`
+              : "Showing 0 reports"}
+
+          </span>
+
+
+          <div className="missing-admin__pages">
+
+            <button
+              type="button"
+              disabled={
+                currentPage === 1
+              }
+              onClick={() =>
+                setCurrentPage(
+                  (page) =>
+                    Math.max(
+                      1,
+                      page - 1
+                    )
+                )
+              }
+              aria-label="Previous page"
+            >
+              <ChevronLeft
+                size={14}
               />
             </button>
+
+
+            {Array.from(
+              {
+                length:
+                  totalPages,
+              },
+              (_, index) =>
+                index + 1
+            ).map((page) => (
+
+              <button
+                type="button"
+                key={page}
+                className={
+                  currentPage ===
+                  page
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setCurrentPage(
+                    page
+                  )
+                }
+              >
+                {page}
+              </button>
+
+            ))}
+
+
+            <button
+              type="button"
+              disabled={
+                currentPage ===
+                totalPages
+              }
+              onClick={() =>
+                setCurrentPage(
+                  (page) =>
+                    Math.min(
+                      totalPages,
+                      page + 1
+                    )
+                )
+              }
+              aria-label="Next page"
+            >
+              <ChevronRight
+                size={14}
+              />
+            </button>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
   );
 }
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+function StatusBadge({
+  status,
+}) {
+  const className =
+    status
+      ?.toLowerCase()
+      .replaceAll(
+        " ",
+        "-"
+      );
+
+
+  return (
+    <span
+      className={`missing-admin__status missing-admin__status--${className}`}
+    >
+      {status}
+    </span>
+  );
+}
+
+
+/* =========================================
+   DATE
+========================================= */
+
+function getReportedDate(pet) {
+  const date =
+    new Date(
+      pet.reportedAt
+    );
+
+
+  return Number.isNaN(
+    date.getTime()
+  )
+    ? 0
+    : date.getTime();
+}
+
+
+function formatTimestamp(value) {
+  if (!value) {
+    return "Not specified";
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return "Not specified";
+  }
+
+
+  const datePart =
+    date.toLocaleDateString(
+      "en-US",
+      {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }
+    );
+
+
+  const timePart =
+    date.toLocaleTimeString(
+      "en-US",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }
+    );
+
+
+  return `${datePart} • ${timePart}`;
+}
+
 
 export default MissingPetReports;

@@ -58,9 +58,6 @@ function Animals() {
       <div className="staff-page__top">
 
         <div>
-          <p className="staff-page__breadcrumb">
-            Animals
-          </p>
 
           <h1 className="staff-page__title">
             Animals

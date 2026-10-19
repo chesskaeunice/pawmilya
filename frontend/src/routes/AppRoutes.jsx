@@ -28,6 +28,7 @@ import RequireSignIn from "../components/common/RequireSignIn.jsx";
 import MockLoginHandler from "../components/common/MockLoginHandler.jsx";
 
 /* STAFF PAGES */
+import AdoptionCounselorDashboard from "../pages/admin/dashboards/AdoptionCounselorDashboard.jsx";
 import Dashboard from "../pages/admin/Dashboard/Dashboard.jsx";
 
 import Animals from "../pages/admin/Animals/Animals.jsx";
@@ -156,11 +157,15 @@ function AppRoutes() {
       </Route>
 
 
-      {/* =========================
+      {/* =====================================
           STAFF SIDE
-      ========================== */}
+      ====================================== */}
 
       <Route element={<AdminLayout />}>
+
+        {/* =================================
+            ADMIN ROOT
+        ================================== */}
 
         <Route
           path="/admin"
@@ -174,58 +179,108 @@ function AppRoutes() {
 
         <Route
           path="/admin/dashboard"
-          element={<Dashboard />}
+          element={
+            <Dashboard />
+          }
         />
+
+        <Route
+          path="/admin/dashboard/adoption-counselor"
+          element={<AdoptionCounselorDashboard />}
+        />
+
+
+        {/* =================================
+            ANIMALS
+        ================================== */}
 
         <Route
           path="/admin/animals"
           element={<Animals />}
         />
 
+
         <Route
           path="/admin/animals/add"
           element={<AddAnimal />}
         />
+
 
         <Route
           path="/admin/animals/:animalId"
           element={<AnimalDetails />}
         />
 
+
         <Route
           path="/admin/animals/:animalId/edit"
           element={<EditAnimal />}
         />
 
+
+        {/* =================================
+            ADOPTION APPLICATIONS
+        ================================== */}
+
         <Route
           path="/admin/adoption-applications"
-          element={<AdoptionApplications />}
+          element={
+            <AdoptionApplications />
+          }
         />
+
 
         <Route
           path="/admin/adoption-applications/:applicationId"
-          element={<AdoptionApplicationDetails />}
+          element={
+            <AdoptionApplicationDetails />
+          }
         />
+
+
+        {/* =================================
+            MISSING PET REPORTS
+        ================================== */}
 
         <Route
           path="/admin/missing-pets"
-          element={<MissingPetReports />}
+          element={
+            <MissingPetReports />
+          }
         />
+
 
         <Route
           path="/admin/missing-pets/:reportId"
-          element={<MissingPetReportDetails />}
+          element={
+            <MissingPetReportDetails />
+          }
         />
+
+
+        {/* =================================
+            VACCINATIONS
+        ================================== */}
 
         <Route
           path="/admin/vaccinations"
           element={<Vaccinations />}
         />
 
+
+        {/* =================================
+            REPORTS
+        ================================== */}
+
         <Route
           path="/admin/reports"
           element={<Reports />}
         />
+
+
+        {/* =================================
+            SETTINGS
+        ================================== */}
 
         <Route
           path="/admin/settings"
@@ -237,5 +292,6 @@ function AppRoutes() {
     </Routes>
   );
 }
+
 
 export default AppRoutes;
