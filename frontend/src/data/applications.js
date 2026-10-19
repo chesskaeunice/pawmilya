@@ -41,11 +41,11 @@ const applications = [
     birthDate:
       "1999-05-14",
 
-    occupation:
+    employmentStatus:
       "Employed",
 
-    company:
-      "Sample Company",
+    work:
+      "Bank Teller",
 
     socialMedia:
       "https://facebook.com/maria.sample",
@@ -190,11 +190,17 @@ const applications = [
     birthDate:
       "1996-03-22",
 
-    occupation:
-      "Employed",
+    employmentStatus:
+      "Self-employed",
 
-    company:
-      "Sample Tech",
+    work:
+      "Sari-sari store owner",
+
+    selfEmployedField:
+      "Retail / Sales",
+
+    selfEmployedFieldOther:
+      "",
 
     socialMedia:
       "https://facebook.com/john.sample",
@@ -329,11 +335,17 @@ const applications = [
     birthDate:
       "2001-07-09",
 
-    occupation:
-      "Self-Employed",
+    employmentStatus:
+      "Self-employed",
 
-    company:
-      "Ana's Online Shop",
+    work:
+      "Pet grooming",
+
+    selfEmployedField:
+      "Other",
+
+    selfEmployedFieldOther:
+      "Pet services",
 
     socialMedia:
       "https://facebook.com/ana.sample",

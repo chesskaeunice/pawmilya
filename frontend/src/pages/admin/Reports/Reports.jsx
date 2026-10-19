@@ -880,9 +880,9 @@ function AnimalsReport() {
         />
 
         <ReportStat
-          value={scoped.filter((p) => p.status === "Available").length}
+          value={scoped.filter((p) => p.status === "Available for Adoption").length}
           label="Available for Adoption"
-          onClick={() => go("/admin/animals", { status: "Available", type: typeParam })}
+          onClick={() => go("/admin/animals", { status: "Available for Adoption", type: typeParam })}
         />
 
         <ReportStat

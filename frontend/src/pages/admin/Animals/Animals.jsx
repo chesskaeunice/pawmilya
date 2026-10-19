@@ -9,6 +9,12 @@ import {
 } from "lucide-react";
 
 import pets from "../../../data/pets.js";
+import {
+  ANIMAL_STATUSES,
+  HEALTH_STATUSES,
+  healthStatusClass,
+  statusClass,
+} from "../../../config/animalStatus.js";
 
 import "./Animals.css";
 
@@ -16,6 +22,7 @@ function Animals() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [healthFilter, setHealthFilter] = useState("All");
   const [sortOrder, setSortOrder] = useState("Newest");
 
   const filteredPets = pets
@@ -34,10 +41,15 @@ function Animals() {
         statusFilter === "All" ||
         pet.status === statusFilter;
 
+      const matchesHealth =
+        healthFilter === "All" ||
+        pet.health_status === healthFilter;
+
       return (
         matchesSearch &&
         matchesType &&
-        matchesStatus
+        matchesStatus &&
+        matchesHealth
       );
     })
     .sort((a, b) => {
@@ -119,25 +131,29 @@ function Animals() {
             All Statuses
           </option>
 
-          <option value="Available">
-            Available
+          {ANIMAL_STATUSES.map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
+
+
+        <select
+          value={healthFilter}
+          onChange={(event) =>
+            setHealthFilter(event.target.value)
+          }
+        >
+          <option value="All">
+            All Health Statuses
           </option>
 
-          <option value="Under Observation">
-            Under Observation
-          </option>
-
-          <option value="Pending Adoption">
-            Pending Adoption
-          </option>
-
-          <option value="Adopted">
-            Adopted
-          </option>
-
-          <option value="Reunited">
-            Reunited
-          </option>
+          {HEALTH_STATUSES.map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
         </select>
 
 
@@ -184,6 +200,7 @@ function Animals() {
               <th>Type</th>
               <th>Breed</th>
               <th>Status</th>
+              <th>Health Status</th>
               <th>Date Rescued</th>
               <th>Actions</th>
             </tr>
@@ -227,16 +244,22 @@ function Animals() {
 
                 <td>
                   <span
-                    className={`staff-status ${
-                      pet.status === "Available"
-                        ? "staff-status--available"
-                        : pet.status === "Adopted" ||
-                          pet.status === "Reunited"
-                        ? "staff-status--approved"
-                        : "staff-status--pending"
-                    }`}
+                    className={`staff-status ${statusClass(
+                      pet.status
+                    )}`}
                   >
                     {pet.status}
+                  </span>
+                </td>
+
+
+                <td>
+                  <span
+                    className={`staff-status ${healthStatusClass(
+                      pet.health_status
+                    )}`}
+                  >
+                    {pet.health_status}
                   </span>
                 </td>
 

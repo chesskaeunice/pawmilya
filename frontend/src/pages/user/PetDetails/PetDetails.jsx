@@ -5,7 +5,7 @@ import pets from "../../../data/pets.js";
 import BackButton from "../../../components/common/BackButton.jsx";
 import PreviewStatus from "../../../components/landing/PreviewStatus.jsx";
 import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
-import { getAdoptableStatus } from "../../../services/previewService.js";
+import { getAdoptableStatus, isAdoptable } from "../../../services/previewService.js";
 import useAuth from "../../../hooks/useAuth.js";
 import useModals from "../../../hooks/useModals.js";
 
@@ -20,7 +20,7 @@ function PetDetails() {
     (pet) => pet.id === Number(petId)
   );
 
-  if (!pet) {
+  if (!isAdoptable(pet)) {
     return (
       <div className="pet-details__not-found">
 

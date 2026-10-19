@@ -35,9 +35,8 @@ const ACTIVE_MISSING_STATUSES = [
 ];
 
 const ATTENTION_STATUSES = [
-  "Critical",
   "Under Treatment",
-  "Needs Checkup",
+  "Under Observation",
 ];
 
 
@@ -56,14 +55,14 @@ function KennelManagerDashboard() {
         available:
           animals.filter(
             (animal) =>
-              animal.status === "Available"
+              animal.status === "Available for Adoption"
           ).length,
 
         healthAttention:
           animals.filter(
             (animal) =>
               ATTENTION_STATUSES.includes(
-                animal.healthStatus
+                animal.health_status
               )
           ).length,
 

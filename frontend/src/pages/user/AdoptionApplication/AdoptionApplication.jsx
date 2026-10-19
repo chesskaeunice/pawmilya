@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import pets from "../../../data/pets.js";
+import { isAdoptable } from "../../../services/previewService.js";
 import ImageDropzone from "../../../components/report/ImageDropzone.jsx";
 
 import "./AdoptionApplication.css";
@@ -11,11 +12,15 @@ import "../../../components/common/ModalForm.css";
 const STATUS_OPTIONS = ["Single", "Married", "Other"];
 const PRONOUN_OPTIONS = ["She/her", "He/him", "They/them"];
 const PROMPT_OPTIONS = ["Friends", "Website", "Social Media", "Others"];
-const OCCUPATION_OPTIONS = [
-  "Student",
-  "Employed",
-  "Self-Employed",
-  "Unemployed",
+const EMPLOYMENT_OPTIONS = ["Student", "Employed", "Self-employed", "Unemployed"];
+const SELF_EMPLOYED_FIELDS = [
+  "Retail / Sales",
+  "Food & Beverage",
+  "Freelance / Online",
+  "Agriculture / Fishing",
+  "Transport",
+  "Services",
+  "Other",
 ];
 
 // Home photos: at least 2, at most 3 images
@@ -42,7 +47,8 @@ function Required() {
   );
 }
 
-function RadioGroup({ name, options, legend }) {
+// Uncontrolled by default; pass value + onChange to control it
+function RadioGroup({ name, options, legend, value, onChange }) {
   return (
     <fieldset className="adoption-form__field adoption-form__radio-group">
       <legend>
@@ -53,7 +59,16 @@ function RadioGroup({ name, options, legend }) {
       <div className="adoption-form__radio-options">
         {options.map((option) => (
           <label key={option} className="adoption-form__radio">
-            <input type="radio" name={name} value={option} required />
+            <input
+              type="radio"
+              name={name}
+              value={option}
+              required
+              {...(onChange && {
+                checked: value === option,
+                onChange: () => onChange(option),
+              })}
+            />
             <span>{option}</span>
           </label>
         ))}
@@ -78,6 +93,10 @@ function AdoptionApplication() {
   const { petId } = useParams();
 
   const [hasPets, setHasPets] = useState("");
+  const [employmentStatus, setEmploymentStatus] = useState("");
+  const [work, setWork] = useState("");
+  const [selfEmployedField, setSelfEmployedField] = useState("");
+  const [selfEmployedFieldOther, setSelfEmployedFieldOther] = useState("");
   const [validId, setValidId] = useState(null);
   // home photos as ImageDropzone items: { id, file, url }
   const [photos, setPhotos] = useState([]);
@@ -86,7 +105,7 @@ function AdoptionApplication() {
 
   const pet = pets.find((pet) => pet.id === Number(petId));
 
-  if (!pet) {
+  if (!isAdoptable(pet)) {
     return (
       <div className="adoption-form__not-found">
         <h1>Pet not found.</h1>
@@ -95,6 +114,14 @@ function AdoptionApplication() {
       </div>
     );
   }
+
+  // switching status clears the extra fields
+  const handleEmploymentChange = (next) => {
+    setEmploymentStatus(next);
+    setWork("");
+    setSelfEmployedField("");
+    setSelfEmployedFieldOther("");
+  };
 
   const handlePhotos = (next) => {
     setPhotos(next);
@@ -188,31 +215,77 @@ function AdoptionApplication() {
                   <input id="birthDate" type="date" required />
                 </div>
 
-                <div className="adoption-form__field">
-                  <label htmlFor="occupation">
-                    Occupation
-                    <Required />
-                  </label>
+                <RadioGroup
+                  legend="Employment Status"
+                  name="employmentStatus"
+                  options={EMPLOYMENT_OPTIONS}
+                  value={employmentStatus}
+                  onChange={handleEmploymentChange}
+                />
 
-                  <select id="occupation" defaultValue="" required>
-                    <option value="" disabled>
-                      Select occupation
-                    </option>
-                    {OCCUPATION_OPTIONS.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                {(employmentStatus === "Employed" ||
+                  employmentStatus === "Self-employed") && (
+                  <div className="adoption-form__field">
+                    <label htmlFor="work">
+                      Work
+                      <Required />
+                    </label>
+                    <input
+                      id="work"
+                      type="text"
+                      value={work}
+                      onChange={(event) => setWork(event.target.value)}
+                      required
+                    />
+                  </div>
+                )}
+
+                {employmentStatus === "Self-employed" && (
+                  <div className="adoption-form__field">
+                    <label htmlFor="selfEmployedField">
+                      Field
+                      <Required />
+                    </label>
+
+                    <select
+                      id="selfEmployedField"
+                      value={selfEmployedField}
+                      onChange={(event) => {
+                        setSelfEmployedField(event.target.value);
+                        setSelfEmployedFieldOther("");
+                      }}
+                      required
+                    >
+                      <option value="" disabled>
+                        Select field
                       </option>
-                    ))}
-                  </select>
-                </div>
+                      {SELF_EMPLOYED_FIELDS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
-                {/* Optional field */}
-                <div className="adoption-form__field">
-                  <label htmlFor="company">
-                    Company/Business Name (N/A if none)
-                  </label>
-                  <input id="company" type="text" placeholder="N/A" />
-                </div>
+                {employmentStatus === "Self-employed" &&
+                  selfEmployedField === "Other" && (
+                    <div className="adoption-form__field">
+                      <label htmlFor="selfEmployedFieldOther">
+                        Specify Field
+                        <Required />
+                      </label>
+                      <input
+                        id="selfEmployedFieldOther"
+                        type="text"
+                        value={selfEmployedFieldOther}
+                        onChange={(event) =>
+                          setSelfEmployedFieldOther(event.target.value)
+                        }
+                        required
+                      />
+                    </div>
+                  )}
 
                 <div className="adoption-form__field">
                   <label htmlFor="socialMedia">
@@ -229,7 +302,7 @@ function AdoptionApplication() {
 
                 <RadioGroup
                   legend="Status"
-                  name="status"
+                  name="civilStatus"
                   options={STATUS_OPTIONS}
                 />
 

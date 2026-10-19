@@ -26,15 +26,13 @@ import "./VetTechDashboard.css";
 
 
 const ATTENTION_STATUSES = [
-  "Critical",
   "Under Treatment",
-  "Needs Checkup",
+  "Under Observation",
 ];
 
 const ATTENTION_PRIORITY = {
-  "Critical": 0,
-  "Under Treatment": 1,
-  "Needs Checkup": 2,
+  "Under Treatment": 0,
+  "Under Observation": 1,
 };
 
 
@@ -127,16 +125,16 @@ function VetTechDashboard() {
       return animals
         .filter((animal) =>
           ATTENTION_STATUSES.includes(
-            animal.healthStatus
+            animal.health_status
           )
         )
         .sort(
           (a, b) =>
             ATTENTION_PRIORITY[
-              a.healthStatus
+              a.health_status
             ] -
             ATTENTION_PRIORITY[
-              b.healthStatus
+              b.health_status
             ]
         );
     }, []);
@@ -525,7 +523,7 @@ function VetTechDashboard() {
 
                             <HealthStatus
                               status={
-                                animal.healthStatus
+                                animal.health_status
                               }
                             />
 

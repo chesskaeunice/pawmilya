@@ -5,7 +5,6 @@ const missingPets = [
     type: "Cat",
     breed: "Domestic Shorthair",
     color: "Gray",
-    age: "2 years old",
     sex: "Male",
 
     location: "Katipunan, Quezon City",
@@ -29,7 +28,6 @@ const missingPets = [
     type: "Dog",
     breed: "Golden Retriever",
     color: "Golden",
-    age: "4 years old",
     sex: "Male",
 
     location: "Quezon City",
@@ -53,7 +51,6 @@ const missingPets = [
     type: "Cat",
     breed: "Domestic Shorthair",
     color: "White",
-    age: "1 year old",
     sex: "Female",
 
     location: "Manila",
@@ -77,7 +74,6 @@ const missingPets = [
     type: "Dog",
     breed: "Aspin",
     color: "Brown and White",
-    age: "3 years old",
     sex: "Male",
 
     location: "Makati City",
@@ -101,7 +97,6 @@ const missingPets = [
     type: "Cat",
     breed: "Siamese",
     color: "Cream and Brown",
-    age: "2 years old",
     sex: "Female",
 
     location: "Pasig City",
@@ -125,7 +120,6 @@ const missingPets = [
     type: "Dog",
     breed: "Shih Tzu",
     color: "White and Brown",
-    age: "5 years old",
     sex: "Female",
 
     location: "Mandaluyong City",
@@ -149,7 +143,6 @@ const missingPets = [
     type: "Cat",
     breed: "Puspin",
     color: "Gray and White",
-    age: "1 year old",
     sex: "Male",
 
     location: "Marikina City",
@@ -173,7 +166,6 @@ const missingPets = [
     type: "Dog",
     breed: "Labrador Retriever",
     color: "Black",
-    age: "3 years old",
     sex: "Female",
 
     location: "Taguig City",
@@ -197,7 +189,6 @@ const missingPets = [
     type: "Cat",
     breed: "Domestic Shorthair",
     color: "Orange / Ginger",
-    age: "4 years old",
     sex: "Male",
 
     location: "San Juan City",
@@ -221,7 +212,6 @@ const missingPets = [
     type: "Dog",
     breed: "Mixed Breed",
     color: "Black and Tan",
-    age: "2 years old",
     sex: "Male",
 
     location: "Pasay City",
@@ -245,7 +235,6 @@ const missingPets = [
     type: "Cat",
     breed: "Domestic Longhair",
     color: "Black and White",
-    age: "3 years old",
     sex: "Female",
 
     location: "Parañaque City",
@@ -269,7 +258,6 @@ const missingPets = [
     type: "Dog",
     breed: "Chihuahua Mix",
     color: "Tan and White",
-    age: "2 years old",
     sex: "Male",
 
     location: "Quezon City",

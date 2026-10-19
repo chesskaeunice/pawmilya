@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Link,
   useParams,
@@ -9,6 +11,13 @@ import pets from "../../../data/pets.js";
 
 import useAuth from "../../../hooks/useAuth.js";
 
+import {
+  ADOPTION_NEEDS_CLEARED_MESSAGE,
+  ANIMAL_STATUSES,
+  canBeAdoptable,
+  HEALTH_STATUSES,
+} from "../../../config/animalStatus.js";
+
 import "./EditAnimal.css";
 
 
@@ -19,6 +28,14 @@ function EditAnimal() {
   const pet = pets.find(
     (item) => item.id === Number(animalId)
   );
+
+  const [status, setStatus] = useState(pet?.status);
+  const [healthStatus, setHealthStatus] = useState(pet?.health_status);
+
+  // Shown with the browser's own validation message (no extra styling)
+  const statusMessage = canBeAdoptable(status, healthStatus)
+    ? ""
+    : ADOPTION_NEEDS_CLEARED_MESSAGE;
 
   if (!pet) {
     return (
@@ -164,13 +181,31 @@ function EditAnimal() {
             >
               <select
                 id="status"
-                defaultValue={pet.status}
+                value={status}
+                onChange={(event) => setStatus(event.target.value)}
+                ref={(node) => node?.setCustomValidity(statusMessage)}
                 disabled={!canEditStatus}
               >
-                <option>Available</option>
-                <option>Under Observation</option>
-                <option>Pending Adoption</option>
-                <option>Adopted</option>
+                {ANIMAL_STATUSES.map((value) => (
+                  <option key={value}>{value}</option>
+                ))}
+              </select>
+            </Field>
+
+            <Field
+              label="Health Status"
+              htmlFor="healthStatus"
+              locked={!canEditStatus}
+            >
+              <select
+                id="healthStatus"
+                value={healthStatus}
+                onChange={(event) => setHealthStatus(event.target.value)}
+                disabled={!canEditStatus}
+              >
+                {HEALTH_STATUSES.map((value) => (
+                  <option key={value}>{value}</option>
+                ))}
               </select>
             </Field>
 

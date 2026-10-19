@@ -1,20 +1,27 @@
 // Landing page data helpers. They read mock data now; replace the bodies with
 // API calls later and keep the same return shapes.
 import pets from "../data/pets.js";
+import { ADOPTABLE_STATUS } from "../config/animalStatus.js";
 import missingPets from "../data/missingPets.js";
 import articles from "../data/articles.js";
 
 const newestFirst = (field) => (a, b) =>
   new Date(b[field]).getTime() - new Date(a[field]).getTime();
 
-// pets.js currently uses "Available"; the UI calls it "Adoptable".
+// pets.js uses the paper status "Available for Adoption"; the UI calls it "Adoptable".
+
 export function getAdoptableStatus(status) {
-  return status === "Available" ? "Adoptable" : status;
+  return status === ADOPTABLE_STATUS ? "Adoptable" : status;
+}
+
+// Citizen pages only show animals that are open for adoption.
+export function isAdoptable(pet) {
+  return pet?.status === ADOPTABLE_STATUS;
 }
 
 export function getLatestAdoptablePets(limit = 6) {
   return pets
-    .filter((pet) => getAdoptableStatus(pet.status) === "Adoptable")
+    .filter(isAdoptable)
     .sort(newestFirst("dateAdded"))
     .slice(0, limit);
 }

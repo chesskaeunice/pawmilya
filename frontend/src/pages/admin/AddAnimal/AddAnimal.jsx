@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 import { ChevronLeft, Plus, X } from "lucide-react";
 
+import {
+  ADOPTION_NEEDS_CLEARED_MESSAGE,
+  ANIMAL_STATUSES,
+  canBeAdoptable,
+  DEFAULT_HEALTH_STATUS,
+  DEFAULT_STATUS,
+  HEALTH_STATUSES,
+} from "../../../config/animalStatus.js";
+
 import "./AddAnimal.css";
 
 const MIN_IMAGES = 3;
@@ -11,14 +20,6 @@ const MAX_TRAITS = 6;
 const MAX_ABOUT = 500;
 
 const TYPE_OPTIONS = ["Dog", "Cat"];
-
-const STATUS_OPTIONS = [
-  "Under Observation",
-  "Available",
-  "Pending Adoption",
-  "Adopted",
-  "Reunited",
-];
 
 const LOCATION_SUGGESTIONS = ["Main Animal Pound", "Foster Home", "Vet Clinic"];
 
@@ -192,7 +193,8 @@ function AddAnimal() {
     ageValue: "",
     ageUnit: "years",
     gender: "",
-    status: "Under Observation",
+    status: DEFAULT_STATUS,
+    healthStatus: DEFAULT_HEALTH_STATUS,
     dateRescued: todayISO(),
     location: "",
     about: "",
@@ -203,9 +205,17 @@ function AddAnimal() {
   const [traits, setTraits] = useState([]);
   const [traitInput, setTraitInput] = useState("");
   const [traitError, setTraitError] = useState("");
+  const [statusError, setStatusError] = useState("");
 
   const update = (key) => (event) =>
     setForm((current) => ({ ...current, [key]: event.target.value }));
+
+  // clears the status message once status / health status are valid again
+  const updateStatus = (key) => (event) => {
+    const next = { ...form, [key]: event.target.value };
+    if (canBeAdoptable(next.status, next.healthStatus)) setStatusError("");
+    setForm(next);
+  };
 
   const animalName = form.name.trim();
 
@@ -253,6 +263,11 @@ function AddAnimal() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (!canBeAdoptable(form.status, form.healthStatus)) {
+      setStatusError(ADOPTION_NEEDS_CLEARED_MESSAGE);
+      return;
+    }
+
     const pendingTrait = traitInput.trim();
     const finalTraits = pendingTrait
       ? [...traits, pendingTrait.charAt(0).toUpperCase() + pendingTrait.slice(1)]
@@ -274,6 +289,7 @@ function AddAnimal() {
       age: `${ageNumber} ${unit} old`,
       gender: form.gender,
       status: form.status,
+      health_status: form.healthStatus,
       dateRescued: form.dateRescued,
       location: form.location.trim(),
       about: form.about.trim(),
@@ -339,11 +355,36 @@ function AddAnimal() {
                 Status
                 <Required />
               </span>
-              <select value={form.status} onChange={update("status")} required>
-                {STATUS_OPTIONS.map((status) => (
+              <select
+                value={form.status}
+                onChange={updateStatus("status")}
+                required
+              >
+                {ANIMAL_STATUSES.map((status) => (
                   <option key={status}>{status}</option>
                 ))}
               </select>
+            </label>
+
+            <label>
+              <span>
+                Health Status
+                <Required />
+              </span>
+              <select
+                value={form.healthStatus}
+                onChange={updateStatus("healthStatus")}
+                required
+              >
+                {HEALTH_STATUSES.map((status) => (
+                  <option key={status}>{status}</option>
+                ))}
+              </select>
+              {statusError && (
+                <p className="add-animal__error" role="alert">
+                  {statusError}
+                </p>
+              )}
             </label>
 
             <label>

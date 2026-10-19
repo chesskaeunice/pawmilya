@@ -343,19 +343,35 @@ function AdoptionApplicationDetails() {
 
 
               <Detail
-                label="Occupation"
+                label="Employment Status"
                 value={
-                  application.occupation
+                  application.employmentStatus
                 }
               />
 
 
-              <Detail
-                label="Company / Business"
-                value={
-                  application.company
-                }
-              />
+              {application.work && (
+                <Detail
+                  label="Work"
+                  value={
+                    application.work
+                  }
+                />
+              )}
+
+
+              {application.employmentStatus ===
+                "Self-employed" && (
+                <Detail
+                  label="Field"
+                  value={
+                    application.selfEmployedField ===
+                    "Other"
+                      ? application.selfEmployedFieldOther
+                      : application.selfEmployedField
+                  }
+                />
+              )}
 
 
               <Detail

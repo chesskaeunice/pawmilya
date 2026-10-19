@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import pets from "../../../data/pets.js";
+import { statusClass } from "../../../config/animalStatus.js";
 
 import "./AnimalDetails.css";
 
@@ -49,7 +50,7 @@ function AnimalDetails() {
             </h1>
 
 
-            <span className="staff-status staff-status--available">
+            <span className={`staff-status ${statusClass(pet.status)}`}>
               {pet.status}
             </span>
 
@@ -109,6 +110,12 @@ function AnimalDetails() {
               icon={<PawPrint size={13} />}
               label="Status"
               value={pet.status}
+            />
+
+            <DetailRow
+              icon={<PawPrint size={13} />}
+              label="Health Status"
+              value={pet.health_status}
             />
 
             <DetailRow
