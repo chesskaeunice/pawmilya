@@ -1,23 +1,29 @@
-# Graph Report - Pawmilya-share  (2026-10-19)
+# Graph Report - Pawmilya-merged  (2026-10-19)
 
 ## Corpus Check
-- 117 files · ~103,671 words
+- 141 files · ~121,400 words
 - Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 81 file(s) not represented in the graph (top: .css 59, (none) 18, .example 2)
 
 ## Summary
-- 756 nodes · 1368 edges · 63 communities (37 shown, 26 thin omitted)
-- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 91 edges (avg confidence: 0.87)
-- Token cost: 158,771 input · 0 output
+- 963 nodes · 1909 edges · 88 communities (60 shown, 28 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 115 edges (avg confidence: 0.88)
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `e9f678ab`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- Landing, Articles & Legal Pages
-- Admin Pages & Pet Data
+- index.js
+- AppRoutes.jsx
 - Shared UI, API & Role Context
 - PoundCare Proposal Concepts
-- Frontend Package & Tooling
-- Project Docs & Architecture
-- Auth Pages & User Routes
-- Missing Pets & Status Help
+- frontend/package.json
+- Laravel 12 REST API backend
+- Profile.jsx
+- lucide-react
 - Search, Filters & Pagination
 - Laravel User Model & Config
 - Database Migrations
@@ -56,30 +62,55 @@
 - Social Icon Sprite
 - Other Pet Placeholder
 - React Logo
+- Reports.jsx
+- Vaccinations.jsx
+- AdoptionCounselorDashboard.jsx
+- AuthProvider.jsx
+- Home.jsx
+- LegalPage.jsx
+- Pawmilya
+- PetPreviewCard.jsx
+- previewService.js
+- Pawmilya
+- backend/README.md
+- React + Vite frontend
+- MissingPetReportDetails.jsx
+- devDependencies
+- Development phases 0-8
+- Sanctum Bearer token auth
+- React + Vite template (HMR)
+- dependencies
+- devDependencies
+- scripts
+- Current status
+- Laravel framework (default README)
+- scripts
+- axios
+- ArticleCard.jsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `react-router-dom` - 40 edges
-2. `lucide-react` - 36 edges
-3. `AppRoutes()` - 33 edges
-4. `react` - 31 edges
-5. `useRole()` - 15 edges
-6. `AdminRoutes()` - 14 edges
-7. `UserRoutes()` - 13 edges
-8. `UserLayout()` - 12 edges
-9. `pets` - 11 edges
-10. `Home()` - 11 edges
+1. `react-router-dom` - 48 edges
+2. `react` - 45 edges
+3. `lucide-react` - 42 edges
+4. `AppRoutes()` - 36 edges
+5. `useAuth()` - 34 edges
+6. `Pawmilya` - 19 edges
+7. `KennelManagerDashboard()` - 15 edges
+8. `PoundStaffDashboard()` - 15 edges
+9. `VetTechDashboard()` - 15 edges
+10. `Pawmilya` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Mock login (no backend)` --references--> `useAuth()`  [INFERRED]
+  README.md → frontend/src/hooks/useAuth.js
+- `Roles` --references--> `hasPermission()`  [INFERRED]
+  CLAUDE.md → frontend/src/config/rolePermissions.js
+- `Known issues (not fixed yet)` --references--> `EditAnimal()`  [INFERRED]
+  README.md → frontend/src/pages/admin/EditAnimal/EditAnimal.jsx
+- `Known issues (not fixed yet)` --references--> `MyMissingPetReports()`  [INFERRED]
+  README.md → frontend/src/pages/user/MyMissingPetReports/MyMissingPetReports.jsx
 - `API online/offline footer indicator` --references--> `api`  [INFERRED]
   CLAUDE.md → frontend/src/services/api.js
-- `VITE_API_URL env variable` --shares_data_with--> `api`  [INFERRED]
-  README.md → frontend/src/services/api.js
-- `api` --shares_data_with--> `Sanctum Bearer token auth`  [INFERRED]
-  frontend/src/services/api.js → CLAUDE.md
-- `React + Vite frontend` --references--> `api`  [EXTRACTED]
-  CLAUDE.md → frontend/src/services/api.js
-- `React + Vite frontend` --conceptually_related_to--> `React + Vite template (HMR)`  [INFERRED]
-  CLAUDE.md → frontend/README.md
 
 ## Import Cycles
 - None detected.
@@ -95,55 +126,55 @@
 - **My Applications Screen Layout Sections** — wireframes_user_side_screenshot_2026_10_16_233431_top_navbar, wireframes_user_side_screenshot_2026_10_16_233431_hero_banner, wireframes_user_side_screenshot_2026_10_16_233431_status_filter_chips, wireframes_user_side_screenshot_2026_10_16_233431_application_card_list, wireframes_user_side_screenshot_2026_10_16_233431_footer [EXTRACTED 1.00]
 - **PoundCare Tech Stack (React/Vite + Laravel/Sanctum + MySQL on Vercel/Aiven)** — proposal_documentation_react_frontend, proposal_documentation_laravel_backend, proposal_documentation_laravel_sanctum, proposal_documentation_mysql, proposal_documentation_vercel, proposal_documentation_aiven_mysql [EXTRACTED 1.00]
 - **Reports screen analytics widgets** — downloads_poundcare_wireframes_staff_side_screenshot_2026_10_16_233312_kpi_cards, downloads_poundcare_wireframes_staff_side_screenshot_2026_10_16_233312_animals_by_status_donut, downloads_poundcare_wireframes_staff_side_screenshot_2026_10_16_233312_animals_by_type_bars, downloads_poundcare_wireframes_staff_side_screenshot_2026_10_16_233312_intake_vs_adoptions, downloads_poundcare_wireframes_staff_side_screenshot_2026_10_16_233312_recent_activity [EXTRACTED 1.00]
+- **Sources of truth for building pages** — claude_proposal_documentation, claude_wireframes, claude_reference_ui, claude_change_requirements, claude_graphify_knowledge_graph [EXTRACTED 1.00]
 - **Staff Dashboard Overview Widgets** — wireframes_staff_side_screenshot_2026_10_16_225228_summary_stat_cards, wireframes_staff_side_screenshot_2026_10_16_225228_recent_animal_records, wireframes_staff_side_screenshot_2026_10_16_225228_adoption_applications_panel, wireframes_staff_side_screenshot_2026_10_16_225228_missing_pet_reports_panel, wireframes_staff_side_screenshot_2026_10_16_225228_animals_by_status_chart, wireframes_staff_side_screenshot_2026_10_16_225228_recent_adoptions_gallery [EXTRACTED 1.00]
+- **Default Vite + React Scaffold Assets** — frontend_public_favicon_vite_lightning_favicon, frontend_public_icons_social_icon_sprite, frontend_src_assets_react_react_logo, frontend_src_assets_vite_vite_logo [INFERRED 0.75]
+- **API health check (footer indicator -> Axios -> /api/health)** — claude_api_health_indicator, frontend_src_services_api_api, claude_api_health_endpoint, claude_laravel_rest_api [INFERRED 0.85]
+- **Article Image Placeholder Set** — frontend_src_assets_images_placeholders_article_1_article_image_1_placeholder, frontend_src_assets_images_placeholders_article_2_article_image_2_placeholder, frontend_src_assets_images_placeholders_article_3_article_image_3_placeholder, frontend_src_assets_images_placeholders_article_4_article_image_4_placeholder, frontend_src_assets_images_placeholders_article_5_article_image_5_placeholder, frontend_src_assets_images_placeholders_article_6_article_image_6_placeholder [INFERRED 0.85]
+- **Token auth flow: Sanctum + Axios interceptor + AuthContext/ProtectedRoute** — claude_sanctum_token_auth, frontend_src_services_api_api, claude_authcontext, claude_protectedroute, claude_role_middleware [INFERRED 0.85]
 - **Missing Pet Detail Hero Layout** — wireframes_user_side_screenshot_2026_10_16_233426_pet_image_placeholder, wireframes_user_side_screenshot_2026_10_16_233426_help_find_me_card, wireframes_user_side_screenshot_2026_10_16_233426_hero_text, wireframes_user_side_screenshot_2026_10_16_233426_found_miming_cta [INFERRED 0.85]
 - **Missing Pet Detail Page Layout** — c_users_anne_arbolente_downloads_poundcare_wireframes_staff_side_screenshot_2026_10_16_233124_photo_gallery, c_users_anne_arbolente_downloads_poundcare_wireframes_staff_side_screenshot_2026_10_16_233124_basic_information_card, c_users_anne_arbolente_downloads_poundcare_wireframes_staff_side_screenshot_2026_10_16_233124_details_tabs [INFERRED 0.85]
+- **Pet Photo Placeholders (dog/cat/other)** — frontend_src_assets_images_placeholders_pet_cat_cat_photo_placeholder, frontend_src_assets_images_placeholders_pet_dog_dog_photo_placeholder, frontend_src_assets_images_placeholders_pet_other_pet_photo_placeholder [INFERRED 0.85]
 - **Adoption browse flow: list, filter, card, details, apply** — downloads_poundcare_wireframes_user_side_screenshot_2026_10_16_225010_adoptable_pets_screen, downloads_poundcare_wireframes_user_side_screenshot_2026_10_16_225010_pet_card, downloads_poundcare_wireframes_user_side_screenshot_2026_10_16_225010_pet_details_screen, downloads_poundcare_wireframes_user_side_screenshot_2026_10_16_225010_apply_cta [INFERRED 0.85]
 - **Adoption Application Workflow (apply, review, approve, status update)** — proposal_documentation_adoption_application_management, proposal_documentation_adoption_approval_rule, proposal_documentation_adoption_applications_table, proposal_documentation_status_management [INFERRED 0.85]
 - **Auth screens sharing nav, hero panel and form card pattern** — wireframes_user_side_screenshot_2026_10_16_224907_login_wireframe, wireframes_user_side_screenshot_2026_10_16_224907_register_wireframe, wireframes_user_side_screenshot_2026_10_16_224907_top_nav_bar, wireframes_user_side_screenshot_2026_10_16_224907_hero_panel [INFERRED 0.85]
 - **Missing Pet Report and Matching Flow** — proposal_documentation_lost_pet_owners, proposal_documentation_missing_pet_reporting, proposal_documentation_missing_pet_monitoring, proposal_documentation_missing_pet_table [INFERRED 0.85]
 - **Staff Vaccinations Screen Layout** — wireframes_staff_side_screenshot_2026_10_16_233321_sidebar_navigation, wireframes_staff_side_screenshot_2026_10_16_233321_filter_toolbar, wireframes_staff_side_screenshot_2026_10_16_233321_vaccination_table, wireframes_staff_side_screenshot_2026_10_16_233321_pagination [INFERRED 0.85]
-- **Token auth flow: Sanctum + Axios interceptor + AuthContext/ProtectedRoute** — claude_sanctum_token_auth, frontend_src_services_api_api, claude_authcontext, claude_protectedroute, claude_role_middleware [INFERRED 0.85]
-- **API health check (footer indicator -> Axios -> /api/health)** — claude_api_health_indicator, frontend_src_services_api_api, claude_api_health_endpoint, claude_laravel_rest_api [INFERRED 0.85]
-- **Sources of truth for building pages** — claude_proposal_documentation, claude_wireframes, claude_reference_ui, claude_change_requirements, claude_graphify_knowledge_graph [EXTRACTED 1.00]
-- **Pet Photo Placeholders (dog/cat/other)** — frontend_src_assets_images_placeholders_pet_cat_cat_photo_placeholder, frontend_src_assets_images_placeholders_pet_dog_dog_photo_placeholder, frontend_src_assets_images_placeholders_pet_other_pet_photo_placeholder [INFERRED 0.85]
-- **Article Image Placeholder Set** — frontend_src_assets_images_placeholders_article_1_article_image_1_placeholder, frontend_src_assets_images_placeholders_article_2_article_image_2_placeholder, frontend_src_assets_images_placeholders_article_3_article_image_3_placeholder, frontend_src_assets_images_placeholders_article_4_article_image_4_placeholder, frontend_src_assets_images_placeholders_article_5_article_image_5_placeholder, frontend_src_assets_images_placeholders_article_6_article_image_6_placeholder [INFERRED 0.85]
-- **Default Vite + React Scaffold Assets** — frontend_public_favicon_vite_lightning_favicon, frontend_public_icons_social_icon_sprite, frontend_src_assets_react_react_logo, frontend_src_assets_vite_vite_logo [INFERRED 0.75]
 - **User Pages Pet Photography Hero Banners** — frontend_src_assets_images_users_home_home_hero_home_hero_photo, frontend_src_assets_images_users_home_myapplications_hero_myapplications_hero_photo, frontend_src_assets_images_users_home_adoptablepets_hero_adoptablepets_hero_photo, frontend_src_assets_images_users_missing_pets_missing_pets_hero_missing_pets_hero_photo [INFERRED 0.85]
 
-## Communities (63 total, 26 thin omitted)
+## Communities (88 total, 28 thin omitted)
 
-### Community 0 - "Landing, Articles & Legal Pages"
-Cohesion: 0.05
-Nodes (43): About Us Image 1 Placeholder, About Us Image 2 Placeholder, Article Image 1 Placeholder, Article Image 2 Placeholder, Article Image 3 Placeholder, Article Image 4 Placeholder, Article Image 5 Placeholder, Article Image 6 Placeholder (+35 more)
+### Community 0 - "index.js"
+Cohesion: 0.12
+Nodes (11): About Us Image 1 Placeholder, About Us Image 2 Placeholder, Article Image 1 Placeholder, Article Image 2 Placeholder, Article Image 3 Placeholder, Article Image 4 Placeholder, Article Image 5 Placeholder, Article Image 6 Placeholder (+3 more)
 
-### Community 1 - "Admin Pages & Pet Data"
-Cohesion: 0.09
-Nodes (41): AdminHeader(), AdminSidebar(), menuItems, AdminStatCard(), MockLoginHandler(), RequireSignIn(), applications, pets (+33 more)
+### Community 1 - "AppRoutes.jsx"
+Cohesion: 0.06
+Nodes (71): Auth (still mock), Folder structure (frontend/src), Known issues (not fixed yet), App(), AdminHeader(), AdminSidebar(), menuItems, DevRoleSwitcher() (+63 more)
 
 ### Community 2 - "Shared UI, API & Role Context"
-Cohesion: 0.07
-Nodes (41): Donation QR Code Placeholder, Donation via QR Payment, Modal(), SignInModal(), EmergencyButton(), EmergencyReportFlow(), EmergencyReportModal(), emptyForm (+33 more)
+Cohesion: 0.06
+Nodes (44): Donation QR Code Placeholder, Donation via QR Payment, Modal(), EmergencyReportFlow(), EmergencyReportModal(), emptyForm, isFutureDateTime(), joinList() (+36 more)
 
 ### Community 3 - "PoundCare Proposal Concepts"
 Cohesion: 0.06
 Nodes (46): Adoption Application Management Feature, Adoption_Applications Table (Pending/Under Review/Approved/Rejected), Aiven for MySQL (managed free tier), Animal Record Management Feature, Animals Table (animal_code, species, status enum), REST API Endpoints (/api/animals, /api/adoption-applications, /api/missing-pets, /api/dashboard, /api/reports), Audit_Logs Table, AuthContext (Context API: user, role, token) (+38 more)
 
-### Community 4 - "Frontend Package & Tooling"
-Cohesion: 0.05
-Nodes (35): frontend index.html (Pawmilya), dependencies, axios, lucide-react, react, react-dom, react-router-dom, devDependencies (+27 more)
+### Community 4 - "frontend/package.json"
+Cohesion: 0.17
+Nodes (11): axios, vite, name, private, type, version, react-dom, @types/react (+3 more)
 
-### Community 5 - "Project Docs & Architecture"
-Cohesion: 0.08
-Nodes (33): robots.txt (allow all crawlers), Eloquent ORM, Laravel framework (default README), Schema migrations, Adoption application (valid ID + proof of income uploads), /api/health endpoint, API online/offline footer indicator, AuthContext (planned) (+25 more)
+### Community 5 - "Laravel 12 REST API backend"
+Cohesion: 0.25
+Nodes (6): SVG QR codes (bacon/bacon-qr-code), Laravel 12 REST API backend, MySQL / XAMPP MariaDB (DB poundcare), ProtectedRoute (planned), Roles, Stray QR code page (pet + owner info)
 
-### Community 6 - "Auth Pages & User Routes"
-Cohesion: 0.10
-Nodes (26): ImageDropzone(), AdoptionApplication(), AgreeCheckbox(), HOME_PHOTO_CHECKLIST, OCCUPATION_OPTIONS, PROMPT_OPTIONS, PRONOUN_OPTIONS, RadioGroup() (+18 more)
+### Community 6 - "Profile.jsx"
+Cohesion: 0.39
+Nodes (7): DEFAULT_PROFILE, FIELD_ORDER, loadProfile(), Profile(), saveProfile(), todayLocal(), validate()
 
-### Community 7 - "Missing Pets & Status Help"
-Cohesion: 0.13
-Nodes (20): Hero Layers Illustration (isometric stacked purple/white tiles, Vite template asset), Adoptable Pets Hero Photo (woman interacting with four dogs in a training/shelter room), Cat and Dog Companionship Imagery, Home Hero Photo (person holding two cream Labrador puppies outdoors), User Page Hero Banner Pattern (warm pet photography header), My Applications Hero Photo (two kittens and a puppy peeking over a white ledge), Missing Pets Hero Photo (orange kitten sleeping on a golden puppy), statuses (+12 more)
+### Community 7 - "lucide-react"
+Cohesion: 0.07
+Nodes (45): AdminStatCard(), statuses, StatusHelp(), missingPets, pets, ACTIVE_MISSING_STATUSES, ATTENTION_STATUSES, BreakdownGroup() (+37 more)
 
 ### Community 8 - "Search, Filters & Pagination"
 Cohesion: 0.16
@@ -158,8 +189,8 @@ Cohesion: 0.14
 Nodes (9): {closure#1}(), {closure#2}(), {closure#3}(), {closure#1}(), {closure#2}(), {closure#1}(), {closure#2}(), {closure#3}() (+1 more)
 
 ### Community 11 - "Backend Node Tooling"
-Cohesion: 0.10
-Nodes (19): devDependencies, axios, concurrently, laravel-vite-plugin, tailwindcss, @tailwindcss/vite, vite, axios (+11 more)
+Cohesion: 0.20
+Nodes (9): axios, vite, private, $schema, type, concurrently, laravel-vite-plugin, tailwindcss (+1 more)
 
 ### Community 12 - "Admin Details Wireframes"
 Cohesion: 0.16
@@ -261,32 +292,124 @@ Nodes (3): autoload-dev, psr-4, Tests\\
 Cohesion: 0.67
 Nodes (3): extra, laravel, dont-discover
 
+### Community 63 - "Reports.jsx"
+Cohesion: 0.12
+Nodes (42): ACTIVITY, addDays(), AdoptionsReport(), AnimalsReport(), Bar(), countBy(), countOf(), daysFromToday() (+34 more)
+
+### Community 64 - "Vaccinations.jsx"
+Cohesion: 0.11
+Nodes (34): vaccinations, ATTENTION_PRIORITY, ATTENTION_STATUSES, DashboardCard(), EmptyState(), formatTimestamp(), getActivityDate(), getDueLabel() (+26 more)
+
+### Community 65 - "AdoptionCounselorDashboard.jsx"
+Cohesion: 0.10
+Nodes (28): Hero Layers Illustration (isometric stacked purple/white tiles, Vite template asset), Adoptable Pets Hero Photo (woman interacting with four dogs in a training/shelter room), Cat and Dog Companionship Imagery, Home Hero Photo (person holding two cream Labrador puppies outdoors), User Page Hero Banner Pattern (warm pet photography header), My Applications Hero Photo (two kittens and a puppy peeking over a white ledge), Missing Pets Hero Photo (orange kitten sleeping on a golden puppy), applications (+20 more)
+
+### Community 66 - "AuthProvider.jsx"
+Cohesion: 0.22
+Nodes (10): CITIZEN, hasPermission(), ROLE_LABELS, rolePermissions, ROLES, AuthContext, AuthProvider(), MOCK_USERS (+2 more)
+
+### Community 67 - "Home.jsx"
+Cohesion: 0.19
+Nodes (9): aboutPlaceholders, getCurrentIndex(), isKeyboardFocus(), ScrollStrip(), useScrollReveal(), aboutGoals, adoptablePets, articles (+1 more)
+
+### Community 68 - "LegalPage.jsx"
+Cohesion: 0.32
+Nodes (8): BackButton(), LEGAL_UPDATED, legalOrder, legalPages, ArticleDetails(), LegalPage(), getArticleById(), formatDate()
+
+### Community 69 - "Pawmilya"
+Cohesion: 0.17
+Nodes (11): Data rules, Differences from Proposal Documentation.pdf, graphify-out knowledge graph, Pawmilya, Phases, Proposal Documentation.pdf (the paper), Required changes on top of the wireframes [CHANGE], Run (+3 more)
+
+### Community 70 - "PetPreviewCard.jsx"
+Cohesion: 0.33
+Nodes (7): petPlaceholders, PetPreviewCard(), PreviewStatus(), getAdoptableStatus(), formatDateTime(), displayPetName(), UNNAMED_PET
+
+### Community 71 - "previewService.js"
+Cohesion: 0.36
+Nodes (8): articles, getAllAdoptablePets(), getAllArticles(), getLatestAdoptablePets(), getLatestArticles(), getLatestMissingReports(), isAdoptable(), newestFirst()
+
+### Community 72 - "Pawmilya"
+Cohesion: 0.20
+Nodes (8): Backend, Configuration notes, First-time setup, Folder structure, Frontend, Pawmilya, Requirements, Run
+
+### Community 73 - "backend/README.md"
+Cohesion: 0.22
+Nodes (8): About Laravel, Code of Conduct, Contributing, Laravel Sponsors, Learning Laravel, License, Premium Partners, Security Vulnerabilities
+
+### Community 74 - "React + Vite frontend"
+Cohesion: 0.25
+Nodes (8): Open question: Continue with Google vs Sanctum only, Mock data (src/data, src/services/*Service.js), React + Vite frontend, Reference UI (ui-reference/poundcare-frontend), Wireframes (Staff Side / User Side screenshots), frontend index.html (Pawmilya), Vite Lightning Bolt Favicon, Vite Logo
+
+### Community 75 - "MissingPetReportDetails.jsx"
+Cohesion: 0.43
+Nodes (7): ContactRow(), Detail(), formatTimestamp(), InfoBox(), MissingPetReportDetails(), STATUS_OPTIONS, StatusBadge()
+
+### Community 76 - "devDependencies"
+Cohesion: 0.29
+Nodes (7): devDependencies, axios, concurrently, laravel-vite-plugin, tailwindcss, @tailwindcss/vite, vite
+
+### Community 77 - "Development phases 0-8"
+Cohesion: 0.38
+Nodes (7): Adoption application (valid ID + proof of income uploads), [CHANGE] required changes on top of wireframes, Development phases 0-8, Missing Pet Reports (guest/citizen), Vaccinations and health logs, Working rules, storage:link for uploaded photos/IDs
+
+### Community 78 - "Sanctum Bearer token auth"
+Cohesion: 0.29
+Nodes (7): /api/health endpoint, API online/offline footer indicator, AuthContext (planned), Sanctum Bearer token auth, api, Sanctum personal access tokens (Bearer, not cookies), VITE_API_URL env variable
+
+### Community 79 - "React + Vite template (HMR)"
+Cohesion: 0.29
+Nodes (6): Expanding the Oxlint configuration, @vitejs/plugin-react (Oxc) / plugin-react-swc (SWC), React Compiler, React + Vite, React + Vite template (HMR), oxlint
+
+### Community 80 - "dependencies"
+Cohesion: 0.33
+Nodes (6): dependencies, axios, lucide-react, react, react-dom, react-router-dom
+
+### Community 81 - "devDependencies"
+Cohesion: 0.33
+Nodes (6): devDependencies, oxlint, @types/react, @types/react-dom, vite, @vitejs/plugin-react
+
+### Community 82 - "scripts"
+Cohesion: 0.40
+Nodes (5): scripts, build, dev, lint, preview
+
+### Community 83 - "Current status"
+Cohesion: 0.40
+Nodes (5): Current status, Data rules, Differences from Proposal Documentation.pdf, Known issues (not fixed yet), Mock login (no backend)
+
+### Community 84 - "Laravel framework (default README)"
+Cohesion: 0.50
+Nodes (4): robots.txt (allow all crawlers), Eloquent ORM, Laravel framework (default README), Schema migrations
+
+### Community 85 - "scripts"
+Cohesion: 0.67
+Nodes (3): scripts, build, dev
+
 ## Ambiguous Edges - Review These
 - `My Applications (Adoption Applications) Screen` → `View Details Button`  [AMBIGUOUS]
   Wireframes/User Side/Screenshot 2026-10-16 233431.png · relation: conceptually_related_to
 - `Laravel REST API Backend` → `Vercel Hosting (serverless, GitHub CI/CD)`  [AMBIGUOUS]
   Proposal Documentation.pdf · relation: references
-- `Hero Layers Illustration (isometric stacked purple/white tiles, Vite template asset)` → `User Page Hero Banner Pattern (warm pet photography header)`  [AMBIGUOUS]
+- `User Page Hero Banner Pattern (warm pet photography header)` → `Hero Layers Illustration (isometric stacked purple/white tiles, Vite template asset)`  [AMBIGUOUS]
   frontend/src/assets/hero.png · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **98 isolated node(s):** `axios`, `vite`, `concurrently`, `tailwindcss`, `PoundCare Branding and Cream/Orange Palette` (+93 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 280 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **26 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **99 isolated node(s):** `axios`, `concurrently`, `tailwindcss`, `vite`, `axios` (+94 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 333 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react-router-dom` connect `Admin Pages & Pet Data` to `Landing, Articles & Legal Pages`, `Shared UI, API & Role Context`, `Frontend Package & Tooling`, `Auth Pages & User Routes`, `Missing Pets & Status Help`?**
-  _High betweenness centrality (0.068) - this node is a cross-community bridge._
-- **What connects `axios`, `vite`, `concurrently` to the rest of the system?**
-  _98 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Landing, Articles & Legal Pages` be split into smaller, more focused modules?**
-  _Cohesion score 0.053208137715179966 - nodes in this community are weakly interconnected._
-- **Why does `react` connect `Shared UI, API & Role Context` to `Landing, Articles & Legal Pages`, `Admin Pages & Pet Data`, `Frontend Package & Tooling`, `Auth Pages & User Routes`, `Missing Pets & Status Help`, `Search, Filters & Pagination`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
-- **Should `Admin Pages & Pet Data` be split into smaller, more focused modules?**
-  _Cohesion score 0.08999122036874452 - nodes in this community are weakly interconnected._
+- **Why does `react-router-dom` connect `AppRoutes.jsx` to `Vaccinations.jsx`, `AdoptionCounselorDashboard.jsx`, `Shared UI, API & Role Context`, `AuthProvider.jsx`, `frontend/package.json`, `LegalPage.jsx`, `PetPreviewCard.jsx`, `lucide-react`, `Home.jsx`, `MissingPetReportDetails.jsx`, `ArticleCard.jsx`, `Reports.jsx`?**
+  _High betweenness centrality (0.070) - this node is a cross-community bridge._
+- **Are the 3 inferred relationships involving `useAuth()` (e.g. with `Auth (still mock)` and `Folder structure (frontend/src)`) actually correct?**
+  _`useAuth()` has 3 INFERRED edges - model-reasoned connections that need verification._
+- **What connects `axios`, `concurrently`, `tailwindcss` to the rest of the system?**
+  _99 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `index.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.1225296442687747 - nodes in this community are weakly interconnected._
+- **Why does `react` connect `Shared UI, API & Role Context` to `Vaccinations.jsx`, `AppRoutes.jsx`, `AuthProvider.jsx`, `Home.jsx`, `frontend/package.json`, `AdoptionCounselorDashboard.jsx`, `Profile.jsx`, `lucide-react`, `Search, Filters & Pagination`, `MissingPetReportDetails.jsx`, `Reports.jsx`?**
+  _High betweenness centrality (0.064) - this node is a cross-community bridge._
 
 ### Low-confidence Hints
 _AMBIGUOUS edges — the extractor was unsure. Verify before acting on these._
