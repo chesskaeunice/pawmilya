@@ -7,7 +7,7 @@ import ScrollStrip from "../../../components/landing/ScrollStrip.jsx";
 import PetPreviewCard from "../../../components/landing/PetPreviewCard.jsx";
 import ArticleCard from "../../../components/landing/ArticleCard.jsx";
 
-import useRole from "../../../hooks/useRole.js";
+import useAuth from "../../../hooks/useAuth.js";
 import useScrollReveal from "../../../hooks/useScrollReveal.js";
 import { useGoToSection } from "../../../hooks/useSectionScroll.js";
 import {
@@ -31,7 +31,7 @@ const aboutGoals = [
 ];
 
 function Home() {
-  const { isLoggedIn } = useRole();
+  const { isLoggedIn } = useAuth();
   const goToSection = useGoToSection();
 
   useScrollReveal();

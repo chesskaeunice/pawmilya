@@ -7,14 +7,14 @@ import { Lock } from "lucide-react";
 
 import pets from "../../../data/pets.js";
 
-import { useStaffAuth } from "../../../context/StaffAuthContext.jsx";
+import useAuth from "../../../hooks/useAuth.js";
 
 import "./EditAnimal.css";
 
 
 function EditAnimal() {
   const { animalId } = useParams();
-  const { can } = useStaffAuth();
+  const { can } = useAuth();
 
   const pet = pets.find(
     (item) => item.id === Number(animalId)

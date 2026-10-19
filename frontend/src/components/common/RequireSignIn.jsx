@@ -1,13 +1,13 @@
 import { Navigate, useLocation, useParams } from "react-router-dom";
 
-import useRole from "../../hooks/useRole.js";
+import useAuth from "../../hooks/useAuth.js";
 
 // Wraps pages that need an account (the adoption application, My Applications).
 // A guest who opens one directly is sent to `fallback` (a normal page), where the
 // "Please sign in to continue" pop-up opens. After logging in, the Login page
 // brings them back to the address they wanted.
 function RequireSignIn({ children, reason, fallback = () => "/" }) {
-  const { isLoggedIn } = useRole();
+  const { isLoggedIn } = useAuth();
   const location = useLocation();
   const params = useParams();
 

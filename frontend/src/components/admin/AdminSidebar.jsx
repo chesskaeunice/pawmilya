@@ -12,9 +12,7 @@ import {
   Settings,
 } from "lucide-react";
 
-import {
-  useStaffAuth,
-} from "../../context/StaffAuthContext.jsx";
+import useAuth from "../../hooks/useAuth.js";
 
 import DevRoleSwitcher from "./DevRoleSwitcher.jsx";
 
@@ -124,7 +122,7 @@ function AdminSidebar() {
   const {
     can,
     roleLabel,
-  } = useStaffAuth();
+  } = useAuth();
 
 
   const visibleMenuItems =

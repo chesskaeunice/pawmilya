@@ -3,7 +3,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import UserNavbar from "../components/user/UserNavbar.jsx";
 import UserFooter from "../components/user/UserFooter.jsx";
 import EmergencyButton from "../components/landing/EmergencyButton.jsx";
-import { RoleProvider } from "../context/RoleProvider.jsx";
 import { ModalProvider } from "../context/ModalProvider.jsx";
 import { useScrollOnNavigate } from "../hooks/useSectionScroll.js";
 
@@ -22,7 +21,6 @@ function UserLayout() {
   useScrollOnNavigate();
 
   return (
-    <RoleProvider>
       <ModalProvider>
       <div className="user-layout">
 
@@ -45,7 +43,6 @@ function UserLayout() {
 
       </div>
       </ModalProvider>
-    </RoleProvider>
   );
 }
 

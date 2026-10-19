@@ -4,7 +4,7 @@ import { LogOut, Settings, User } from "lucide-react";
 
 import { sectionLinks, siteInfo } from "../../data/siteInfo.js";
 import useActiveSection from "../../hooks/useActiveSection.js";
-import useRole from "../../hooks/useRole.js";
+import useAuth from "../../hooks/useAuth.js";
 import { useGoToSection } from "../../hooks/useSectionScroll.js";
 
 import "./UserNavbar.css";
@@ -34,7 +34,7 @@ function getLinks(isLoggedIn) {
 // styles/user-layout.css). Guests have no account buttons; a logged-in user
 // gets an avatar menu at the far right.
 function UserNavbar() {
-  const { isLoggedIn, logout } = useRole();
+  const { isLoggedIn, logout } = useAuth();
   const activeId = useActiveSection(sectionIds);
   const goToSection = useGoToSection();
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import { Siren } from "lucide-react";
 
 import useModals from "../../hooks/useModals.js";
-import useRole from "../../hooks/useRole.js";
+import useAuth from "../../hooks/useAuth.js";
 
 import "./EmergencyButton.css";
 
@@ -9,7 +9,7 @@ import "./EmergencyButton.css";
 // the menu (My Missing Pet Reports / Report Missing Pet page).
 function EmergencyButton() {
   const { openEmergency } = useModals();
-  const { isLoggedIn } = useRole();
+  const { isLoggedIn } = useAuth();
 
   if (isLoggedIn) return null;
 

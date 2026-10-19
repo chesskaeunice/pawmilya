@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { ModalContext } from "./modalContext.js";
-import useRole from "../hooks/useRole.js";
+import useAuth from "../hooks/useAuth.js";
 import EmergencyReportModal from "../components/report/EmergencyReportModal.jsx";
 import SignInModal from "../components/common/SignInModal.jsx";
 
@@ -13,7 +13,7 @@ import SignInModal from "../components/common/SignInModal.jsx";
 // that needs an account (RequireSignIn puts signInFrom in the route state).
 export function ModalProvider({ children }) {
   const location = useLocation();
-  const { isLoggedIn } = useRole();
+  const { isLoggedIn } = useAuth();
 
   const [active, setActive] = useState(null);
   const [signIn, setSignIn] = useState({ from: "/", reason: "" });

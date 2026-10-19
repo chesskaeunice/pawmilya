@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 /* LAYOUTS */
 import UserLayout from "../layouts/UserLayout.jsx";
 import AdminLayout from "../layouts/AdminLayout.jsx";
+import RequirePermission from "../components/admin/RequirePermission.jsx";
 
 /* USER PAGES */
 import Home from "../pages/user/Home/Home.jsx";
@@ -179,14 +180,12 @@ function AppRoutes() {
 
         <Route
           path="/admin/dashboard"
-          element={
-            <Dashboard />
-          }
+          element={<RequirePermission permission="dashboard.view"><Dashboard /></RequirePermission>}
         />
 
         <Route
           path="/admin/dashboard/adoption-counselor"
-          element={<AdoptionCounselorDashboard />}
+          element={<RequirePermission permission="dashboard.view"><AdoptionCounselorDashboard /></RequirePermission>}
         />
 
 
@@ -196,25 +195,25 @@ function AppRoutes() {
 
         <Route
           path="/admin/animals"
-          element={<Animals />}
+          element={<RequirePermission permission="animals.view"><Animals /></RequirePermission>}
         />
 
 
         <Route
           path="/admin/animals/add"
-          element={<AddAnimal />}
+          element={<RequirePermission permission="animals.create"><AddAnimal /></RequirePermission>}
         />
 
 
         <Route
           path="/admin/animals/:animalId"
-          element={<AnimalDetails />}
+          element={<RequirePermission permission="animals.view"><AnimalDetails /></RequirePermission>}
         />
 
 
         <Route
           path="/admin/animals/:animalId/edit"
-          element={<EditAnimal />}
+          element={<RequirePermission permission="animals.edit"><EditAnimal /></RequirePermission>}
         />
 
 
@@ -224,17 +223,13 @@ function AppRoutes() {
 
         <Route
           path="/admin/adoption-applications"
-          element={
-            <AdoptionApplications />
-          }
+          element={<RequirePermission permission="adoptionApplications.view"><AdoptionApplications /></RequirePermission>}
         />
 
 
         <Route
           path="/admin/adoption-applications/:applicationId"
-          element={
-            <AdoptionApplicationDetails />
-          }
+          element={<RequirePermission permission="adoptionApplications.view"><AdoptionApplicationDetails /></RequirePermission>}
         />
 
 
@@ -244,17 +239,13 @@ function AppRoutes() {
 
         <Route
           path="/admin/missing-pets"
-          element={
-            <MissingPetReports />
-          }
+          element={<RequirePermission permission="missingPets.view"><MissingPetReports /></RequirePermission>}
         />
 
 
         <Route
           path="/admin/missing-pets/:reportId"
-          element={
-            <MissingPetReportDetails />
-          }
+          element={<RequirePermission permission="missingPets.view"><MissingPetReportDetails /></RequirePermission>}
         />
 
 
@@ -264,7 +255,7 @@ function AppRoutes() {
 
         <Route
           path="/admin/vaccinations"
-          element={<Vaccinations />}
+          element={<RequirePermission permission="vaccinations.view"><Vaccinations /></RequirePermission>}
         />
 
 
@@ -274,7 +265,7 @@ function AppRoutes() {
 
         <Route
           path="/admin/reports"
-          element={<Reports />}
+          element={<RequirePermission permission="reports.view"><Reports /></RequirePermission>}
         />
 
 
@@ -284,7 +275,7 @@ function AppRoutes() {
 
         <Route
           path="/admin/settings"
-          element={<Settings />}
+          element={<RequirePermission permission="settings.view"><Settings /></RequirePermission>}
         />
 
       </Route>

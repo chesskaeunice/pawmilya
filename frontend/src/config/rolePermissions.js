@@ -6,7 +6,14 @@ export const ROLES = {
 };
 
 
+// Logged-in public user; no staff permissions
+export const CITIZEN = "citizen";
+
+
 export const ROLE_LABELS = {
+  [CITIZEN]:
+    "Citizen",
+
   [ROLES.KENNEL_MANAGER]:
     "Kennel Manager",
 
@@ -22,6 +29,9 @@ export const ROLE_LABELS = {
 
 
 export const rolePermissions = {
+
+  [CITIZEN]: [],
+
 
   /* =========================================
      KENNEL MANAGER

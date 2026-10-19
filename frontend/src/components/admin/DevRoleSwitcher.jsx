@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { ROLES, ROLE_LABELS } from "../../config/rolePermissions.js";
-import { useStaffAuth } from "../../context/StaffAuthContext.jsx";
+import useAuth from "../../hooks/useAuth.js";
 
 
 /*
@@ -9,7 +9,7 @@ import { useStaffAuth } from "../../context/StaffAuthContext.jsx";
  * Renders nothing in a production build.
  */
 function DevRoleSwitcher() {
-  const { role, setRole } = useStaffAuth();
+  const { role, login } = useAuth();
   const navigate = useNavigate();
 
   if (!import.meta.env.DEV) {
@@ -17,7 +17,7 @@ function DevRoleSwitcher() {
   }
 
   const handleChange = (event) => {
-    setRole(event.target.value);
+    login(event.target.value);
 
     // Go to the dashboard so the new role's page loads
     // (also avoids landing on a page the role can't open).

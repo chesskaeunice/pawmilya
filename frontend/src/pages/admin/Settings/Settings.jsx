@@ -9,7 +9,7 @@ import {
   UserCog,
 } from "lucide-react";
 
-import { useStaffAuth } from "../../../context/StaffAuthContext.jsx";
+import useAuth from "../../../hooks/useAuth.js";
 import {
   ROLE_LABELS,
   ROLES,
@@ -59,7 +59,7 @@ function Settings() {
     user,
     roleLabel,
     can,
-  } = useStaffAuth();
+  } = useAuth();
 
   /* Only the Kennel Manager has system/admin settings. */
   const canManageSystem =

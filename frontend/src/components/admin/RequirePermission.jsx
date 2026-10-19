@@ -2,9 +2,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import {
-  useStaffAuth,
-} from "../../context/StaffAuthContext.jsx";
+import useAuth from "../../hooks/useAuth.js";
 
 
 function RequirePermission({
@@ -12,7 +10,7 @@ function RequirePermission({
   children,
 }) {
   const { can } =
-    useStaffAuth();
+    useAuth();
 
 
   if (!can(permission)) {

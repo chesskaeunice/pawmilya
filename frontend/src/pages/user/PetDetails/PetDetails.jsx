@@ -6,14 +6,14 @@ import BackButton from "../../../components/common/BackButton.jsx";
 import PreviewStatus from "../../../components/landing/PreviewStatus.jsx";
 import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { getAdoptableStatus } from "../../../services/previewService.js";
-import useRole from "../../../hooks/useRole.js";
+import useAuth from "../../../hooks/useAuth.js";
 import useModals from "../../../hooks/useModals.js";
 
 import "./PetDetails.css";
 
 function PetDetails() {
   const { petId } = useParams();
-  const { isLoggedIn } = useRole();
+  const { isLoggedIn } = useAuth();
   const { openSignIn } = useModals();
 
   const pet = pets.find(

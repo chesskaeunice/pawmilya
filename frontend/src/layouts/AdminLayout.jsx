@@ -1,18 +1,28 @@
 import {
+  Navigate,
   Outlet,
 } from "react-router-dom";
 
 import AdminSidebar from "../components/admin/AdminSidebar.jsx";
 import AdminHeader from "../components/admin/AdminHeader.jsx";
 
-import {
-  StaffAuthProvider,
-} from "../context/StaffAuthContext.jsx";
+import useAuth from "../hooks/useAuth.js";
 
 
 function AdminLayout() {
+  const { isLoggedIn, isStaff } = useAuth();
+
+  // Staff only: guests go to login, citizens go home
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!isStaff) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
-    <StaffAuthProvider>
+    <>
 
       <div className="staff-layout">
 
@@ -34,7 +44,7 @@ function AdminLayout() {
 
       </div>
 
-    </StaffAuthProvider>
+    </>
   );
 }
 

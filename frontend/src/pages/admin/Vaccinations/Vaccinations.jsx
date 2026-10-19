@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 
-import { useStaffAuth } from "../../../context/StaffAuthContext.jsx";
+import useAuth from "../../../hooks/useAuth.js";
 
 import pets from "../../../data/pets.js";
 import initialVaccinations from "../../../data/vaccinations.js";
@@ -150,7 +150,7 @@ const rowName = (row) =>
 
 function Vaccinations() {
 
-  const { can } = useStaffAuth();
+  const { can } = useAuth();
 
   const canCreate = can("vaccinations.create");
   const canEdit = can("vaccinations.edit");
