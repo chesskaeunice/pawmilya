@@ -15,7 +15,7 @@
 
   text-transform: uppercase;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 
   letter-spacing: 2px;
 
@@ -53,7 +53,7 @@
 .report-pet__section h2 {
   margin-top: 0;
 
-  font-size: 20px;
+  font-size: var(--font-h3);
 }
 
 .report-pet__grid {
@@ -73,7 +73,7 @@
 
   margin-bottom: 15px;
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 
   font-weight: 600;
 }
@@ -120,34 +120,7 @@
    (.missing-pets__page-arrow) on the Missing Pets page
 ========================================= */
 
-.report-pet__back {
-  min-width: 40px;
-  height: 40px;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-
-  margin-bottom: 16px;
-  padding: 0 13px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-
-  background: white;
-  color: var(--color-brown);
-
-  font-size: 12px;
-  font-weight: 600;
-
-  cursor: pointer;
-}
-
-.report-pet__back:hover {
-  border-color: var(--color-orange);
-  color: var(--color-orange);
-}
 
 /* =========================================
    STATUS RADIO GROUP
@@ -194,7 +167,7 @@
 .report-pet__hint {
   margin: 0.25rem 0 0.5rem;
   color: var(--color-muted);
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .report-pet__file-list {
@@ -204,7 +177,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
 }
 
 .report-pet__file-list li {
@@ -246,7 +219,7 @@
 .report-pet__error {
   margin: 0.5rem 0 0;
   color: #d93025;
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 600;
 }
 
@@ -293,7 +266,7 @@
   grid-column: 2;
   margin: 0;
   color: var(--color-muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 400;
   line-height: 1.5;
 }

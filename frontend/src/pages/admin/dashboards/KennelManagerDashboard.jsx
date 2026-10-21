@@ -20,10 +20,8 @@ import {
   XCircle,
 } from "lucide-react";
 
-import animals from "../../../data/pets.js";
-import applications from "../../../data/applications.js";
-import missingPets from "../../../data/missingPets.js";
-import vaccinations from "../../../data/vaccinations.js";
+import useAdminLists from "../../../hooks/useAdminLists.js";
+import OnDutyToday from "../../../components/admin/OnDutyToday.jsx";
 
 import "./KennelManagerDashboard.css";
 
@@ -41,6 +39,8 @@ const ATTENTION_STATUSES = [
 
 
 function KennelManagerDashboard() {
+  const { animals, applications, missingPets, vaccinations } = useAdminLists();
+
 
   /* =========================================
      OVERVIEW STATISTICS
@@ -104,7 +104,7 @@ function KennelManagerDashboard() {
               getVaccinationStatus(record) === "Due Soon"
           ).length,
       };
-    }, []);
+    }, [animals, applications, missingPets, vaccinations]);
 
 
   /* =========================================
@@ -124,7 +124,7 @@ function KennelManagerDashboard() {
             getTime(a.date, a.id)
         )
         .slice(0, 4);
-    }, []);
+    }, [applications]);
 
 
   /* =========================================
@@ -158,7 +158,7 @@ function KennelManagerDashboard() {
           );
         })
         .slice(0, 4);
-    }, []);
+    }, [vaccinations]);
 
 
   /* =========================================
@@ -171,7 +171,7 @@ function KennelManagerDashboard() {
         animals,
         (animal) => animal.type || "Other"
       );
-    }, []);
+    }, [animals]);
 
 
   const animalsByStatus =
@@ -180,7 +180,7 @@ function KennelManagerDashboard() {
         animals,
         (animal) => animal.status || "Unknown"
       );
-    }, []);
+    }, [animals]);
 
 
   /* =========================================
@@ -201,7 +201,7 @@ function KennelManagerDashboard() {
             getTime(a.reportedAt, a.id)
         )
         .slice(0, 3);
-    }, []);
+    }, [missingPets]);
 
 
   return (
@@ -678,6 +678,9 @@ function KennelManagerDashboard() {
           </DashboardCard>
 
       </section>
+
+
+      <OnDutyToday />
 
     </div>
   );

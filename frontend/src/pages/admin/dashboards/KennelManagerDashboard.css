@@ -91,7 +91,7 @@
 .manager-dashboard__stat-label {
   color: var(--color-muted);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -99,7 +99,7 @@
 .manager-dashboard__stat strong {
   color: var(--color-brown);
 
-  font-size: 27px;
+  font-size: var(--font-h2);
   line-height: 1;
 }
 
@@ -107,7 +107,7 @@
 .manager-dashboard__stat small {
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -200,7 +200,7 @@
 
   color: var(--color-brown);
 
-  font-size: 17px;
+  font-size: var(--font-lg);
 }
 
 
@@ -209,7 +209,7 @@
 
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 
   line-height: 1.5;
 }
@@ -225,7 +225,7 @@
 
   color: var(--color-orange);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   text-decoration: none;
@@ -310,7 +310,7 @@
   color:
     var(--color-brown);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 800;
 }
 
@@ -328,14 +328,14 @@
 .manager-dashboard__row-user strong {
   color: var(--color-text);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
 .manager-dashboard__row-user span {
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -352,7 +352,7 @@
 
   color: var(--color-muted);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
@@ -384,7 +384,7 @@
 
   color: var(--color-orange);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   text-decoration: none;
@@ -419,7 +419,7 @@
 
   border-radius: 999px;
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   white-space: nowrap;
@@ -476,7 +476,7 @@
 
   color: var(--color-muted);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   letter-spacing: 0.04em;
@@ -499,7 +499,7 @@
 
   gap: 10px;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -549,7 +549,7 @@
 
   color: #33723d;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -651,14 +651,14 @@
 .manager-dashboard__missing-title strong {
   color: var(--color-brown);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 
 .manager-dashboard__missing-info > span {
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -672,14 +672,14 @@
 
   color: var(--color-muted);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
 .manager-dashboard__missing-info small {
-  color: #9b9186;
+  color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -694,7 +694,7 @@
 
   color: white;
 
-  font-size: 9px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -706,7 +706,7 @@
 
 .manager-dashboard__missing-status--sighted {
   background: #f4a261;
-  color: #4d2a00;
+  color: var(--color-brown);
 }
 
 
@@ -743,7 +743,7 @@
 .manager-dashboard__empty strong {
   color: var(--color-brown);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 
@@ -752,7 +752,7 @@
 
   margin: 0;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 

@@ -50,7 +50,8 @@ return [
     |
     */
 
-    'expiration' => null,
+    // Backstop; each token also gets its own expires_at by role (config/security.php)
+    'expiration' => 10080,
 
     /*
     |--------------------------------------------------------------------------

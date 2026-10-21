@@ -10,9 +10,6 @@ import article4 from "./article-4.svg";
 import article5 from "./article-5.svg";
 import article6 from "./article-6.svg";
 
-import about1 from "./about-1.svg";
-import about2 from "./about-2.svg";
-
 export const petPlaceholders = {
   Dog: petDog,
   Cat: petCat,
@@ -27,5 +24,3 @@ export const articlePlaceholders = [
   article5,
   article6,
 ];
-
-export const aboutPlaceholders = [about1, about2];

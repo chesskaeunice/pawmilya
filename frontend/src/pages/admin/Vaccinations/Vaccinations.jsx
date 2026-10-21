@@ -9,16 +9,23 @@ import {
   Plus,
   RefreshCw,
   Trash2,
-  MoreVertical,
   X,
 } from "lucide-react";
 
 import useAuth from "../../../hooks/useAuth.js";
 
-import pets from "../../../data/pets.js";
-import initialVaccinations from "../../../data/vaccinations.js";
+import useAdminLists from "../../../hooks/useAdminLists.js";
+import useFetch from "../../../hooks/useFetch.js";
+import {
+  addVaccinations,
+  deleteVaccination,
+  listVaccinations,
+  updateVaccination,
+} from "../../../services/vaccinationService.js";
+import { formatApiError } from "../../../services/authService.js";
 
 import "./Vaccinations.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 /* ---------- constants ---------- */
 
@@ -157,8 +164,14 @@ function Vaccinations() {
   const canDelete = can("vaccinations.delete");
   const showActions = canEdit || canDelete;
 
-  const [records, setRecords] = useState(() =>
-    initialVaccinations.map(normalize)
+  // Records and the animals list come from the API
+  const { data: recordData, reload } = useFetch(() => listVaccinations(), []);
+  const records = useMemo(() => (recordData ?? []).map(normalize), [recordData]);
+
+  const { animals } = useAdminLists();
+  const pets = useMemo(
+    () => animals.map((animal) => ({ ...animal, name: animal.name || animal.animal_code })),
+    [animals]
   );
   const [searchParams] = useSearchParams();
 
@@ -183,8 +196,7 @@ function Vaccinations() {
   const [sortBy, setSortBy] = useState("newest");
   const [page, setPage] = useState(1);
 
-  /* row menu, modals, toast */
-  const [openMenuId, setOpenMenuId] = useState(null);
+  /* modals, toast */
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [toast, setToast] = useState("");
@@ -207,27 +219,18 @@ function Vaccinations() {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  /* close row menu on outside click; close menu/modals on Escape */
+  /* close modals on Escape */
   useEffect(() => {
-    const onClick = (event) => {
-      if (!event.target.closest(".vaccinations__menu-wrap")) {
-        setOpenMenuId(null);
-      }
-    };
-
     const onKey = (event) => {
       if (event.key === "Escape") {
-        setOpenMenuId(null);
         setEditing(null);
         setDeleting(null);
       }
     };
 
-    document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
 
     return () => {
-      document.removeEventListener("mousedown", onClick);
       document.removeEventListener("keydown", onKey);
     };
   }, []);
@@ -311,7 +314,7 @@ function Vaccinations() {
     row.nextDue ||
     (rowName(row) && row.date ? nextDueFor(rowName(row), row.date) : "");
 
-  const handleAddBatch = () => {
+  const handleAddBatch = async () => {
     if (!selectedPet) {
       setFormError("Select an animal first.");
       return;
@@ -362,55 +365,51 @@ function Vaccinations() {
       seen.add(key);
     }
 
-    const startId = Math.max(0, ...records.map((r) => r.id)) + 1;
+    try {
+      const created = await addVaccinations(
+        selectedPet.id,
+        rows.map((row) => ({
+          vaccine: rowName(row),
+          administered_at: row.date,
+          next_due_date: nextDueOf(row) || null,
+        }))
+      );
 
-    const created = rows.map((row, index) => {
-      const next = nextDueOf(row);
+      reload();
 
-      return {
-        id: startId + index,
-        petId: selectedPet.id,
-        petName: selectedPet.name,
-        petType: selectedPet.type,
-        vaccine: rowName(row),
-        date: row.date,
-        nextDue: next || null,
-        status: getStatus(next || null),
-      };
-    });
+      setSortBy("newest");
+      setPage(1);
+      setRows([newRow()]);
+      setFormError("");
 
-    setRecords((current) => [...current, ...created]);
-
-    setSortBy("newest");
-    setPage(1);
-    setRows([newRow()]);
-    setFormError("");
-
-    showToast(
-      created.length === 1
-        ? `Vaccination added for ${selectedPet.name}.`
-        : `${created.length} vaccinations added for ${selectedPet.name}.`
-    );
+      showToast(
+        created.length === 1
+          ? `Vaccination added for ${selectedPet.name}.`
+          : `${created.length} vaccinations added for ${selectedPet.name}.`
+      );
+    } catch (error) {
+      setFormError(formatApiError(error).message);
+    }
   };
 
-  const recordBooster = (record) => {
+  const recordBooster = async (record) => {
     const today = toISO(new Date());
     const nextDue = nextDueFor(record.vaccine, today);
 
-    setRecords((current) =>
-      current.map((item) =>
-        item.id === record.id
-          ? { ...item, date: today, nextDue, status: getStatus(nextDue) }
-          : item
-      )
-    );
+    try {
+      await updateVaccination(record.id, {
+        administered_at: today,
+        next_due_date: nextDue,
+      });
 
-    setOpenMenuId(null);
-    showToast(`${record.vaccine} given to ${record.petName} today.`);
+      reload();
+      showToast(`${record.vaccine} given to ${record.petName} today.`);
+    } catch (error) {
+      showToast(formatApiError(error).message);
+    }
   };
 
   const openEdit = (record) => {
-    setOpenMenuId(null);
 
     const isListed = optionsFor(record.petType).includes(record.vaccine);
 
@@ -426,7 +425,7 @@ function Vaccinations() {
     });
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     const vaccineName =
       editing.vaccine === "Other"
         ? editing.customVaccine.trim()
@@ -451,29 +450,31 @@ function Vaccinations() {
       return;
     }
 
-    const nextDue = editing.nextDue || null;
+    try {
+      await updateVaccination(editing.id, {
+        vaccine: vaccineName,
+        administered_at: editing.date,
+        next_due_date: editing.nextDue || null,
+      });
+    } catch (error) {
+      setEditing({ ...editing, error: formatApiError(error).message });
+      return;
+    }
 
-    setRecords((current) =>
-      current.map((item) =>
-        item.id === editing.id
-          ? {
-              ...item,
-              vaccine: vaccineName,
-              date: editing.date,
-              nextDue,
-              status: getStatus(nextDue),
-            }
-          : item
-      )
-    );
-
+    reload();
     showToast(`Record for ${editing.petName} updated.`);
     setEditing(null);
   };
 
-  const confirmDelete = () => {
-    setRecords((current) => current.filter((item) => item.id !== deleting.id));
-    showToast(`Record for ${deleting.petName} deleted.`);
+  const confirmDelete = async () => {
+    try {
+      await deleteVaccination(deleting.id);
+      reload();
+      showToast(`Record for ${deleting.petName} deleted.`);
+    } catch (error) {
+      showToast(formatApiError(error).message);
+    }
+
     setDeleting(null);
   };
 
@@ -481,6 +482,8 @@ function Vaccinations() {
 
   return (
     <div className="staff-page vaccinations">
+      <BackButton fallback="/admin/dashboard" />
+
       <div className="staff-page__top">
         <div>
          
@@ -761,50 +764,26 @@ function Vaccinations() {
 
                 {showActions && (
                 <td>
-                  <div className="vaccinations__menu-wrap">
-                    <button
-                      type="button"
-                      className="vaccinations__more"
-                      aria-label={`Actions for ${record.petName}`}
-                      aria-expanded={openMenuId === record.id}
-                      onClick={() =>
-                        setOpenMenuId(openMenuId === record.id ? null : record.id)
-                      }
-                    >
-                      <MoreVertical size={14} />
-                    </button>
+                  <div className="vaccinations__actions">
+                    {canEdit && (
+                      <button type="button" className="ui-btn ui-btn--ghost ui-btn--sm" onClick={() => recordBooster(record)}>
+                        <RefreshCw size={14} />
+                        Booster
+                      </button>
+                    )}
 
-                    {openMenuId === record.id && (
-                      <div className="vaccinations__menu" role="menu">
-                        {canEdit && (
-                          <button type="button" role="menuitem" onClick={() => recordBooster(record)}>
-                            <RefreshCw size={12} />
-                            Record booster today
-                          </button>
-                        )}
+                    {canEdit && (
+                      <button type="button" className="ui-btn ui-btn--ghost ui-btn--sm" onClick={() => openEdit(record)}>
+                        <Pencil size={14} />
+                        Edit
+                      </button>
+                    )}
 
-                        {canEdit && (
-                          <button type="button" role="menuitem" onClick={() => openEdit(record)}>
-                            <Pencil size={12} />
-                            Edit record
-                          </button>
-                        )}
-
-                        {canDelete && (
-                          <button
-                            type="button"
-                            role="menuitem"
-                            className="vaccinations__menu-danger"
-                            onClick={() => {
-                              setOpenMenuId(null);
-                              setDeleting(record);
-                            }}
-                          >
-                            <Trash2 size={12} />
-                            Delete
-                          </button>
-                        )}
-                      </div>
+                    {canDelete && (
+                      <button type="button" className="ui-btn ui-btn--danger-ghost ui-btn--sm" onClick={() => setDeleting(record)}>
+                        <Trash2 size={14} />
+                        Delete
+                      </button>
                     )}
                   </div>
                 </td>

@@ -17,13 +17,15 @@ import {
   XCircle,
 } from "lucide-react";
 
-import applications from "../../../data/applications.js";
-import missingPets from "../../../data/missingPets.js";
+import useAdminLists from "../../../hooks/useAdminLists.js";
+import MyShifts from "../../../components/admin/MyShifts.jsx";
 
 import "./AdoptionCounselorDashboard.css";
 
 
 function AdoptionCounselorDashboard() {
+  const { applications, missingPets } = useAdminLists();
+
 
   /* =========================================
      APPLICATION STATISTICS
@@ -50,7 +52,7 @@ function AdoptionCounselorDashboard() {
               application.status === "Rejected"
           ).length,
       };
-    }, []);
+    }, [applications]);
 
 
   /* =========================================
@@ -70,7 +72,7 @@ function AdoptionCounselorDashboard() {
             getApplicationDate(a)
         )
         .slice(0, 4);
-    }, []);
+    }, [applications]);
 
 
   /* =========================================
@@ -86,7 +88,7 @@ function AdoptionCounselorDashboard() {
             getApplicationDate(a)
         )
         .slice(0, 4);
-    }, []);
+    }, [applications]);
 
 
   /* =========================================
@@ -108,7 +110,7 @@ function AdoptionCounselorDashboard() {
             new Date(b.reportedAt) -
             new Date(a.reportedAt)
         );
-    }, []);
+    }, [missingPets]);
 
 
   const visibleMissingReports =
@@ -612,6 +614,9 @@ function AdoptionCounselorDashboard() {
         </div>
 
       </section>
+
+
+      <MyShifts />
 
     </div>
   );

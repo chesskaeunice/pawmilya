@@ -1,5 +1,4 @@
 import {
-  ArrowLeft,
   CalendarDays,
   Clock3,
   MapPin,
@@ -7,48 +6,46 @@ import {
 } from "lucide-react";
 
 import {
-  useNavigate,
   useParams,
 } from "react-router-dom";
 
-import missingPets from "../../../data/missingPets.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { getMissingPet } from "../../../services/missingPetService.js";
 
 import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { displayPetName } from "../../../utils/petName.js";
 import StatusHelp from "../../../components/common/StatusHelp/StatusHelp.jsx";
 
 import "./MissingPetDetails.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 
 function MissingPetDetails() {
   const { reportId } =
     useParams();
 
-  const navigate =
-    useNavigate();
 
-
-  const pet =
-    missingPets.find(
-      (item) =>
-        item.id === Number(reportId)
+  const { data: pet, loading } =
+    useFetch(
+      () => getMissingPet(reportId),
+      [reportId]
     );
+
+
+  if (loading) {
+    return (
+      <div className="missing-detail">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
 
   if (!pet) {
     return (
       <div className="missing-detail">
 
-        <button
-          type="button"
-          className="missing-detail__back"
-          onClick={() =>
-            navigate("/missing-pets")
-          }
-        >
-          <ArrowLeft size={17} />
-          Back to Missing Pets
-        </button>
+        <BackButton fallback="/missing-pets" />
 
 
         <div className="missing-detail__not-found">
@@ -72,16 +69,7 @@ function MissingPetDetails() {
 
       {/* BACK */}
 
-      <button
-        type="button"
-        className="missing-detail__back"
-        onClick={() =>
-          navigate(-1)
-        }
-      >
-        <ArrowLeft size={17} />
-        Back
-      </button>
+      <BackButton fallback="/missing-pets" />
 
 
       {/* HEADER */}

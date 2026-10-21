@@ -38,7 +38,7 @@
 
   color: var(--color-orange);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   letter-spacing: 2px;
@@ -63,7 +63,7 @@
 
   color: var(--color-muted);
 
-  font-size: 17px;
+  font-size: var(--font-lg);
   line-height: 1.7;
 }
 
@@ -88,7 +88,7 @@
 
   color: var(--color-brown);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 600;
 }
 
@@ -115,7 +115,7 @@
 
   color: var(--color-brown);
 
-  font-size: 32px;
+  font-size: var(--font-h1);
 }
 
 .login__card-header p:last-child {
@@ -123,7 +123,7 @@
 
   color: var(--color-muted);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 
@@ -146,7 +146,7 @@
 .login__field label {
   color: var(--color-text);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 600;
 }
 
@@ -178,7 +178,7 @@
 }
 
 .login__field input::placeholder {
-  color: #aaa197;
+  color: var(--color-muted);
 }
 
 
@@ -202,7 +202,7 @@
 
   color: var(--color-muted);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 .login__remember input {
@@ -218,7 +218,7 @@
 
   color: var(--color-orange);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 600;
 }
 
@@ -240,7 +240,7 @@
   background-color: var(--color-orange);
   color: var(--color-white);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 700;
 
   transition:
@@ -255,6 +255,25 @@
 }
 
 
+.login__error {
+  margin: 0;
+
+  padding: 10px 14px;
+
+  border-radius: 10px;
+
+  background-color: #fdecec;
+  color: #a12a2a;
+
+  font-size: var(--font-xs);
+}
+
+.login__submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+
 /* SIGNUP LINK */
 
 .login__signup-text {
@@ -264,7 +283,7 @@
 
   color: var(--color-muted);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .login__signup-text a {
@@ -314,7 +333,7 @@
   }
 
   .login__description {
-    font-size: 16px;
+    font-size: var(--font-md);
   }
 
   .login__card {
@@ -325,4 +344,14 @@
     flex-direction: column;
     align-items: flex-start;
   }
+}
+.login__notice {
+  margin: 0;
+  padding: 10px 14px;
+
+  border-radius: 10px;
+  background-color: #e8f4ea;
+  color: #2e6b34;
+
+  font-size: var(--font-xs);
 }

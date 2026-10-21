@@ -19,8 +19,8 @@ import {
   MapPin,
 } from "lucide-react";
 
-import vaccinations from "../../../data/vaccinations.js";
-import animals from "../../../data/pets.js";
+import useAdminLists from "../../../hooks/useAdminLists.js";
+import MyShifts from "../../../components/admin/MyShifts.jsx";
 
 import "./VetTechDashboard.css";
 
@@ -37,6 +37,8 @@ const ATTENTION_PRIORITY = {
 
 
 function VetTechDashboard() {
+  const { vaccinations, animals } = useAdminLists();
+
 
   /* =========================================
      VACCINATION STATISTICS
@@ -63,7 +65,7 @@ function VetTechDashboard() {
               getVaccinationStatus(record) === "Up to date"
           ).length,
       };
-    }, []);
+    }, [vaccinations]);
 
 
   /* =========================================
@@ -97,7 +99,7 @@ function VetTechDashboard() {
           );
         })
         .slice(0, 4);
-    }, []);
+    }, [vaccinations]);
 
 
   /* =========================================
@@ -113,7 +115,7 @@ function VetTechDashboard() {
             getActivityDate(a)
         )
         .slice(0, 4);
-    }, []);
+    }, [vaccinations]);
 
 
   /* =========================================
@@ -137,7 +139,7 @@ function VetTechDashboard() {
               b.health_status
             ]
         );
-    }, []);
+    }, [animals]);
 
 
   const visibleAttentionAnimals =
@@ -693,6 +695,9 @@ function VetTechDashboard() {
         </div>
 
       </section>
+
+
+      <MyShifts />
 
     </div>
   );

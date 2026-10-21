@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+// Staff view of an animal. Key names (type, sex, ageLabel, dateAdded) match what the UI already uses.
+class AnimalResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        $photos = $this->photos->map->url()->values();
+
+        return [
+            'id' => $this->id,
+            'animal_code' => $this->animal_code,
+            'name' => $this->name,
+            'type' => $this->species,
+            'breed' => $this->breed,
+            'sex' => $this->sex,
+            'age_months' => $this->age_months,
+            'ageLabel' => $this->ageLabel(),
+            'color' => $this->color,
+            'location' => $this->location,
+            'status' => $this->status,
+            'health_status' => $this->health_status,
+            'personality' => $this->personality ?? [],
+            'vaccinated' => $this->vaccinated,
+            'neutered' => $this->neutered,
+            'description' => $this->description,
+            'ideal_home' => $this->ideal_home,
+            'dateAdded' => $this->rescued_at?->toDateString(),
+            'owner_name' => $this->owner_name,
+            'owner_contact' => $this->owner_contact,
+            'image' => $photos->first(),
+            'images' => $photos,
+        ];
+    }
+}

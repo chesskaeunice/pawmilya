@@ -10,7 +10,12 @@ import useAuth from "../hooks/useAuth.js";
 
 
 function AdminLayout() {
-  const { isLoggedIn, isStaff } = useAuth();
+  const { isLoggedIn, isStaff, loading, user } = useAuth();
+
+  // Wait until the stored session is checked
+  if (loading) {
+    return null;
+  }
 
   // Staff only: guests go to login, citizens go home
   if (!isLoggedIn) {
@@ -19,6 +24,11 @@ function AdminLayout() {
 
   if (!isStaff) {
     return <Navigate to="/" replace />;
+  }
+
+  // Temporary password: nothing else works until it is replaced
+  if (user?.mustChangePassword) {
+    return <Navigate to="/change-password" replace />;
   }
 
   return (

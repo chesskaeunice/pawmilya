@@ -1,48 +1,64 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import SearchBar from "../../../components/common/SearchBar.jsx";
 import Pagination from "../../../components/common/Pagination.jsx";
 import PetPreviewCard from "../../../components/landing/PetPreviewCard.jsx";
 
-import { getAllAdoptablePets } from "../../../services/previewService.js";
-import { matchesPetSearch } from "../../../utils/liveSearch.js";
+import useDebouncedValue from "../../../hooks/useDebouncedValue.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { listPets } from "../../../services/animalService.js";
 
 import adoptablePetsHero from "../../../assets/images/users/home/adoptablePets-hero.jpg";
 
 import "./AdoptablePets.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 const PETS_PER_PAGE = 6;
 
-const allPets = getAllAdoptablePets();
+const AGE_OPTIONS = [
+  { value: "baby", label: "Under 1 year" },
+  { value: "young", label: "1 to 3 years" },
+  { value: "adult", label: "3 years and older" },
+];
 
 function AdoptablePets() {
   const listRef = useRef(null);
 
   // live search: the grid filters on every keystroke
   const [query, setQuery] = useState("");
-  // Type filter: same options and rules as the original page
+  // Filters are sent to the API (only animals available for adoption come back)
   const [type, setType] = useState("All");
+  const [breed, setBreed] = useState("All");
+  const [sex, setSex] = useState("All");
+  const [age, setAge] = useState("All");
   const [page, setPage] = useState(1);
 
-  const filteredPets = useMemo(() => {
-    return allPets.filter((pet) => {
-      // name, breed or species
-      const matchesSearch = matchesPetSearch(pet, query);
+  const debouncedQuery = useDebouncedValue(query);
 
-      const matchesType =
-        type === "All" || pet.type === type;
-
-      return matchesSearch && matchesType;
-    });
-  }, [query, type]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredPets.length / PETS_PER_PAGE));
-  const currentPage = Math.min(page, totalPages);
-
-  const visiblePets = filteredPets.slice(
-    (currentPage - 1) * PETS_PER_PAGE,
-    currentPage * PETS_PER_PAGE
+  const { data, loading } = useFetch(
+    () =>
+      listPets({
+        q: debouncedQuery || undefined,
+        type: type === "All" ? undefined : type,
+        breed: breed === "All" ? undefined : breed,
+        sex: sex === "All" ? undefined : sex,
+        age: age === "All" ? undefined : age,
+        per_page: PETS_PER_PAGE,
+        page,
+      }),
+    [debouncedQuery, type, breed, sex, age, page]
   );
+
+  const visiblePets = data?.data ?? [];
+  const totalPets = data?.meta.total ?? 0;
+  const totalPages = Math.max(1, data?.meta.last_page ?? 1);
+  const currentPage = page;
+  const breeds = data?.breeds ?? [];
+
+  const changeFilter = (setter) => (next) => {
+    setter(next);
+    setPage(1);
+  };
 
   const changeQuery = (value) => {
     setQuery(value);
@@ -54,11 +70,6 @@ function AdoptablePets() {
     setPage(1);
   };
 
-  const changeType = (next) => {
-    setType(next);
-    setPage(1);
-  };
-
   const changePage = (next) => {
     setPage(next);
     listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -66,6 +77,8 @@ function AdoptablePets() {
 
   return (
     <div className="adoptable">
+      <BackButton fallback="/" />
+
 
       <section
         className="adoptable__header"
@@ -113,7 +126,7 @@ function AdoptablePets() {
           <select
             value={type}
             onChange={(event) =>
-              changeType(event.target.value)
+              changeFilter(setType)(event.target.value)
             }
             aria-label="Animal type"
           >
@@ -122,15 +135,55 @@ function AdoptablePets() {
             <option value="Cat">Cats</option>
           </select>
 
+          <select
+            value={breed}
+            onChange={(event) =>
+              changeFilter(setBreed)(event.target.value)
+            }
+            aria-label="Breed"
+          >
+            <option value="All">All Breeds</option>
+            {breeds.map((name) => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
+
+          <select
+            value={sex}
+            onChange={(event) =>
+              changeFilter(setSex)(event.target.value)
+            }
+            aria-label="Sex"
+          >
+            <option value="All">Any Sex</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+
+          <select
+            value={age}
+            onChange={(event) =>
+              changeFilter(setAge)(event.target.value)
+            }
+            aria-label="Age"
+          >
+            <option value="All">Any Age</option>
+            {AGE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+
         </div>
 
 
         <p className="adoptable__result-count">
-          {filteredPets.length} {filteredPets.length === 1 ? "pet" : "pets"} found
+          {loading ? "Loading pets..." : `${totalPets} ${totalPets === 1 ? "pet" : "pets"} found`}
         </p>
 
 
-        {visiblePets.length > 0 ? (
+        {loading ? null : visiblePets.length > 0 ? (
           <div className="adoptable__grid">
             {visiblePets.map((pet) => (
               <PetPreviewCard key={pet.id} kind="adoptable" item={pet} />
@@ -139,7 +192,7 @@ function AdoptablePets() {
         ) : (
           <div className="adoptable__empty" role="status">
             <h2>No pets match your search</h2>
-            <p>Try a different name, breed or species.</p>
+            <p>Try different filters, or a different name, breed or species.</p>
 
             <button type="button" onClick={clearSearch}>
               Clear search

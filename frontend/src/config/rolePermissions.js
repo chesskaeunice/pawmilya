@@ -44,6 +44,8 @@ export const rolePermissions = {
     "animals.create",
     "animals.edit",
     "animals.delete",
+    "animals.photo",
+    "qr.generate",
 
     "adoptionApplications.view",
     "adoptionApplications.review",
@@ -65,6 +67,8 @@ export const rolePermissions = {
 
     "settings.view",
     "settings.system",
+
+    "shifts.manage",
   ],
 
 
@@ -77,6 +81,7 @@ export const rolePermissions = {
 
     "animals.view",
     "animals.adoptionUpdate",
+    "animals.photo",
 
     "adoptionApplications.view",
     "adoptionApplications.review",
@@ -95,6 +100,8 @@ export const rolePermissions = {
 
     "settings.view",
     "settings.ownAccount",
+
+    "shifts.viewOwn",
   ],
 
 
@@ -107,6 +114,7 @@ export const rolePermissions = {
 
     "animals.view",
     "animals.healthUpdate",
+    "animals.photo",
 
     "missingPets.view",
 
@@ -121,6 +129,8 @@ export const rolePermissions = {
 
     "settings.view",
     "settings.ownAccount",
+
+    "shifts.viewOwn",
   ],
 
 
@@ -133,8 +143,8 @@ export const rolePermissions = {
 
     "animals.view",
     "animals.husbandryUpdate",
-
-    "adoptionApplications.view",
+    "animals.photo",
+    "qr.generate",
 
     "missingPets.view",
 
@@ -142,6 +152,8 @@ export const rolePermissions = {
 
     "settings.view",
     "settings.ownAccount",
+
+    "shifts.viewOwn",
   ],
 };
 

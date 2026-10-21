@@ -10,48 +10,22 @@ import {
 } from "lucide-react";
 
 import useAuth from "../../../hooks/useAuth.js";
+import useFetch from "../../../hooks/useFetch.js";
+import {
+  createStaffAccount,
+  listStaffAccounts,
+  updateStaffAccount,
+} from "../../../services/adminService.js";
+import { formatApiError } from "../../../services/authService.js";
 import {
   ROLE_LABELS,
   ROLES,
 } from "../../../config/rolePermissions.js";
 
+import SiteContentForm from "./SiteContentForm.jsx";
+
 import "./Settings.css";
-
-
-/* Temporary staff accounts until the Laravel users API exists. */
-const initialStaffAccounts = [
-  {
-    id: 1,
-    name: "Rafael Dela Cruz",
-    email: "manager@pawmilya.local",
-    role: ROLES.KENNEL_MANAGER,
-    active: true,
-  },
-
-  {
-    id: 2,
-    name: "Angela Reyes",
-    email: "counselor@pawmilya.local",
-    role: ROLES.ADOPTION_COUNSELOR,
-    active: true,
-  },
-
-  {
-    id: 3,
-    name: "Marco Villanueva",
-    email: "vettech@pawmilya.local",
-    role: ROLES.VET_TECH,
-    active: true,
-  },
-
-  {
-    id: 4,
-    name: "Josefina Bautista",
-    email: "staff@pawmilya.local",
-    role: ROLES.POUND_STAFF,
-    active: false,
-  },
-];
+import BackButton from "../../../components/common/BackButton.jsx";
 
 
 function Settings() {
@@ -65,34 +39,91 @@ function Settings() {
   const canManageSystem =
     can("settings.system");
 
-  const [staffAccounts, setStaffAccounts] =
-    useState(initialStaffAccounts);
-
-
-  const changeRole = (id, role) => {
-    setStaffAccounts((accounts) =>
-      accounts.map((account) =>
-        account.id === id
-          ? { ...account, role }
-          : account
-      )
+  /* Staff accounts and roles come from the API (kennel manager only). */
+  const { data: accountData, reload } =
+    useFetch(
+      () =>
+        canManageSystem
+          ? listStaffAccounts()
+          : Promise.resolve([]),
+      [canManageSystem]
     );
+
+  const staffAccounts =
+    accountData ?? [];
+
+  const [newAccount, setNewAccount] =
+    useState({
+      name: "",
+      email: "",
+      role: ROLES.POUND_STAFF,
+      password: "",
+    });
+
+  const [accountMessage, setAccountMessage] =
+    useState("");
+
+
+  // The API refuses changes like demoting yourself; its message is shown
+  const saveChange = async (id, changes) => {
+    try {
+      await updateStaffAccount(id, changes);
+      setAccountMessage("");
+    } catch (error) {
+      setAccountMessage(
+        formatApiError(error).message
+      );
+    }
+
+    reload();
   };
 
 
+  const changeRole = (id, role) =>
+    saveChange(id, { role });
+
+
   const toggleActive = (id) => {
-    setStaffAccounts((accounts) =>
-      accounts.map((account) =>
-        account.id === id
-          ? { ...account, active: !account.active }
-          : account
-      )
-    );
+    const account =
+      staffAccounts.find(
+        (item) => item.id === id
+      );
+
+    saveChange(id, {
+      is_active: !account.active,
+    });
+  };
+
+
+  const createAccount = async (event) => {
+    event.preventDefault();
+
+    try {
+      await createStaffAccount(newAccount);
+
+      setNewAccount({
+        name: "",
+        email: "",
+        role: ROLES.POUND_STAFF,
+        password: "",
+      });
+      setAccountMessage("Staff account created.");
+      reload();
+    } catch (error) {
+      const { message, fields } =
+        formatApiError(error);
+
+      setAccountMessage(
+        Object.values(fields)[0] || message
+      );
+    }
   };
 
 
   return (
     <div className="staff-page">
+      <BackButton fallback="/admin/dashboard" />
+
       <div className="staff-page__top">
         <div>
           <h1 className="staff-page__title">
@@ -216,43 +247,6 @@ function Settings() {
           <section className="settings__grid">
             <div className="staff-detail-card">
               <h2 className="staff-detail-card__title">
-                Organization Information
-              </h2>
-
-              <div className="settings__fields">
-                <label>
-                  Organization Name
-                  <input
-                    defaultValue="Pawmilya"
-                  />
-                </label>
-
-                <label>
-                  Contact Number
-                  <input
-                    placeholder="Contact number"
-                  />
-                </label>
-
-                <label>
-                  Email Address
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                  />
-                </label>
-
-                <label>
-                  Office Address
-                  <input
-                    placeholder="Office address"
-                  />
-                </label>
-              </div>
-            </div>
-
-            <div className="staff-detail-card">
-              <h2 className="staff-detail-card__title">
                 Adoption Guidelines
               </h2>
 
@@ -263,6 +257,9 @@ function Settings() {
               />
             </div>
           </section>
+
+
+          <SiteContentForm />
 
 
           <section className="staff-detail-card settings__section">
@@ -410,6 +407,73 @@ function Settings() {
                 </tbody>
               </table>
             </div>
+
+            {accountMessage && (
+              <p role="status">
+                {accountMessage}
+              </p>
+            )}
+
+            <form
+              className="settings__fields"
+              onSubmit={createAccount}
+            >
+              <label>
+                Name
+                <input
+                  value={newAccount.name}
+                  onChange={(event) =>
+                    setNewAccount({ ...newAccount, name: event.target.value })
+                  }
+                  required
+                />
+              </label>
+
+              <label>
+                Email
+                <input
+                  type="email"
+                  value={newAccount.email}
+                  onChange={(event) =>
+                    setNewAccount({ ...newAccount, email: event.target.value })
+                  }
+                  required
+                />
+              </label>
+
+              <label>
+                Role
+                <select
+                  value={newAccount.role}
+                  onChange={(event) =>
+                    setNewAccount({ ...newAccount, role: event.target.value })
+                  }
+                >
+                  {Object.values(ROLES).map((role) => (
+                    <option key={role} value={role}>
+                      {ROLE_LABELS[role]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                Temporary password (min. 10, upper + lower case, number, symbol; changed at first login)
+                <input
+                  type="password"
+                  minLength={10}
+                  value={newAccount.password}
+                  onChange={(event) =>
+                    setNewAccount({ ...newAccount, password: event.target.value })
+                  }
+                  required
+                />
+              </label>
+
+              <button type="submit" className="staff-button">
+                Add Staff Account
+              </button>
+            </form>
           </section>
 
 

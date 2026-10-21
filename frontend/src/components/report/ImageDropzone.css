@@ -38,7 +38,7 @@
 
 .dropzone span {
   color: var(--color-muted);
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .dropzone__thumbs {
@@ -105,7 +105,7 @@
 
 .dropzone-slot small {
   color: var(--color-muted);
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .dropzone-slot--filled {
@@ -136,7 +136,7 @@
   background-color: rgba(47, 39, 31, 0.75);
   color: var(--color-white);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 

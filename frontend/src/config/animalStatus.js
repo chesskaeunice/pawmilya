@@ -13,6 +13,21 @@ export const HEALTH_STATUSES = [
   "Cleared",
 ];
 
+// "Limited" status changes for roles without animals.edit (the API enforces the same list)
+const STATUS_LIMITS = {
+  "animals.adoptionUpdate": ["Available for Adoption", "Pending Adoption", "Adopted"],
+  "animals.healthUpdate": ["Rescued", "Available for Adoption"],
+};
+
+// Statuses a role may choose; `can` is the permission check from useAuth
+export function allowedStatuses(can) {
+  if (can("animals.edit")) return ANIMAL_STATUSES;
+
+  return ANIMAL_STATUSES.filter((status) =>
+    Object.entries(STATUS_LIMITS).some(([permission, list]) => can(permission) && list.includes(status))
+  );
+}
+
 // A pet can only be listed for adoption once it is cleared.
 export const ADOPTABLE_STATUS = "Available for Adoption";
 export const CLEARED = "Cleared";

@@ -19,7 +19,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -28,7 +28,7 @@
 
   color: var(--color-brown);
 
-  font-size: 25px;
+  font-size: var(--font-h2);
 
   letter-spacing: -0.7px;
 }
@@ -39,7 +39,7 @@
 
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -48,7 +48,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   line-height: 1.45;
 }
 
@@ -73,7 +73,7 @@
 
   color: var(--color-brown);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -132,7 +132,7 @@
 
   color: var(--color-text);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 
   outline: none;
 }
@@ -185,7 +185,7 @@
 
   color: var(--color-orange);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -197,7 +197,7 @@
 
   color: #4b433a;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
@@ -220,9 +220,9 @@
 
   background-color: #faf7f1;
 
-  color: #aaa197;
+  color: var(--color-muted);
 
-  font-size: 8px;
+  font-size: var(--font-xs);
 }
 
 
@@ -236,7 +236,7 @@
 
   border-radius: 999px;
 
-  font-size: 9px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -282,7 +282,7 @@
 
   color: var(--color-orange);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 
   cursor: pointer;
 }
@@ -303,7 +303,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -321,7 +321,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -349,7 +349,7 @@
 
   color: var(--color-brown);
 
-  font-size: 15px;
+  font-size: var(--font-label);
 }
 
 
@@ -378,14 +378,14 @@
 
   color: var(--color-muted);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 
 .staff-detail-row strong {
   color: var(--color-text);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 /* =========================================
@@ -395,15 +395,15 @@
 /* PAGE HEADER */
 
 .staff-page__breadcrumb {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .staff-page__title {
-  font-size: 30px;
+  font-size: var(--font-h1);
 }
 
 .staff-page__subtitle {
-  font-size: 14px;
+  font-size: var(--font-sm);
   line-height: 1.6;
 }
 
@@ -412,7 +412,7 @@
 
 .staff-button,
 .staff-page button {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -420,30 +420,30 @@
 
 .staff-filters input,
 .staff-filters select {
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
 /* TABLE */
 
 .staff-table th {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .staff-table td {
-  font-size: 13px;
+  font-size: var(--font-xs);
   line-height: 1.5;
 }
 
 .staff-table td strong {
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
 /* STATUS BADGES */
 
 .staff-status {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
@@ -451,15 +451,15 @@
 
 .staff-detail-card__title,
 .staff-detail-card h2 {
-  font-size: 17px;
+  font-size: var(--font-lg);
 }
 
 .staff-detail-row span {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .staff-detail-row strong {
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
@@ -467,11 +467,11 @@
 
 .staff-pagination,
 .staff-pagination span {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .staff-pagination__pages button {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 

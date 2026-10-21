@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 import BackButton from "../../../components/common/BackButton.jsx";
 import legalPages, { LEGAL_UPDATED, legalOrder } from "../../../data/legalPages.js";
-import { siteInfo } from "../../../data/siteInfo.js";
+import useSiteInfo from "../../../hooks/useSiteInfo.js";
 import { formatDate } from "../../../utils/formatDateTime.js";
 
 import "./LegalPage.css";
@@ -10,6 +10,7 @@ import "./LegalPage.css";
 // One page component for all three policies; `slug` picks the content.
 function LegalPage({ slug }) {
   const page = legalPages[slug];
+  const contact = useSiteInfo()?.pound ?? {};
   const others = legalOrder.filter((key) => key !== slug);
 
   return (
@@ -45,10 +46,15 @@ function LegalPage({ slug }) {
 
       <section className="legal-page__section">
         <h2>Contact us</h2>
-        <p>
-          Questions about this policy? Email {siteInfo.contact.email} or call{" "}
-          {siteInfo.contact.phone}.
-        </p>
+        {(contact.email || contact.phone) && (
+          <p>
+            Questions about this policy?
+            {contact.email && ` Email ${contact.email}`}
+            {contact.email && contact.phone && " or call"}
+            {!contact.email && " Call"}
+            {contact.phone && ` ${contact.phone}`}.
+          </p>
+        )}
       </section>
 
       <nav className="legal-page__others" aria-label="Other policies">

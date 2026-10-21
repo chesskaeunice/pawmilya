@@ -6,6 +6,8 @@ import Modal from "../common/Modal.jsx";
 import ImageDropzone from "./ImageDropzone.jsx";
 import { formatDateTime } from "../../utils/formatDateTime.js";
 import { displayPetName } from "../../utils/petName.js";
+import { submitMissingPetReport } from "../../services/missingPetService.js";
+import { formatApiError } from "../../services/authService.js";
 
 import "../common/ModalForm.css";
 import "./EmergencyReportModal.css";
@@ -80,7 +82,7 @@ function joinList(items) {
   return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
 }
 
-// Mock only: nothing is sent anywhere. Open to guests (no login needed).
+// Open to guests (no login needed); the report goes to the API.
 // Step 1: the pet (2 photos + details). Step 2: where it was last seen + contact.
 function EmergencyReportFlow({ onClose }) {
   const rootRef = useRef(null);
@@ -94,6 +96,8 @@ function EmergencyReportFlow({ onClose }) {
   const [area1, setArea1] = useState([]);
   const [area2, setArea2] = useState([]);
   const [result, setResult] = useState(null);
+  const [submitError, setSubmitError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const errors = validate(values);
   const showError = (field) => (touched[field] ? errors[field] : "");
@@ -147,7 +151,7 @@ function EmergencyReportFlow({ onClose }) {
       <p className="mform__error" role="alert">{showError(field)}</p>
     );
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     // Enter on Step 1 moves on (only when Step 1 is complete); it never submits
@@ -160,10 +164,40 @@ function EmergencyReportFlow({ onClose }) {
     touchAll(STEP_2_FIELDS);
     if (!step1Ready || !step2Ready) return;
 
-    setResult({
-      reference: `PAW-${String(Math.floor(100000 + Math.random() * 900000))}`,
-      submittedAt: new Date().toISOString(),
-    });
+    // a second click while the first is still sending does nothing
+    if (submitting) return;
+
+    const body = new FormData();
+    body.append("name", values.petName.trim());
+    body.append("species", values.species === "Others" ? "Other" : values.species);
+    body.append("other_species", values.species === "Others" ? values.otherSpecies.trim() : "");
+    body.append("breed", values.breed.trim());
+    body.append("details", values.description.trim());
+    body.append("status", values.reportType);
+    body.append("location", values.location.trim());
+    body.append("last_seen_at", values.dateTime);
+    body.append("contact_name", values.contactName.trim());
+    body.append("contact_number", values.contactNumber.trim());
+    body.append("contact_email", values.contactEmail.trim());
+    [...photo1, ...photo2].forEach((item) => body.append("pet_images[]", item.file));
+    [...area1, ...area2].forEach((item) => body.append("last_seen_images[]", item.file));
+
+    setSubmitError("");
+    setSubmitting(true);
+
+    try {
+      const report = await submitMissingPetReport(body);
+
+      setResult({
+        reference: `MPR-${String(report.id).padStart(3, "0")}`,
+        submittedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      const { message, fields } = formatApiError(error);
+      setSubmitError(Object.values(fields)[0] || message);
+    }
+
+    setSubmitting(false);
   };
 
   /* ---------- confirmation ---------- */
@@ -492,6 +526,10 @@ function EmergencyReportFlow({ onClose }) {
             : `To submit, add ${joinList(step2Missing)}.`}
         </p>
 
+        {submitError && (
+          <p className="mform__error" role="alert">{submitError}</p>
+        )}
+
         <div className="emergency__nav">
           <button
             type="button"
@@ -505,9 +543,9 @@ function EmergencyReportFlow({ onClose }) {
           <button
             type="submit"
             className="mform__primary mform__primary--danger"
-            disabled={!step2Ready || !step1Ready}
+            disabled={!step2Ready || !step1Ready || submitting}
           >
-            Submit Report
+            {submitting ? "Submitting..." : "Submit Report"}
           </button>
         </div>
       </section>

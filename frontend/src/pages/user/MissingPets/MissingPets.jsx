@@ -13,7 +13,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-import missingPets from "../../../data/missingPets.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { listMissingPets } from "../../../services/missingPetService.js";
 
 import SearchBar from "../../../components/common/SearchBar.jsx";
 import { displayPetName } from "../../../utils/petName.js";
@@ -23,9 +24,13 @@ import StatusHelp from "../../../components/common/StatusHelp/StatusHelp.jsx";
 import missingPetsHero from "../../../assets/images/users/missing-pets/missing-pets-hero.jpg";
 
 import "./MissingPets.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 
 const PETS_PER_PAGE = 9;
+
+// stable empty list while the API call is loading
+const NO_REPORTS = [];
 
 const ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -56,6 +61,10 @@ const statusDescriptions = {
 
 
 function MissingPets() {
+  // All reports are loaded once; the search and filters below run on this list
+  const { data: reports } = useFetch(() => listMissingPets(), []);
+  const missingPets = reports ?? NO_REPORTS;
+
   // live search: the grid filters on every keystroke
   const [search, setSearch] =
     useState("");
@@ -228,6 +237,7 @@ function MissingPets() {
       );
 
   }, [
+    missingPets,
     search,
     animalType,
     status,
@@ -324,6 +334,8 @@ function MissingPets() {
 
   return (
     <div className="missing-pets">
+      <BackButton fallback="/" />
+
 
       {/* =====================================
           HERO

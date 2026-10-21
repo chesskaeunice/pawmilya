@@ -1,5 +1,6 @@
 import {
   NavLink,
+  useNavigate,
 } from "react-router-dom";
 
 import {
@@ -10,12 +11,12 @@ import {
   Syringe,
   ChartNoAxesColumnIncreasing,
   Settings,
+  LogOut,
+  CalendarClock,
+  ScrollText,
 } from "lucide-react";
 
 import useAuth from "../../hooks/useAuth.js";
-
-import DevRoleSwitcher from "./DevRoleSwitcher.jsx";
-
 
 const menuItems = [
   {
@@ -104,6 +105,34 @@ const menuItems = [
 
   {
     path:
+      "/admin/staff-schedule",
+
+    label:
+      "Staff Schedule",
+
+    icon:
+      CalendarClock,
+
+    permission:
+      "shifts.manage",
+  },
+
+  {
+    path:
+      "/admin/audit-logs",
+
+    label:
+      "Audit Logs",
+
+    icon:
+      ScrollText,
+
+    permission:
+      "settings.system",
+  },
+
+  {
+    path:
       "/admin/settings",
 
     label:
@@ -121,8 +150,17 @@ const menuItems = [
 function AdminSidebar() {
   const {
     can,
-    roleLabel,
+    logout,
   } = useAuth();
+
+  const navigate =
+    useNavigate();
+
+
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
 
 
   const visibleMenuItems =
@@ -202,22 +240,24 @@ function AdminSidebar() {
       </nav>
 
 
-      {/* DEV ONLY: preview other roles */}
-
-      <DevRoleSwitcher />
-
-
-      {/* CURRENT ROLE */}
+      {/* LOG OUT (name and role are shown once, in the header) */}
 
       <div className="staff-sidebar__role">
 
-        <span>
-          Signed in as
-        </span>
+        <button
+          type="button"
+          className="staff-sidebar__logout"
+          onClick={handleLogout}
+        >
+          <LogOut
+            size={14}
+            strokeWidth={1.7}
+          />
 
-        <strong>
-          {roleLabel}
-        </strong>
+          <span>
+            Log out
+          </span>
+        </button>
 
       </div>
 

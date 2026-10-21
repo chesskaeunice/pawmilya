@@ -19,6 +19,13 @@ const myApplicationsLink = {
   isPage: true,
 };
 
+const myMissingReportsLink = {
+  id: "my-missing-reports",
+  label: "My Reports",
+  path: "/my-missing-reports",
+  isPage: true,
+};
+
 // Guest:  Home, Adoptable Pets, Missing Pets, About Us
 // Citizen: Home, Adoptable Pets, My Applications, Missing Pets, About Us
 function getLinks(isLoggedIn) {
@@ -26,6 +33,7 @@ function getLinks(isLoggedIn) {
 
   return sectionLinks.flatMap((link) => {
     if (link.id === "adoptable-pets") return [link, myApplicationsLink];
+    if (link.id === "missing-pets") return [link, myMissingReportsLink];
     return [link];
   });
 }
@@ -156,6 +164,17 @@ function UserNavbar() {
 
 
         <div className="user-navbar__actions">
+
+          {!isLoggedIn && (
+            <>
+              <Link to="/login" className="user-navbar__login">
+                Log In
+              </Link>
+              <Link to="/signup" className="user-navbar__signup">
+                Sign Up
+              </Link>
+            </>
+          )}
 
           {isLoggedIn && (
             <div className="user-menu" ref={menuWrapRef}>

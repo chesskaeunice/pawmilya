@@ -1,13 +1,17 @@
 import { useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import pets from "../../../data/pets.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { getPet } from "../../../services/animalService.js";
+import { submitApplication } from "../../../services/adoptionService.js";
+import { formatApiError } from "../../../services/authService.js";
 import { isAdoptable } from "../../../services/previewService.js";
 import ImageDropzone from "../../../components/report/ImageDropzone.jsx";
 
 import "./AdoptionApplication.css";
 // error text style used by ImageDropzone (.mform__error)
 import "../../../components/common/ModalForm.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 const STATUS_OPTIONS = ["Single", "Married", "Other"];
 const PRONOUN_OPTIONS = ["She/her", "He/him", "They/them"];
@@ -91,6 +95,9 @@ function AgreeCheckbox({ id, children }) {
 
 function AdoptionApplication() {
   const { petId } = useParams();
+  const navigate = useNavigate();
+  const [submitErrors, setSubmitErrors] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
 
   const [hasPets, setHasPets] = useState("");
   const [employmentStatus, setEmploymentStatus] = useState("");
@@ -103,7 +110,15 @@ function AdoptionApplication() {
   const [photosError, setPhotosError] = useState("");
   const photosRef = useRef(null);
 
-  const pet = pets.find((pet) => pet.id === Number(petId));
+  const { data: pet, loading: petLoading } = useFetch(() => getPet(petId), [petId]);
+
+  if (petLoading) {
+    return (
+      <div className="adoption-form__not-found">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!isAdoptable(pet)) {
     return (
@@ -128,8 +143,11 @@ function AdoptionApplication() {
     if (next.length >= MIN_HOME_PHOTOS) setPhotosError("");
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // a second click while the first is still sending does nothing
+    if (submitting) return;
 
     if (photos.length < MIN_HOME_PHOTOS) {
       setPhotosError(
@@ -139,12 +157,57 @@ function AdoptionApplication() {
       return;
     }
 
-    alert("Application submitted. Laravel integration will be added later.");
+    // Fields are read by id / radio name; the files go as multipart
+    const form = event.currentTarget.elements;
+    const body = new FormData();
+    const add = (key, value) => body.append(key, value ?? "");
+
+    add("animal_id", pet.id);
+    add("first_name", form.firstName.value);
+    add("last_name", form.lastName.value);
+    add("address", form.address.value);
+    add("phone", form.contact.value);
+    add("email", form.email.value);
+    add("birth_date", form.birthDate.value);
+    add("employment_status", employmentStatus);
+    add("work", work);
+    add("self_employed_field", selfEmployedField);
+    add("self_employed_field_other", selfEmployedFieldOther);
+    add("social_media", form.socialMedia.value);
+    add("civil_status", form.civilStatus.value);
+    add("pronouns", form.pronouns.value);
+    add("referral_source", form.prompt.value);
+    add("adopted_before", form.adoptedBefore.value === "Yes" ? 1 : 0);
+    add("residence", form.residence.value);
+    add("household_members", form.household.value);
+    add("has_pets", hasPets === "Yes" ? 1 : 0);
+    add("pet_count", hasPets === "Yes" ? form.petCount.value : "");
+    add("pet_experience", form.experience.value);
+    add("why_adopt", form.whyAdopt.value);
+    add("how_care", form.howCare.value);
+    add("terms_accepted", 1);
+    body.append("valid_id", validId);
+    photos.forEach((photo) => body.append("home_photos[]", photo.file));
+
+    setSubmitErrors([]);
+    setSubmitting(true);
+
+    try {
+      await submitApplication(body);
+      navigate("/my-applications");
+    } catch (err) {
+      const { message, fields } = formatApiError(err);
+      const messages = Object.values(fields);
+      setSubmitErrors(messages.length ? messages : [message]);
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="adoption-form">
       <div className="adoption-form__container">
+      <BackButton fallback="/adoptable-pets" />
+
         <section className="adoption-form__header">
           <p className="adoption-form__eyebrow">Adoption Application</p>
 
@@ -588,8 +651,20 @@ function AdoptionApplication() {
               </ol>
             </div>
 
-            <button type="submit" className="adoption-form__submit">
-              Submit Application
+            {submitErrors.length > 0 && (
+              <ul className="adoption-form__error" role="alert">
+                {submitErrors.map((message) => (
+                  <li key={message}>{message}</li>
+                ))}
+              </ul>
+            )}
+
+            <button
+              type="submit"
+              className="adoption-form__submit"
+              disabled={submitting}
+            >
+              {submitting ? "Submitting..." : "Submit Application"}
             </button>
 
             <Link

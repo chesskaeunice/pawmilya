@@ -1,37 +1,107 @@
 :root {
-  /* Pawmilya brand colors */
+  /* ---------- Brand colors ---------- */
 
   --color-cream: #f9e6a8;
   --color-gold: #f2a900;
-  --color-orange: #cc6f00;
+  --color-orange: #a85a00; /* darkened from #cc6f00 so orange text passes AA (4.5:1) on white and cream */
+  --color-orange-bright: #cc6f00; /* fills and icons only, never small text */
   --color-brown: #4d2a00;
   --color-white: #ffffff;
 
-  /* UI colors */
+  /* ---------- UI colors ---------- */
 
   --color-background: #f8f4ec;
   --color-surface: #ffffff;
+  --color-surface-alt: #fbf8f2; /* zebra rows, subtle panels */
 
   --color-text: #2f271f;
-  --color-muted: #756b61;
+  --color-muted: #6b6157; /* AA on white and on the background */
 
   --color-border: #e6ded2;
+  --color-border-strong: #cfc4b3;
 
-  --color-success: #39734d;
-  --color-danger: #b64646;
-  --color-info: #476f9e;
+  --color-success: #2f6b45;
+  --color-danger: #a83a3a;
+  --color-info: #3d6491;
+  --color-warning: #8a5a00;
 
-  /* Border radius */
+  /* status badge fills (text uses the matching strong color) */
+  --badge-success-bg: #e3f1e7;
+  --badge-success-fg: #1f5a37;
+  --badge-warning-bg: #fdf0cf;
+  --badge-warning-fg: #7a4f00;
+  --badge-danger-bg: #fbe4e4;
+  --badge-danger-fg: #9a2f2f;
+  --badge-info-bg: #e3edf8;
+  --badge-info-fg: #2f5683;
+  --badge-neutral-bg: #efe9df;
+  --badge-neutral-fg: #4a4036;
+
+  /* ---------- Typography ---------- */
+
+  --font-family:
+    "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+
+  /* Type scale. Rule: no text below --font-xs (13px). */
+  --font-xs: 0.8125rem; /* 13px  badges, table headers, helper text, captions */
+  --font-sm: 0.875rem; /* 14px  secondary text, labels */
+  --font-label: 0.9375rem; /* 15px  form labels, nav items */
+  --font-md: 1rem; /* 16px  body */
+  --font-lg: 1.125rem; /* 18px  lead text */
+  --font-h3: 1.25rem; /* 20px */
+  --font-h2: clamp(1.5rem, 1.2rem + 1vw, 1.75rem); /* 24-28px */
+  --font-h1: clamp(2rem, 1.6rem + 1.6vw, 2.5rem); /* 32-40px */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --line-height-body: 1.5;
+  --line-height-tight: 1.25;
+
+  /* ---------- Spacing scale ---------- */
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* ---------- Border radius ---------- */
 
   --radius-small: 8px;
   --radius-medium: 14px;
   --radius-large: 22px;
+  --radius-pill: 999px;
 
-  /* Shadows */
+  /* ---------- Shadows ---------- */
 
-  --shadow-soft:
-    0 8px 24px rgba(77, 42, 0, 0.08);
+  --shadow-soft: 0 8px 24px rgba(77, 42, 0, 0.08);
+  --shadow-card: 0 4px 16px rgba(77, 42, 0, 0.06);
 
-  --shadow-card:
-    0 4px 16px rgba(77, 42, 0, 0.06);
+  /* ---------- Controls ---------- */
+
+  --control-height-sm: 34px;
+  --control-height-md: 42px;
+  --control-height-lg: 50px;
+
+  --focus-ring: 0 0 0 3px rgba(242, 169, 0, 0.45);
+  --focus-outline: 3px solid var(--color-gold);
+
+  --transition: 0.2s ease;
+
+  /* ---------- Layout ---------- */
+
+  --page-max-width: 1180px;
+  --page-padding: var(--space-6);
+
+  /* ---------- z-index ---------- */
+
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-modal: 1000;
+  --z-toast: 1100;
 }

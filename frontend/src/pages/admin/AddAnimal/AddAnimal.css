@@ -7,29 +7,7 @@
   color: var(--color-brown);
 }
 
-.add-animal__back {
-  display: inline-flex;
-  align-items: center;
 
-  gap: 4px;
-
-  margin-bottom: 12px;
-  padding: 0;
-
-  border: none;
-
-  background: none;
-
-  color: var(--color-muted);
-
-  font-size: 11px;
-
-  cursor: pointer;
-}
-
-.add-animal__back:hover {
-  color: var(--color-orange);
-}
 
 .add-animal__header {
   margin-bottom: 16px;
@@ -40,13 +18,13 @@
 
   color: var(--color-muted);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .add-animal__header h1 {
   margin: 0 0 6px;
 
-  font-size: 26px;
+  font-size: var(--font-h2);
 }
 
 .add-animal__header p:last-child {
@@ -54,7 +32,7 @@
 
   color: #5c534a;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   line-height: 1.5;
 }
 
@@ -86,7 +64,7 @@
 .add-animal__section h2 {
   margin: 0;
 
-  font-size: 16px;
+  font-size: var(--font-md);
 }
 
 .add-animal__grid {
@@ -104,7 +82,7 @@
 
   gap: 5px;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .add-animal label > span,
@@ -129,7 +107,7 @@
   color: inherit;
 
   font: inherit;
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .add-animal textarea {
@@ -163,7 +141,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   line-height: 1.5;
 }
 
@@ -172,7 +150,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .add-animal__error {
@@ -180,7 +158,7 @@
 
   color: #b3392c;
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 /* photo upload */
@@ -199,7 +177,7 @@
 
   background: #faf7f1;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .add-animal__photos {
@@ -249,7 +227,7 @@
   border: none;
   border-radius: 999px;
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 .add-animal__main-badge {
@@ -341,7 +319,7 @@
 
   background: #fdecc2;
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -400,7 +378,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 
   cursor: pointer;
 }
@@ -427,7 +405,7 @@
 
   border-radius: 9px;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   cursor: pointer;

@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 
 import {
-  Check,
   ChevronLeft,
   ChevronRight,
   CircleCheck,
@@ -17,21 +16,31 @@ import {
   Clipboard,
   Clock3,
   Download,
-  Eye,
-  MoreVertical,
   Search,
   Users,
 } from "lucide-react";
 
-import applications from "../../../data/applications.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { listApplications } from "../../../services/adoptionService.js";
 
 import "./AdoptionApplications.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 
 const APPLICATIONS_PER_PAGE = 10;
 
+// stable empty list while the API call is loading
+const NO_APPLICATIONS = [];
+
 
 function AdoptionApplications() {
+  const { data, loading } = useFetch(
+    () => listApplications({ per_page: 200 }),
+    []
+  );
+
+  const applications = data?.data ?? NO_APPLICATIONS;
+
   const [search, setSearch] =
     useState("");
 
@@ -43,12 +52,6 @@ function AdoptionApplications() {
 
   const [currentPage, setCurrentPage] =
     useState(1);
-
-  const [openMenuId, setOpenMenuId] =
-    useState(null);
-
-  const [copiedId, setCopiedId] =
-    useState(null);
 
 
   /* =========================================
@@ -78,7 +81,7 @@ function AdoptionApplications() {
             application.status === "Rejected"
         ).length,
     };
-  }, []);
+  }, [applications]);
 
 
   /* =========================================
@@ -192,6 +195,7 @@ function AdoptionApplications() {
       );
 
     }, [
+      applications,
       search,
       status,
       sort,
@@ -204,7 +208,6 @@ function AdoptionApplications() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [
     search,
     status,
@@ -368,47 +371,11 @@ function AdoptionApplications() {
   };
 
 
-  /* =========================================
-     COPY APPLICATION ID
-  ========================================= */
-
-  const copyApplicationId =
-    async (application) => {
-
-      const id =
-        `MPR-${String(
-          application.id
-        ).padStart(
-          3,
-          "0"
-        )}`;
-
-
-      try {
-        await navigator.clipboard.writeText(
-          id
-        );
-
-        setCopiedId(
-          application.id
-        );
-
-
-        setTimeout(() => {
-          setCopiedId(null);
-        }, 1500);
-
-      } catch {
-        setCopiedId(null);
-      }
-
-
-      setOpenMenuId(null);
-    };
-
 
   return (
     <div className="staff-page adoption-applications">
+      <BackButton fallback="/admin/dashboard" />
+
 
       {/* =====================================
           PAGE HEADER
@@ -807,92 +774,6 @@ function AdoptionApplications() {
                             </Link>
 
 
-                            <div className="adoption-applications__more">
-
-                              <button
-                                type="button"
-                                className="adoption-applications__more-button"
-                                aria-label={`More actions for ${applicationId}`}
-                                aria-expanded={
-                                  openMenuId ===
-                                  application.id
-                                }
-                                onClick={() =>
-                                  setOpenMenuId(
-                                    (
-                                      current
-                                    ) =>
-                                      current ===
-                                      application.id
-                                        ? null
-                                        : application.id
-                                  )
-                                }
-                              >
-                                <MoreVertical
-                                  size={15}
-                                />
-                              </button>
-
-
-                              {openMenuId ===
-                                application.id && (
-
-                                <div className="adoption-applications__menu">
-
-                                  <Link
-                                    to={`/admin/adoption-applications/${application.id}`}
-                                    onClick={() =>
-                                      setOpenMenuId(
-                                        null
-                                      )
-                                    }
-                                  >
-                                    <Eye
-                                      size={
-                                        13
-                                      }
-                                    />
-
-                                    View Application
-                                  </Link>
-
-
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      copyApplicationId(
-                                        application
-                                      )
-                                    }
-                                  >
-                                    {copiedId ===
-                                    application.id ? (
-                                      <Check
-                                        size={
-                                          13
-                                        }
-                                      />
-                                    ) : (
-                                      <Clipboard
-                                        size={
-                                          13
-                                        }
-                                      />
-                                    )}
-
-                                    {copiedId ===
-                                    application.id
-                                      ? "Copied"
-                                      : "Copy Application ID"}
-                                  </button>
-
-                                </div>
-
-                              )}
-
-                            </div>
-
                           </div>
 
                         </td>
@@ -919,13 +800,16 @@ function AdoptionApplications() {
 
 
                     <strong>
-                      No applications found
+                      {loading
+                        ? "Loading applications..."
+                        : "No applications found"}
                     </strong>
 
 
                     <span>
-                      Try changing your search
-                      or selected status.
+                      {loading
+                        ? ""
+                        : "Try changing your search or selected status."}
                     </span>
 
                   </td>

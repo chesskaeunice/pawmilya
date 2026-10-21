@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, X } from "lucide-react";
 
 import "./Profile.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 /* ---------- mock profile store (no API yet) ----------
    Kept in memory for this session, and (except the password) in
@@ -175,6 +176,8 @@ function Profile() {
 
   return (
     <div className="profile">
+      <BackButton fallback="/" />
+
 
       <section className="profile__header">
 

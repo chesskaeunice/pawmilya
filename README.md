@@ -20,9 +20,9 @@ composer install
 cp .env.example .env          # then check DB_* values
 php artisan key:generate
 # create the database (start MySQL first)
-mysql -u root -e "CREATE DATABASE poundcare CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+mysql -u root -e "CREATE DATABASE pawmilya CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
 php artisan migrate
-php artisan storage:link      # for uploaded photos/IDs (used from Phase 3)
+php artisan storage:link      # needed for animal photos (Phase 3) and later uploads
 ```
 
 ### Frontend
@@ -68,21 +68,20 @@ The frontend (citizen side + staff/admin side) is merged and runs on **mock data
 - New employment fields on applications; missing-pet statuses in the UI are Lost, Sighted, Found, Reunited.
 
 ### Known issues (not fixed yet)
-- Staff side has no logout button or real staff login page.
-- Staff Reports counts missing pets with status "Active" (always 0 now); Reports links like `/admin/animals?status=...` are not read by `Animals.jsx`.
-- `VetTechDashboard.css` has no style for the Under Observation badge; `EditAnimal` shows the browser's own validation bubble instead of an inline error.
+- Reports links like `/admin/animals?status=...` are not read by `Animals.jsx`.
+- `VetTechDashboard.css` has no style for the Under Observation badge.
 - Staff application details still shows the pet's age (`petAge`).
 - Existing lint warnings and a bundle-size warning (~620 kB chunk).
-- `routes/UserRoutes.jsx` and `routes/AdminRoutes.jsx` are unused; `MyMissingPetReports` is not routed.
-- Some [CHANGE] items are not done yet (stray QR code, and filters on some pages). See `CLAUDE.md`.
+- `routes/UserRoutes.jsx` and `routes/AdminRoutes.jsx` are unused.
+- Phase 8 (final polish) is still to do. See `CLAUDE.md`.
 
 ## Folder structure
 ```
-backend/            Laravel 12 API (scaffold only)
+backend/            Laravel 12 API (app/Http, app/Models, app/Support, database, tests)
 frontend/src/
   routes/           AppRoutes (all routes)
   layouts/          UserLayout, AdminLayout (staff guard)
-  context/          AuthProvider (mock auth), ModalProvider
+  context/          AuthProvider (Sanctum auth), ModalProvider
   hooks/            useAuth, useModals, scroll helpers
   config/           rolePermissions, animalStatus
   pages/user|admin  one folder per page (admin/dashboards = role dashboards)
@@ -97,3 +96,37 @@ graphify-out/       knowledge graph
 - CORS allows only `FRONTEND_URL` (default `http://localhost:5173`), set in `backend/.env`.
 - Auth uses Sanctum **personal access tokens** (Bearer header), not cookies.
 - Deployment (Vercel / Aiven per the proposal) is intentionally not set up yet.
+
+## Manual test checklist
+
+Start MySQL, then in `backend`: `php artisan migrate:fresh --seed`, `php artisan storage:link`, `php artisan serve`; in `frontend`: `npm run dev`. Automated tests: `php artisan test` (backend). Seeded logins (password `password`): manager@pawmilya.com, staff@pawmilya.com, staff2@pawmilya.com, vet@pawmilya.com, vet2@pawmilya.com, counselor@pawmilya.com (all @pawmilya.com), and citizens juan@email.com, maria@email.com, john@email.com.
+
+**Accounts and roles**
+- [ ] Sign Up creates a citizen and logs in; a wrong password shows an error; Log out works on both the citizen navbar and the staff sidebar.
+- [ ] Each staff role only sees its own sidebar items; opening a forbidden `/admin/...` page goes back to the dashboard.
+
+**Animals**
+- [ ] Kennel manager adds an animal (3-4 photos, owner info optional); "Available for Adoption" is refused unless health status is Cleared.
+- [ ] Vet tech can change health status only; pound staff can change location only; counselor can change status but not health status.
+- [ ] Animal details shows a stray QR code; opening `/stray/<token>` shows the pet and the owner info (if known). Citizen pages never show health status.
+
+**Adoption applications**
+- [ ] A citizen applies (valid ID + 2-3 home photos). Applying again for the same animal is refused. My Applications shows it as Pending.
+- [ ] Counselor opens the application (pet pictures and location, ID and home photos load), approves it: the animal becomes Adopted and other pending applications for it are rejected. Approving or rejecting again is refused.
+
+**Missing pets**
+- [ ] A guest files a report from the Home page button (contact name and number required). Filing the same pet at the same place and day again is refused.
+- [ ] A citizen's "My Reports" lists their reports; "Mark as Found" closes one as Reunited. Logged out, the page asks you to sign in.
+- [ ] Staff open a report, see the reporter contact and the "Possible Matches in the Pound", and change the status (kennel manager / counselor only).
+
+**Vaccinations**
+- [ ] Vet tech adds several vaccines for one animal; the same vaccine on the same date is refused; the next due date and status (Up to date / Due Soon / Overdue) look right; edit, booster and delete work; pound staff can only view.
+
+**Staff shifts**
+- [ ] As the Kennel Manager open Staff Schedule and assign two staff (one pound staff, one vet tech) to a shift; the coverage badge turns "Covered". Assigning the same person again is refused. Removing one shows the "still needs..." warning.
+- [ ] Log in as each of them: My Shifts on the dashboard shows the shift; Check In works only from 30 minutes before the start; Check Out is refused with "You cannot check out before your shift ends." until the end time, then works.
+- [ ] Back as the Kennel Manager: "On Duty Today" shows who checked in; the Audit Logs page lists the assign, check-in and check-out entries.
+
+**Accounts management and audit**
+- [ ] In Settings the kennel manager adds a staff account, changes a role and disables an account (that person is signed out). You cannot change your own role.
+- [ ] Audit Logs can be filtered by area and date.

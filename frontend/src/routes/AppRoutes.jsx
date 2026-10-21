@@ -9,12 +9,19 @@ import RequirePermission from "../components/admin/RequirePermission.jsx";
 import Home from "../pages/user/Home/Home.jsx";
 import Login from "../pages/user/Login/Login.jsx";
 import Signup from "../pages/user/Signup/Signup.jsx";
+import {
+  ChangePassword,
+  ForgotPassword,
+  ResetPassword,
+} from "../pages/user/PasswordPages/PasswordPages.jsx";
+import StrayInfo from "../pages/user/StrayInfo/StrayInfo.jsx";
 
 import AdoptablePets from "../pages/user/AdoptablePets/AdoptablePets.jsx";
 import PetDetails from "../pages/user/PetDetails/PetDetails.jsx";
 import AdoptionApplication from "../pages/user/AdoptionApplication/AdoptionApplication.jsx";
 
 import MyApplications from "../pages/user/MyApplications/MyApplications.jsx";
+import MyMissingPetReports from "../pages/user/MyMissingPetReports/MyMissingPetReports.jsx";
 
 import MissingPets from "../pages/user/MissingPets/MissingPets.jsx";
 import MissingPetDetails from "../pages/user/MissingPetDetails/MissingPetDetails.jsx";
@@ -26,7 +33,6 @@ import Articles from "../pages/user/Articles/Articles.jsx";
 import LegalPage from "../pages/user/LegalPage/LegalPage.jsx";
 import ArticleDetails from "../pages/user/ArticleDetails/ArticleDetails.jsx";
 import RequireSignIn from "../components/common/RequireSignIn.jsx";
-import MockLoginHandler from "../components/common/MockLoginHandler.jsx";
 
 /* STAFF PAGES */
 import AdoptionCounselorDashboard from "../pages/admin/dashboards/AdoptionCounselorDashboard.jsx";
@@ -35,6 +41,7 @@ import Dashboard from "../pages/admin/Dashboard/Dashboard.jsx";
 import Animals from "../pages/admin/Animals/Animals.jsx";
 import AddAnimal from "../pages/admin/AddAnimal/AddAnimal.jsx";
 import AnimalDetails from "../pages/admin/AnimalDetails/AnimalDetails.jsx";
+import CollarTag from "../pages/admin/CollarTag/CollarTag.jsx";
 import EditAnimal from "../pages/admin/EditAnimal/EditAnimal.jsx";
 
 import AdoptionApplications from "../pages/admin/AdoptionApplications/AdoptionApplications.jsx";
@@ -48,6 +55,8 @@ import Vaccinations from "../pages/admin/Vaccinations/Vaccinations.jsx";
 import Reports from "../pages/admin/Reports/Reports.jsx";
 
 import Settings from "../pages/admin/Settings/Settings.jsx";
+import StaffSchedule from "../pages/admin/StaffSchedule/StaffSchedule.jsx";
+import AuditLogs from "../pages/admin/AuditLogs/AuditLogs.jsx";
 
 
 function AppRoutes() {
@@ -67,16 +76,21 @@ function AppRoutes() {
 
         <Route
           path="/login"
-          element={
-            <MockLoginHandler>
-              <Login />
-            </MockLoginHandler>
-          }
+          element={<Login />}
         />
 
         <Route
           path="/signup"
           element={<Signup />}
+        />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/change-password" element={<ChangePassword />} />
+
+        <Route
+          path="/stray/:token"
+          element={<StrayInfo />}
         />
 
         <Route
@@ -113,6 +127,15 @@ function AppRoutes() {
         <Route
           path="/missing-pets"
           element={<MissingPets />}
+        />
+
+        <Route
+          path="/my-missing-reports"
+          element={
+            <RequireSignIn reason="You need an account to view your missing pet reports.">
+              <MyMissingPetReports />
+            </RequireSignIn>
+          }
         />
 
         <Route
@@ -212,8 +235,13 @@ function AppRoutes() {
 
 
         <Route
+          path="/admin/animals/:animalId/collar-tag"
+          element={<RequirePermission permission="qr.generate"><CollarTag /></RequirePermission>}
+        />
+
+        <Route
           path="/admin/animals/:animalId/edit"
-          element={<RequirePermission permission="animals.edit"><EditAnimal /></RequirePermission>}
+          element={<RequirePermission anyOf={["animals.edit", "animals.photo"]}><EditAnimal /></RequirePermission>}
         />
 
 
@@ -276,6 +304,21 @@ function AppRoutes() {
         <Route
           path="/admin/settings"
           element={<RequirePermission permission="settings.view"><Settings /></RequirePermission>}
+        />
+
+
+        {/* =================================
+            STAFF SCHEDULE AND AUDIT LOGS (kennel manager)
+        ================================== */}
+
+        <Route
+          path="/admin/staff-schedule"
+          element={<RequirePermission permission="shifts.manage"><StaffSchedule /></RequirePermission>}
+        />
+
+        <Route
+          path="/admin/audit-logs"
+          element={<RequirePermission permission="settings.system"><AuditLogs /></RequirePermission>}
         />
 
       </Route>

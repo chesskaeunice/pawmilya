@@ -1,9 +1,14 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ChevronLeft, X } from "lucide-react";
+import { X } from "lucide-react";
+
+import { BREEDS } from "../../../config/petBreeds.js";
+import { submitMissingPetReport } from "../../../services/missingPetService.js";
+import { formatApiError } from "../../../services/authService.js";
 
 import "./ReportMissingPet.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 const STATUS_OPTIONS = [
   {
@@ -22,6 +27,12 @@ const STATUS_OPTIONS = [
 
 const MIN_IMAGES = 2;
 const MAX_IMAGES = 3;
+
+const todayISO = () => {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
 
 function Required() {
   return (
@@ -47,6 +58,7 @@ function ImageUpload({ id, label }) {
     a.lastModified === b.lastModified;
 
   // Keep the real <input> in sync so native "required" validation still works
+  // (the form reads the chosen files from this input when it is submitted)
   const updateFiles = (next, notice = "") => {
     const input = inputRef.current;
 
@@ -106,6 +118,7 @@ function ImageUpload({ id, label }) {
       <input
         ref={inputRef}
         id={id}
+        name={id}
         type="file"
         accept="image/*"
         multiple
@@ -141,27 +154,54 @@ function ImageUpload({ id, label }) {
   );
 }
 
+// Open to guests (no login needed). A logged-in citizen's report is linked to the account.
 function ReportMissingPet() {
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const [petType, setPetType] = useState("");
+  const [errors, setErrors] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    alert(
-      "Missing pet report submitted. Laravel integration will be added later."
-    );
+    // a second click while the first is still sending does nothing
+    if (submitting) return;
+
+    const form = event.currentTarget.elements;
+    const body = new FormData();
+
+    body.append("name", form.petName.value);
+    body.append("species", form.petType.value);
+    body.append("breed", form.breed.value);
+    body.append("color", form.color.value);
+    body.append("last_seen_at", `${form.lastSeenDate.value} 00:00:00`);
+    body.append("location", form.location.value);
+    body.append("status", form.status.value);
+    body.append("details", form.details.value);
+    body.append("contact_name", `${form.firstName.value} ${form.lastName.value}`.trim());
+    body.append("contact_number", form.contactNumber.value);
+    body.append("contact_email", form.contactEmail.value);
+    Array.from(form.petImages.files).forEach((file) => body.append("pet_images[]", file));
+    Array.from(form.lastSeenImages.files).forEach((file) => body.append("last_seen_images[]", file));
+
+    setErrors([]);
+    setSubmitting(true);
+
+    try {
+      await submitMissingPetReport(body);
+      navigate("/missing-pets");
+    } catch (err) {
+      const { message, fields } = formatApiError(err);
+      const messages = Object.values(fields);
+      setErrors(messages.length ? messages : [message]);
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="report-pet">
-      <button
-        type="button"
-        className="report-pet__back"
-        onClick={() => navigate(-1)}
-      >
-        <ChevronLeft size={15} />
-        Back
-      </button>
+      <BackButton fallback="/missing-pets" />
 
       <section className="report-pet__header">
         <p className="report-pet__eyebrow">Missing Pet Report</p>
@@ -182,7 +222,7 @@ function ReportMissingPet() {
           <div className="report-pet__grid">
             <label>
               <span>Pet Name (optional)</span>
-              <input type="text" />
+              <input type="text" name="petName" maxLength={100} />
               <span className="report-pet__hint">
                 Leave blank if you don't know the name.
               </span>
@@ -194,7 +234,12 @@ function ReportMissingPet() {
                 <Required />
               </span>
 
-              <select defaultValue="" required>
+              <select
+                name="petType"
+                value={petType}
+                onChange={(event) => setPetType(event.target.value)}
+                required
+              >
                 <option value="" disabled>
                   Select type
                 </option>
@@ -208,7 +253,22 @@ function ReportMissingPet() {
                 Breed
                 <Required />
               </span>
-              <input type="text" required />
+
+              {/* the choices depend on the pet type; changing the type resets the breed */}
+              <select
+                name="breed"
+                key={petType}
+                defaultValue=""
+                required
+                disabled={!petType}
+              >
+                <option value="" disabled>
+                  {petType ? "Select breed" : "Select a pet type first"}
+                </option>
+                {(BREEDS[petType] ?? []).map((breed) => (
+                  <option key={breed}>{breed}</option>
+                ))}
+              </select>
             </label>
 
             <label>
@@ -216,7 +276,7 @@ function ReportMissingPet() {
                 Color / Markings
                 <Required />
               </span>
-              <input type="text" required />
+              <input type="text" name="color" maxLength={100} required />
             </label>
           </div>
 
@@ -232,7 +292,7 @@ function ReportMissingPet() {
                 Date Last Seen
                 <Required />
               </span>
-              <input type="date" required />
+              <input type="date" name="lastSeenDate" max={todayISO()} required />
             </label>
 
             <label>
@@ -240,7 +300,7 @@ function ReportMissingPet() {
                 Last Known Location
                 <Required />
               </span>
-              <input type="text" required />
+              <input type="text" name="location" maxLength={255} required />
             </label>
           </div>
 
@@ -275,7 +335,7 @@ function ReportMissingPet() {
           <label>
             <span>Additional Details (optional)</span>
 
-            <textarea rows="5" />
+            <textarea name="details" rows="5" maxLength={2000} />
           </label>
         </section>
 
@@ -288,7 +348,7 @@ function ReportMissingPet() {
                 First Name
                 <Required />
               </span>
-              <input type="text" required />
+              <input type="text" name="firstName" maxLength={100} required />
             </label>
 
             <label>
@@ -296,7 +356,7 @@ function ReportMissingPet() {
                 Last Name
                 <Required />
               </span>
-              <input type="text" required />
+              <input type="text" name="lastName" maxLength={100} required />
             </label>
 
             <label>
@@ -304,7 +364,7 @@ function ReportMissingPet() {
                 Contact Number
                 <Required />
               </span>
-              <input type="tel" required />
+              <input type="tel" name="contactNumber" required />
             </label>
 
             <label>
@@ -312,13 +372,21 @@ function ReportMissingPet() {
                 Email Address
                 <Required />
               </span>
-              <input type="email" required />
+              <input type="email" name="contactEmail" required />
             </label>
           </div>
         </section>
 
-        <button type="submit" className="report-pet__submit">
-          Submit Missing Pet Report
+        {errors.length > 0 && (
+          <ul className="report-pet__error" role="alert">
+            {errors.map((message) => (
+              <li key={message}>{message}</li>
+            ))}
+          </ul>
+        )}
+
+        <button type="submit" className="report-pet__submit" disabled={submitting}>
+          {submitting ? "Submitting..." : "Submit Missing Pet Report"}
         </button>
       </form>
     </div>

@@ -2,40 +2,45 @@ import { useState } from "react";
 
 import {
   Link,
+  useNavigate,
   useParams,
 } from "react-router-dom";
 
 import { Lock } from "lucide-react";
 
-import pets from "../../../data/pets.js";
-
 import useAuth from "../../../hooks/useAuth.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { getAnimal, updateAnimal, updateAnimalPhoto } from "../../../services/animalService.js";
+import { formatApiError } from "../../../services/authService.js";
 
 import {
   ADOPTION_NEEDS_CLEARED_MESSAGE,
-  ANIMAL_STATUSES,
+  allowedStatuses,
   canBeAdoptable,
   HEALTH_STATUSES,
 } from "../../../config/animalStatus.js";
 
 import "./EditAnimal.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 
 function EditAnimal() {
   const { animalId } = useParams();
-  const { can } = useAuth();
 
-  const pet = pets.find(
-    (item) => item.id === Number(animalId)
+  const { data: pet, loading } = useFetch(
+    () => getAnimal(animalId),
+    [animalId]
   );
 
-  const [status, setStatus] = useState(pet?.status);
-  const [healthStatus, setHealthStatus] = useState(pet?.health_status);
+  if (loading) {
+    return (
+      <div className="staff-page">
+      <BackButton fallback="/admin/animals" />
 
-  // Shown with the browser's own validation message (no extra styling)
-  const statusMessage = canBeAdoptable(status, healthStatus)
-    ? ""
-    : ADOPTION_NEEDS_CLEARED_MESSAGE;
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!pet) {
     return (
@@ -45,18 +50,70 @@ function EditAnimal() {
     );
   }
 
+  return <EditAnimalForm pet={pet} />;
+}
+
+
+function EditAnimalForm({ pet }) {
+  const { can } = useAuth();
+  const navigate = useNavigate();
+
+  const [status, setStatus] = useState(pet.status);
+  const [healthStatus, setHealthStatus] = useState(pet.health_status);
+  const [errors, setErrors] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [photo, setPhoto] = useState(pet.image);
+  const [photoMessage, setPhotoMessage] = useState("");
+
+  // Every staff role may replace the main photo; it saves right away
+  const changePhoto = async (event) => {
+    const file = event.target.files[0];
+    event.target.value = "";
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setPhotoMessage("Use a JPG, PNG or WebP image.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setPhotoMessage("The image must be 5 MB or smaller.");
+      return;
+    }
+
+    try {
+      const updated = await updateAnimalPhoto(pet.id, file);
+      setPhoto(updated.image);
+      setPhotoMessage("Main photo updated.");
+    } catch (err) {
+      setPhotoMessage(formatApiError(err).message);
+    }
+  };
+
+  const petName = pet.name || "Unnamed";
+
+  // Shown inline under the form
+  const statusMessage = canBeAdoptable(status, healthStatus)
+    ? ""
+    : ADOPTION_NEEDS_CLEARED_MESSAGE;
+
 
   /* =========================================
      FIELD PERMISSIONS (see RBAC Part 2)
+     The API enforces the same rules.
   ========================================= */
 
-  // Name, type, breed, sex: Kennel Manager only
+  // Name, type, breed, sex, owner info: Kennel Manager only
   const canEditBasic = can("animals.edit");
 
   // General status: Kennel Manager full, Counselor / Vet Tech limited
   const canEditStatus =
     can("animals.edit") ||
     can("animals.adoptionUpdate") ||
+    can("animals.healthUpdate");
+
+  // Health status: Kennel Manager and Vet Tech
+  const canEditHealth =
+    can("animals.edit") ||
     can("animals.healthUpdate");
 
   // Kennel location: Kennel Manager and Pound Staff
@@ -71,28 +128,63 @@ function EditAnimal() {
     can("animals.husbandryUpdate");
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // TODO: send changes to the Laravel API.
-    // The backend must also reject fields this role cannot edit.
+    if (statusMessage) {
+      setErrors([statusMessage]);
+      return;
+    }
+
+    // Disabled fields are not part of FormData, so only editable fields are sent
+    const payload = Object.fromEntries(new FormData(event.currentTarget));
+
+    setErrors([]);
+    setSaving(true);
+
+    try {
+      await updateAnimal(pet.id, payload);
+      navigate(`/admin/animals/${pet.id}`);
+    } catch (err) {
+      const { message, fields } = formatApiError(err);
+      const messages = Object.values(fields);
+      setErrors(messages.length ? messages : [message]);
+      setSaving(false);
+    }
   };
 
 
   return (
     <div className="staff-page">
+      <BackButton fallback="/admin/animals" />
+
 
       <div className="staff-page__top">
         <div>
           <p className="staff-page__breadcrumb">
-            Animals / {pet.name} / Edit
+            Animals / {petName} / Edit
           </p>
 
           <h1 className="staff-page__title">
-            Edit {pet.name}
+            Edit {petName}
           </h1>
         </div>
       </div>
+
+
+      <section className="staff-form__section">
+        <div className="staff-form__section-header">
+          <h2>Main Photo</h2>
+          <p>Shown first on the animal's pages. Every staff role can change it.</p>
+        </div>
+
+        {photo && (
+          <img src={photo} alt={`Main photo of ${petName}`} style={{ maxWidth: 180, borderRadius: 12 }} />
+        )}
+
+        <input type="file" accept="image/jpeg,image/png,image/webp" onChange={changePhoto} />
+        {photoMessage && <p role="status">{photoMessage}</p>}
+      </section>
 
 
       <form
@@ -122,26 +214,30 @@ function EditAnimal() {
             <Field label="Animal Name" htmlFor="name">
               <input
                 id="name"
-                defaultValue={pet.name}
+                name="name"
+                defaultValue={pet.name ?? ""}
                 disabled={!canEditBasic}
               />
             </Field>
 
-            <Field label="Animal Type" htmlFor="type">
+            <Field label="Animal Type" htmlFor="species">
               <select
-                id="type"
+                id="species"
+                name="species"
                 defaultValue={pet.type}
                 disabled={!canEditBasic}
               >
                 <option>Dog</option>
                 <option>Cat</option>
+                <option>Other</option>
               </select>
             </Field>
 
             <Field label="Breed" htmlFor="breed">
               <input
                 id="breed"
-                defaultValue={pet.breed}
+                name="breed"
+                defaultValue={pet.breed ?? ""}
                 disabled={!canEditBasic}
               />
             </Field>
@@ -149,12 +245,32 @@ function EditAnimal() {
             <Field label="Sex" htmlFor="sex">
               <select
                 id="sex"
+                name="sex"
                 defaultValue={pet.sex}
                 disabled={!canEditBasic}
               >
                 <option>Male</option>
                 <option>Female</option>
+                <option>Unknown</option>
               </select>
+            </Field>
+
+            <Field label="Owner Name (if known)" htmlFor="owner_name">
+              <input
+                id="owner_name"
+                name="owner_name"
+                defaultValue={pet.owner_name ?? ""}
+                disabled={!canEditBasic}
+              />
+            </Field>
+
+            <Field label="Owner Contact (if known)" htmlFor="owner_contact">
+              <input
+                id="owner_contact"
+                name="owner_contact"
+                defaultValue={pet.owner_contact ?? ""}
+                disabled={!canEditBasic}
+              />
             </Field>
 
           </div>
@@ -181,12 +297,13 @@ function EditAnimal() {
             >
               <select
                 id="status"
+                name="status"
                 value={status}
                 onChange={(event) => setStatus(event.target.value)}
-                ref={(node) => node?.setCustomValidity(statusMessage)}
                 disabled={!canEditStatus}
               >
-                {ANIMAL_STATUSES.map((value) => (
+                {/* the current status always stays listed, even when this role cannot pick it */}
+                {[...new Set([pet.status, ...allowedStatuses(can)])].map((value) => (
                   <option key={value}>{value}</option>
                 ))}
               </select>
@@ -194,14 +311,15 @@ function EditAnimal() {
 
             <Field
               label="Health Status"
-              htmlFor="healthStatus"
-              locked={!canEditStatus}
+              htmlFor="health_status"
+              locked={!canEditHealth}
             >
               <select
-                id="healthStatus"
+                id="health_status"
+                name="health_status"
                 value={healthStatus}
                 onChange={(event) => setHealthStatus(event.target.value)}
-                disabled={!canEditStatus}
+                disabled={!canEditHealth}
               >
                 {HEALTH_STATUSES.map((value) => (
                   <option key={value}>{value}</option>
@@ -216,7 +334,8 @@ function EditAnimal() {
             >
               <input
                 id="location"
-                defaultValue={pet.location}
+                name="location"
+                defaultValue={pet.location ?? ""}
                 disabled={!canEditLocation}
               />
             </Field>
@@ -247,13 +366,23 @@ function EditAnimal() {
           >
             <textarea
               id="description"
+              name="description"
               rows="5"
-              defaultValue={pet.description}
+              defaultValue={pet.description ?? ""}
               disabled={!canEditNotes}
             />
           </Field>
 
         </section>
+
+
+        {(statusMessage || errors.length > 0) && (
+          <ul className="staff-form__error" role="alert">
+            {(errors.length ? errors : [statusMessage]).map((message) => (
+              <li key={message}>{message}</li>
+            ))}
+          </ul>
+        )}
 
 
         {/* ACTIONS */}
@@ -270,8 +399,9 @@ function EditAnimal() {
           <button
             type="submit"
             className="staff-button"
+            disabled={saving}
           >
-            Save Changes
+            {saving ? "Saving..." : "Save Changes"}
           </button>
 
         </div>

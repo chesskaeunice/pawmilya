@@ -92,8 +92,7 @@
   text-transform:
     uppercase;
 
-  font-size:
-    12px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -143,8 +142,7 @@
       0.92
     );
 
-  font-size:
-    17px;
+  font-size: var(--font-lg);
 
   line-height:
     1.65;
@@ -185,13 +183,12 @@
     999px;
 
   background-color:
-    #f2a900;
+    var(--color-gold);
 
   color:
-    #4d2a00;
+    var(--color-brown);
 
-  font-size:
-    15px;
+  font-size: var(--font-label);
 
   font-weight:
     800;
@@ -224,10 +221,10 @@
 
 .missing-pets__report:hover {
   background-color:
-    #f9e6a8;
+    var(--color-cream);
 
   color:
-    #4d2a00;
+    var(--color-brown);
 
   transform:
     translateY(-2px);
@@ -360,14 +357,13 @@
   color:
     var(--color-text);
 
-  font-size:
-    14px;
+  font-size: var(--font-sm);
 }
 
 
 .missing-pets__search input::placeholder {
   color:
-    #9f978e;
+    var(--color-muted);
 }
 
 
@@ -449,8 +445,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    13px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -544,8 +539,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -582,8 +576,7 @@
   color:
     var(--color-text);
 
-  font-size:
-    13px;
+  font-size: var(--font-xs);
 }
 
 
@@ -622,8 +615,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    12px;
+  font-size: var(--font-xs);
 
   font-weight:
     600;
@@ -698,8 +690,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -719,8 +710,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 }
 
 
@@ -728,8 +718,7 @@
   color:
     var(--color-orange);
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -780,8 +769,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -906,8 +894,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    18px;
+  font-size: var(--font-lg);
 }
 
 
@@ -915,8 +902,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -1066,8 +1052,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    13px;
+  font-size: var(--font-xs);
 
   font-weight:
     600;
@@ -1127,8 +1112,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    22px;
+  font-size: var(--font-h3);
 }
 
 
@@ -1139,8 +1123,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    13px !important;
+  font-size: var(--font-xs);
 }
 
 
@@ -1154,8 +1137,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    12px !important;
+  font-size: var(--font-xs);
 
   line-height:
     1.55;
@@ -1185,8 +1167,7 @@
   color:
     white;
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -1204,7 +1185,7 @@
     #f4a261;
 
   color:
-    #4d2a00;
+    var(--color-brown);
 }
 
 
@@ -1234,7 +1215,7 @@
     #e9c46a;
 
   color:
-    #4d2a00;
+    var(--color-brown);
 }
 
 
@@ -1280,8 +1261,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 
   text-transform:
     uppercase;
@@ -1295,8 +1275,7 @@
   color:
     var(--color-text);
 
-  font-size:
-    12px;
+  font-size: var(--font-xs);
 
   line-height:
     1.45;
@@ -1353,8 +1332,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 
   text-transform:
     uppercase;
@@ -1368,8 +1346,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 
   font-weight:
     600;
@@ -1403,8 +1380,7 @@
   color:
     var(--color-orange);
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -1458,8 +1434,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    21px;
+  font-size: var(--font-h3);
 }
 
 
@@ -1470,8 +1445,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    13px;
+  font-size: var(--font-xs);
 }
 
 
@@ -1569,8 +1543,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    12px;
+  font-size: var(--font-xs);
 
   font-weight:
     600;
@@ -1699,8 +1672,7 @@
 
 
   .missing-pets__hero-description {
-    font-size:
-      15px;
+    font-size: var(--font-label);
   }
 
 
@@ -1714,8 +1686,7 @@
     padding:
       0 22px;
 
-    font-size:
-      14px;
+    font-size: var(--font-sm);
   }
 
 

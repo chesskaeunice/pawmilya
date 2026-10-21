@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ChevronLeft, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 
 import {
   ADOPTION_NEEDS_CLEARED_MESSAGE,
@@ -12,7 +12,11 @@ import {
   HEALTH_STATUSES,
 } from "../../../config/animalStatus.js";
 
+import { createAnimal } from "../../../services/animalService.js";
+import { formatApiError } from "../../../services/authService.js";
+
 import "./AddAnimal.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 const MIN_IMAGES = 3;
 const MAX_IMAGES = 4; // 1 main photo + 3 thumbnails, as on the Animal Details page
@@ -199,6 +203,8 @@ function AddAnimal() {
     location: "",
     about: "",
     idealHome: "",
+    ownerName: "",
+    ownerContact: "",
   });
 
   const [images, setImages] = useState([]);
@@ -206,6 +212,8 @@ function AddAnimal() {
   const [traitInput, setTraitInput] = useState("");
   const [traitError, setTraitError] = useState("");
   const [statusError, setStatusError] = useState("");
+  const [serverErrors, setServerErrors] = useState([]);
+  const [saving, setSaving] = useState(false);
 
   const update = (key) => (event) =>
     setForm((current) => ({ ...current, [key]: event.target.value }));
@@ -260,7 +268,7 @@ function AddAnimal() {
 
   /* ----- submit ----- */
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!canBeAdoptable(form.status, form.healthStatus)) {
@@ -279,44 +287,44 @@ function AddAnimal() {
       return;
     }
 
-    const ageNumber = Number(form.ageValue);
-    const unit = ageNumber === 1 ? form.ageUnit.slice(0, -1) : form.ageUnit;
+    // Sent as multipart because of the photos; the first photo is the main one
+    const months =
+      Number(form.ageValue) * (form.ageUnit === "years" ? 12 : 1);
 
-    const animal = {
-      name: animalName,
-      type: form.type,
-      breed: form.breed.trim(),
-      age: `${ageNumber} ${unit} old`,
-      gender: form.gender,
-      status: form.status,
-      health_status: form.healthStatus,
-      dateRescued: form.dateRescued,
-      location: form.location.trim(),
-      about: form.about.trim(),
-      personality: finalTraits,
-      idealHome: form.idealHome.trim(),
-      images,
-    };
+    const body = new FormData();
+    body.append("name", animalName);
+    body.append("species", form.type);
+    body.append("breed", form.breed.trim());
+    body.append("sex", form.gender);
+    body.append("age_months", months);
+    body.append("status", form.status);
+    body.append("health_status", form.healthStatus);
+    body.append("rescued_at", form.dateRescued);
+    body.append("location", form.location.trim());
+    body.append("description", form.about.trim());
+    body.append("ideal_home", form.idealHome.trim());
+    body.append("owner_name", form.ownerName.trim());
+    body.append("owner_contact", form.ownerContact.trim());
+    finalTraits.forEach((trait) => body.append("personality[]", trait));
+    images.forEach((file) => body.append("images[]", file));
 
-    console.log("New animal:", animal);
+    setServerErrors([]);
+    setSaving(true);
 
-    alert(
-      `${animal.name} was added. Laravel integration will be added later.`
-    );
-
-    navigate("/admin/animals");
+    try {
+      await createAnimal(body);
+      navigate("/admin/animals");
+    } catch (err) {
+      const { message, fields } = formatApiError(err);
+      const messages = Object.values(fields);
+      setServerErrors(messages.length ? messages : [message]);
+      setSaving(false);
+    }
   };
 
   return (
     <div className="add-animal">
-      <button
-        type="button"
-        className="add-animal__back"
-        onClick={() => navigate(-1)}
-      >
-        <ChevronLeft size={15} />
-        Back
-      </button>
+      <BackButton fallback="/admin/animals" />
 
       <section className="add-animal__header">
         <p className="add-animal__eyebrow">Animals / Add Animal</p>
@@ -494,6 +502,26 @@ function AddAnimal() {
                 ))}
               </datalist>
             </label>
+
+            <label>
+              <span>Owner Name (if known)</span>
+              <input
+                type="text"
+                maxLength={255}
+                value={form.ownerName}
+                onChange={update("ownerName")}
+              />
+            </label>
+
+            <label>
+              <span>Owner Contact (if known)</span>
+              <input
+                type="text"
+                maxLength={50}
+                value={form.ownerContact}
+                onChange={update("ownerContact")}
+              />
+            </label>
           </div>
 
           <PhotoUpload id="animalPhotos" files={images} onChange={setImages} />
@@ -619,6 +647,14 @@ function AddAnimal() {
           </label>
         </section>
 
+        {serverErrors.length > 0 && (
+          <ul className="add-animal__error" role="alert">
+            {serverErrors.map((message) => (
+              <li key={message}>{message}</li>
+            ))}
+          </ul>
+        )}
+
         <div className="add-animal__actions">
           <button
             type="button"
@@ -628,8 +664,8 @@ function AddAnimal() {
             Cancel
           </button>
 
-          <button type="submit" className="add-animal__submit">
-            Add Animal
+          <button type="submit" className="add-animal__submit" disabled={saving}>
+            {saving ? "Saving..." : "Add Animal"}
           </button>
         </div>
       </form>

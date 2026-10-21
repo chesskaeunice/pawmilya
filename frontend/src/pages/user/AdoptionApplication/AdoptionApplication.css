@@ -23,7 +23,7 @@
 
   color: var(--color-orange);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   text-transform: uppercase;
@@ -103,7 +103,7 @@
 
   color: var(--color-brown);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -112,7 +112,7 @@
 
   color: var(--color-brown);
 
-  font-size: 20px;
+  font-size: var(--font-h3);
 }
 
 
@@ -137,7 +137,7 @@
 .adoption-form__field label {
   color: var(--color-text);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 600;
 }
 
@@ -213,7 +213,7 @@
 
   color: var(--color-brown);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 600;
 }
 
@@ -222,7 +222,7 @@
 
   color: var(--color-brown);
 
-  font-size: 25px;
+  font-size: var(--font-h2);
 }
 
 .adoption-form__pet-card > p:not(.adoption-form__eyebrow) {
@@ -230,7 +230,7 @@
 
   color: var(--color-muted);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 .adoption-form__pet-tags {
@@ -251,7 +251,7 @@
 
   color: var(--color-brown);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
@@ -277,7 +277,7 @@
 
   color: var(--color-brown);
 
-  font-size: 15px;
+  font-size: var(--font-label);
 }
 
 .adoption-form__next ol {
@@ -287,7 +287,7 @@
 
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 
   line-height: 1.7;
 }
@@ -316,6 +316,24 @@
   background-color: var(--color-brown);
 }
 
+.adoption-form__submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.adoption-form__error {
+  margin: 16px 0 0;
+
+  padding: 10px 14px 10px 30px;
+
+  border-radius: 10px;
+
+  background-color: #fdecec;
+  color: #a12a2a;
+
+  font-size: var(--font-xs);
+}
+
 .adoption-form__cancel {
   width: 100%;
 
@@ -332,7 +350,7 @@
 
   color: var(--color-orange);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 600;
 }
 
@@ -369,7 +387,7 @@
   }
 
   .adoption-form__header h1 {
-    font-size: 38px;
+    font-size: var(--font-h1);
   }
 
   .adoption-form__grid {
@@ -405,7 +423,7 @@
 .adoption-form__radio-group legend {
   padding: 0;
   margin-bottom: 0.5rem;
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
 }
 
 .adoption-form__radio-options {
@@ -464,12 +482,12 @@
 .adoption-form__file-list {
   margin: 0.5rem 0 0;
   padding-left: 1.25rem;
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
 }
 
 .adoption-form__file-name {
   margin: 0.5rem 0 0;
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
 }
 
 /* "I agree" checkbox */

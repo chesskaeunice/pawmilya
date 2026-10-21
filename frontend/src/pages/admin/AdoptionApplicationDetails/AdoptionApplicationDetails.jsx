@@ -3,12 +3,10 @@ import {
 } from "react";
 
 import {
-  Link,
   useParams,
 } from "react-router-dom";
 
 import {
-  ArrowLeft,
   BadgeCheck,
   CalendarDays,
   Check,
@@ -29,9 +27,16 @@ import {
   X,
 } from "lucide-react";
 
-import applications from "../../../data/applications.js";
+import useFetch from "../../../hooks/useFetch.js";
+import {
+  approveApplication,
+  getApplication,
+  rejectApplication,
+} from "../../../services/adoptionService.js";
+import { formatApiError } from "../../../services/authService.js";
 
 import "./AdoptionApplicationDetails.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 
 function AdoptionApplicationDetails() {
@@ -39,33 +44,35 @@ function AdoptionApplicationDetails() {
     useParams();
 
 
-  const application =
-    applications.find(
-      (item) =>
-        item.id ===
-        Number(applicationId)
+  const { data: application, loading, reload } =
+    useFetch(
+      () => getApplication(applicationId),
+      [applicationId]
     );
 
+  // blocks a second click while a decision is being saved
+  const [busy, setBusy] =
+    useState(false);
 
-  const [currentStatus, setCurrentStatus] =
-    useState(
-      application?.status ||
-        "Pending"
+  const currentStatus =
+    application?.status ||
+    "Pending";
+
+
+  if (loading) {
+    return (
+      <div className="staff-page">
+        <p>Loading...</p>
+      </div>
     );
+  }
 
 
   if (!application) {
     return (
       <div className="staff-page">
 
-        <Link
-          to="/admin/adoption-applications"
-          className="application-details__back"
-        >
-          <ArrowLeft size={14} />
-
-          Back to Applications
-        </Link>
+        <BackButton fallback="/admin/adoption-applications" />
 
 
         <div className="application-details__not-found">
@@ -95,31 +102,56 @@ function AdoptionApplicationDetails() {
     )}`;
 
 
+  // The API decides (and refuses a second decision); the page shows its message
+  const decide = async (action) => {
+    setBusy(true);
+
+    try {
+      await action();
+    } catch (error) {
+      window.alert(
+        formatApiError(error).message
+      );
+    }
+
+    reload();
+    setBusy(false);
+  };
+
+
   const handleApprove = () => {
     const confirmed =
       window.confirm(
-        `Approve ${application.applicantName}'s application for ${application.petName}?`
+        `Approve ${application.applicantName}'s application for ${application.petName}? The animal will be marked as Adopted and other pending applications for it will be rejected.`
       );
 
 
     if (confirmed) {
-      setCurrentStatus(
-        "Approved"
+      decide(() =>
+        approveApplication(
+          application.id
+        )
       );
     }
   };
 
 
   const handleReject = () => {
-    const confirmed =
-      window.confirm(
-        `Reject ${application.applicantName}'s application for ${application.petName}?`
+    const reason =
+      window.prompt(
+        `Reject ${application.applicantName}'s application for ${application.petName}?
+
+Reason (shown to the applicant, optional):`
       );
 
 
-    if (confirmed) {
-      setCurrentStatus(
-        "Rejected"
+    // Cancel leaves it as it is
+    if (reason !== null) {
+      decide(() =>
+        rejectApplication(
+          application.id,
+          reason.trim() || null
+        )
       );
     }
   };
@@ -137,14 +169,7 @@ function AdoptionApplicationDetails() {
 
       {/* BACK */}
 
-      <Link
-        to="/admin/adoption-applications"
-        className="application-details__back"
-      >
-        <ArrowLeft size={14} />
-
-        Back to Applications
-      </Link>
+      <BackButton fallback="/admin/adoption-applications" />
 
 
       {/* =====================================
@@ -716,6 +741,19 @@ function AdoptionApplicationDetails() {
               </div>
 
 
+              {application.petImages?.length > 1 && (
+                <div style={{ display: "flex", gap: 6 }}>
+                  {application.petImages.slice(1).map((url) => (
+                    <img
+                      key={url}
+                      src={url}
+                      alt={`${application.petName} photo`}
+                      style={{ width: 52, height: 52, objectFit: "cover", borderRadius: 6 }}
+                    />
+                  ))}
+                </div>
+              )}
+
               <div className="application-details__animal-info">
 
                 <h3>
@@ -1019,6 +1057,10 @@ function AdoptionApplicationDetails() {
           <button
             type="button"
             className="application-details__reject"
+            disabled={
+              busy ||
+              currentStatus !== "Pending"
+            }
             onClick={
               handleReject
             }
@@ -1032,6 +1074,10 @@ function AdoptionApplicationDetails() {
           <button
             type="button"
             className="application-details__approve"
+            disabled={
+              busy ||
+              currentStatus !== "Pending"
+            }
             onClick={
               handleApprove
             }

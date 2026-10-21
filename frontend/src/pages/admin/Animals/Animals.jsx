@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import {
   ChevronLeft,
   ChevronRight,
-  MoreVertical,
   Plus,
+  QrCode,
 } from "lucide-react";
 
-import pets from "../../../data/pets.js";
+import useAuth from "../../../hooks/useAuth.js";
+import useDebouncedValue from "../../../hooks/useDebouncedValue.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { listAnimals } from "../../../services/animalService.js";
 import {
   ANIMAL_STATUSES,
   HEALTH_STATUSES,
@@ -17,55 +20,62 @@ import {
 } from "../../../config/animalStatus.js";
 
 import "./Animals.css";
+import BackButton from "../../../components/common/BackButton.jsx";
+
+const SORTS = {
+  Newest: "newest",
+  "Name A-Z": "name_asc",
+  "Name Z-A": "name_desc",
+};
+
+const formatDate = (value) =>
+  value
+    ? new Date(value).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "-";
 
 function Animals() {
+  const { can } = useAuth();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
   const [healthFilter, setHealthFilter] = useState("All");
   const [sortOrder, setSortOrder] = useState("Newest");
 
-  const filteredPets = pets
-    .filter((pet) => {
-      const searchValue = search.toLowerCase();
+  const [page, setPage] = useState(1);
 
-      const matchesSearch =
-        pet.name.toLowerCase().includes(searchValue) ||
-        pet.breed.toLowerCase().includes(searchValue);
+  // Filters go to the API; the search waits until typing stops
+  const debouncedSearch = useDebouncedValue(search);
 
-      const matchesType =
-        typeFilter === "All" ||
-        pet.type === typeFilter;
+  const { data, loading, error } = useFetch(
+    () =>
+      listAnimals({
+        q: debouncedSearch || undefined,
+        type: typeFilter === "All" ? undefined : typeFilter,
+        status: statusFilter === "All" ? undefined : statusFilter,
+        health_status: healthFilter === "All" ? undefined : healthFilter,
+        sort: SORTS[sortOrder],
+        page,
+      }),
+    [debouncedSearch, typeFilter, statusFilter, healthFilter, sortOrder, page]
+  );
 
-      const matchesStatus =
-        statusFilter === "All" ||
-        pet.status === statusFilter;
+  const animals = data?.data ?? [];
+  const meta = data?.meta;
 
-      const matchesHealth =
-        healthFilter === "All" ||
-        pet.health_status === healthFilter;
-
-      return (
-        matchesSearch &&
-        matchesType &&
-        matchesStatus &&
-        matchesHealth
-      );
-    })
-    .sort((a, b) => {
-      if (sortOrder === "Name A-Z") {
-        return a.name.localeCompare(b.name);
-      }
-
-      if (sortOrder === "Name Z-A") {
-        return b.name.localeCompare(a.name);
-      }
-
-      return b.id - a.id;
-    });
+  // a changed filter goes back to page 1
+  const withReset = (setter) => (event) => {
+    setter(event.target.value);
+    setPage(1);
+  };
 
   return (
     <div className="staff-page">
+      <BackButton fallback="/admin/dashboard" />
+
 
       <div className="staff-page__top">
 
@@ -95,17 +105,13 @@ function Animals() {
           type="text"
           placeholder="Search by name, ID, or breed..."
           value={search}
-          onChange={(event) =>
-            setSearch(event.target.value)
-          }
+          onChange={withReset(setSearch)}
         />
 
 
         <select
           value={typeFilter}
-          onChange={(event) =>
-            setTypeFilter(event.target.value)
-          }
+          onChange={withReset(setTypeFilter)}
         >
           <option value="All">
             All Types
@@ -123,9 +129,7 @@ function Animals() {
 
         <select
           value={statusFilter}
-          onChange={(event) =>
-            setStatusFilter(event.target.value)
-          }
+          onChange={withReset(setStatusFilter)}
         >
           <option value="All">
             All Statuses
@@ -141,9 +145,7 @@ function Animals() {
 
         <select
           value={healthFilter}
-          onChange={(event) =>
-            setHealthFilter(event.target.value)
-          }
+          onChange={withReset(setHealthFilter)}
         >
           <option value="All">
             All Health Statuses
@@ -159,9 +161,7 @@ function Animals() {
 
         <select
           value={sortOrder}
-          onChange={(event) =>
-            setSortOrder(event.target.value)
-          }
+          onChange={withReset(setSortOrder)}
         >
           <option value="Newest">
             Newest First
@@ -209,25 +209,33 @@ function Animals() {
 
           <tbody>
 
-            {filteredPets.map((pet) => (
+            {animals.map((pet) => (
 
               <tr key={pet.id}>
 
                 <td>
-                  A-{String(pet.id).padStart(3, "0")}
+                  {pet.animal_code}
                 </td>
 
 
                 <td>
                   <div className="staff-table__photo">
-                    Photo
+                    {pet.image ? (
+                      <img
+                        src={pet.image}
+                        alt={pet.name || "Animal"}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
+                      />
+                    ) : (
+                      "Photo"
+                    )}
                   </div>
                 </td>
 
 
                 <td>
                   <strong>
-                    {pet.name}
+                    {pet.name || "Unnamed"}
                   </strong>
                 </td>
 
@@ -265,7 +273,7 @@ function Animals() {
 
 
                 <td>
-                  Sep 26, 2026
+                  {formatDate(pet.dateAdded)}
                 </td>
 
 
@@ -279,13 +287,15 @@ function Animals() {
                       View
                     </Link>
 
-                    <button
-                      type="button"
-                      className="animals__more"
-                      aria-label={`More actions for ${pet.name}`}
-                    >
-                      <MoreVertical size={14} />
-                    </button>
+                    {can("qr.generate") && (
+                      <Link
+                        to={`/admin/animals/${pet.id}/collar-tag`}
+                        className="animals__view"
+                      >
+                        <QrCode size={14} />
+                        Generate QR
+                      </Link>
+                    )}
 
                   </div>
                 </td>
@@ -293,6 +303,14 @@ function Animals() {
               </tr>
 
             ))}
+
+            {!loading && animals.length === 0 && (
+              <tr>
+                <td colSpan={9}>
+                  {error ? "Could not load animals." : "No animals found."}
+                </td>
+              </tr>
+            )}
 
           </tbody>
 
@@ -302,40 +320,42 @@ function Animals() {
         <div className="staff-pagination">
 
           <span>
-            Showing 1-{filteredPets.length} of {filteredPets.length} animals
+            {meta
+              ? `Showing ${meta.from ?? 0}-${meta.to ?? 0} of ${meta.total} animals`
+              : "Loading..."}
           </span>
 
 
           <div className="staff-pagination__pages">
 
-            <button type="button">
+            <button
+              type="button"
+              disabled={page <= 1}
+              onClick={() => setPage(page - 1)}
+              aria-label="Previous page"
+            >
               <ChevronLeft size={12} />
             </button>
 
+            {Array.from({ length: meta?.last_page ?? 1 }, (_, index) => index + 1).map(
+              (number) => (
+                <button
+                  type="button"
+                  key={number}
+                  className={number === page ? "active" : undefined}
+                  onClick={() => setPage(number)}
+                >
+                  {number}
+                </button>
+              )
+            )}
+
             <button
               type="button"
-              className="active"
+              disabled={page >= (meta?.last_page ?? 1)}
+              onClick={() => setPage(page + 1)}
+              aria-label="Next page"
             >
-              1
-            </button>
-
-            <button type="button">
-              2
-            </button>
-
-            <button type="button">
-              3
-            </button>
-
-            <button type="button">
-              4
-            </button>
-
-            <button type="button">
-              5
-            </button>
-
-            <button type="button">
               <ChevronRight size={12} />
             </button>
 

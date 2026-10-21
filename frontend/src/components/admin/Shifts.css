@@ -1,0 +1,209 @@
+/* My Shifts, On Duty Today and the Staff Schedule page */
+
+.shifts-card {
+  margin-top: 18px;
+}
+
+.shifts-card__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.shifts-card h3 {
+  margin: 0 0 8px;
+
+  color: var(--color-brown);
+
+  font-size: var(--font-xs);
+  font-weight: 700;
+}
+
+.shifts-list {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  display: grid;
+  gap: 8px;
+}
+
+.shifts-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 10px 12px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+
+  background-color: #fffaf2;
+
+  font-size: var(--font-xs);
+}
+
+.shifts-list__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shifts-list__main strong {
+  color: var(--color-brown);
+
+  font-size: var(--font-xs);
+}
+
+.shifts-list__main span {
+  color: var(--color-muted);
+}
+
+.shifts-list__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shifts-empty {
+  margin: 0;
+
+  color: var(--color-muted);
+
+  font-size: var(--font-xs);
+}
+
+.shifts-error {
+  margin: 8px 0 0;
+
+  color: #a12a2a;
+
+  font-size: var(--font-xs);
+}
+
+.shifts-coverage {
+  display: inline-block;
+
+  padding: 3px 8px;
+
+  border-radius: 999px;
+
+  font-size: var(--font-xs);
+  font-weight: 700;
+}
+
+.shifts-coverage--ok {
+  background-color: #e8f3dc;
+  color: #4f6f2f;
+}
+
+.shifts-coverage--missing {
+  background-color: #fdecec;
+  color: #a12a2a;
+}
+
+/* Staff Schedule page */
+
+.schedule__layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.schedule__form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.schedule__form label {
+  display: grid;
+  gap: 4px;
+
+  color: var(--color-muted);
+
+  font-size: var(--font-xs);
+  font-weight: 700;
+}
+
+.schedule__form select,
+.schedule__form input {
+  min-height: 34px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+
+  background-color: var(--color-white);
+
+  font-size: var(--font-xs);
+}
+
+.schedule__group {
+  margin-top: 14px;
+}
+
+.schedule__group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin-bottom: 6px;
+}
+
+.schedule__group-head h3 {
+  margin: 0;
+}
+
+.schedule__remove {
+  border: 0;
+  background: none;
+
+  color: #a12a2a;
+
+  font-size: var(--font-xs);
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.schedule__notice {
+  margin: 12px 0 0;
+
+  padding: 10px 14px;
+
+  border-radius: 9px;
+
+  font-size: var(--font-xs);
+}
+
+.schedule__notice--warning {
+  background-color: #fff4d6;
+  color: #7a5200;
+}
+
+.schedule__notice--ok {
+  background-color: #e8f3dc;
+  color: #4f6f2f;
+}
+
+.schedule__notice--error {
+  background-color: #fdecec;
+  color: #a12a2a;
+}
+
+.schedule__directory li {
+  align-items: flex-start;
+}
+
+@media (max-width: 1000px) {
+  .shifts-card__grid,
+  .schedule__layout,
+  .schedule__form {
+    grid-template-columns: 1fr;
+  }
+}

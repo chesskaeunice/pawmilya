@@ -3,17 +3,22 @@ import { Link } from "react-router-dom";
 
 import { X } from "lucide-react";
 
-import applications from "../../../data/applications.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { listMyApplications } from "../../../services/adoptionService.js";
 
 import myApplicationsHero from "../../../assets/images/users/home/MyApplications-hero.jpg";
 
 import "./MyApplications.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 const STATUS_FILTERS = ["All", "Pending", "Approved", "Rejected"];
 
 function MyApplications() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [expandedPet, setExpandedPet] = useState(null);
+
+  const { data, loading } = useFetch(() => listMyApplications(), []);
+  const applications = data ?? [];
 
   const filteredApplications = applications.filter((application) =>
     statusFilter === "All" ? true : application.status === statusFilter
@@ -38,6 +43,8 @@ function MyApplications() {
 
   return (
     <div className="my-applications">
+      <BackButton fallback="/" />
+
       {/* HERO */}
 
       <section className="my-applications__header">
@@ -142,7 +149,11 @@ function MyApplications() {
             </article>
           ))}
 
-          {filteredApplications.length === 0 && (
+          {loading && (
+            <p className="my-applications__empty">Loading your applications...</p>
+          )}
+
+          {!loading && filteredApplications.length === 0 && (
             <p className="my-applications__empty">
               No applications found for this status.
             </p>

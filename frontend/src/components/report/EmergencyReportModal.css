@@ -29,7 +29,7 @@
   border-radius: 12px;
 
   color: var(--color-text);
-  font-size: 15px;
+  font-size: var(--font-label);
   font-weight: 600;
 
   cursor: pointer;
@@ -51,7 +51,7 @@
 .emergency__heading {
   margin: 8px 0 0;
 
-  font-size: 16px;
+  font-size: var(--font-md);
 }
 
 .emergency__summary {
@@ -78,14 +78,14 @@
 
 .emergency__summary dt {
   color: var(--color-muted);
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .emergency__summary dd {
   margin: 0;
 
   color: var(--color-brown);
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 700;
   text-align: right;
 }
@@ -109,7 +109,7 @@
   margin: 0;
 
   color: var(--color-orange);
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -150,7 +150,7 @@
 .emergency__step-title {
   margin: 0;
 
-  font-size: 20px;
+  font-size: var(--font-h3);
 }
 
 .emergency__photo-slots {
@@ -163,7 +163,7 @@
   margin: 0;
 
   color: var(--color-muted);
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .emergency__step .mform__primary,

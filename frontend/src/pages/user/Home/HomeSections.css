@@ -16,7 +16,7 @@
 
   color: var(--color-orange);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -26,7 +26,7 @@
 .about__text h2 {
   margin: 0;
 
-  font-size: 32px;
+  font-size: var(--font-h1);
   letter-spacing: -1px;
 }
 
@@ -34,7 +34,7 @@
   margin: 8px 0 0;
 
   color: var(--color-muted);
-  font-size: 16px;
+  font-size: var(--font-md);
 }
 
 .landing-section__action {
@@ -56,7 +56,7 @@
 
   color: var(--color-brown);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 700;
 
   transition:
@@ -103,14 +103,14 @@
 .about__text h3 {
   margin: 20px 0 4px;
 
-  font-size: 17px;
+  font-size: var(--font-lg);
 }
 
 .about__text p {
   margin: 0;
 
   color: var(--color-muted);
-  font-size: 15px;
+  font-size: var(--font-label);
 }
 
 .about__text .landing-section__eyebrow {
@@ -122,7 +122,7 @@
   padding-left: 20px;
 
   color: var(--color-muted);
-  font-size: 15px;
+  font-size: var(--font-label);
   line-height: 1.7;
 }
 
@@ -143,10 +143,25 @@
 
   .landing-section__header h2,
   .about__text h2 {
-    font-size: 27px;
+    font-size: var(--font-h2);
   }
 
   .about__images img {
     min-height: 180px;
   }
+}
+
+/* Staff have not uploaded About images: text only */
+.about--no-images {
+  grid-template-columns: 1fr;
+  max-width: 760px;
+}
+
+/* nothing to show in a preview strip */
+.landing-section__empty {
+  margin: 0;
+  padding: 32px 16px;
+
+  text-align: center;
+  color: var(--color-muted);
 }

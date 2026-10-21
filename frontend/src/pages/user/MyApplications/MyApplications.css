@@ -19,7 +19,7 @@
 
   letter-spacing: 2px;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -119,13 +119,13 @@
 
   border-radius: 9px;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .my-applications__pet h2 {
   margin: 0 0 4px;
 
-  font-size: 18px;
+  font-size: var(--font-lg);
 }
 
 .my-applications__pet p {
@@ -133,7 +133,7 @@
 
   color: var(--color-muted);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 .my-applications__date {
@@ -147,11 +147,11 @@
 .my-applications__date span {
   color: var(--color-muted);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .my-applications__date strong {
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 .status {
@@ -159,7 +159,7 @@
 
   border-radius: 999px;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 
   font-weight: 700;
 }
@@ -191,7 +191,7 @@
 .my-applications__view {
   color: var(--color-orange);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 
   font-weight: 700;
 }
@@ -278,7 +278,7 @@
 .my-applications__hero-description {
   margin: 18px 0 0;
 
-  font-size: 16px;
+  font-size: var(--font-md);
 
   line-height: 1.65;
 }
@@ -358,7 +358,7 @@
 
   color: #d90429;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 
   text-transform: uppercase;
 
@@ -370,7 +370,7 @@
 
   color: var(--color-text);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 
   line-height: 1.55;
 }
@@ -529,11 +529,11 @@
 }
 
 .my-applications__date span {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .my-applications__date strong {
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .my-applications__pet p {
@@ -573,7 +573,7 @@
 
   color: var(--color-orange);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 
   font-weight: 700;
 

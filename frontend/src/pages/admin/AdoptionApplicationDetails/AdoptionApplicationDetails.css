@@ -11,52 +11,8 @@
    BACK BUTTON
 ========================================= */
 
-.application-details__back {
-  min-height: 36px;
-
-  display: inline-flex;
-  align-items: center;
-
-  gap: 7px;
-
-  margin-bottom: 18px;
-
-  padding: 0 12px;
-
-  border:
-    1px solid
-    var(--color-border);
-
-  border-radius: 999px;
-
-  background:
-    white;
-
-  color:
-    var(--color-brown);
-
-  font-size: 10px;
-  font-weight: 700;
-
-  text-decoration: none;
-
-  transition:
-    border-color 0.18s ease,
-    color 0.18s ease,
-    background-color 0.18s ease;
-}
 
 
-.application-details__back:hover {
-  border-color:
-    var(--color-orange);
-
-  background:
-    #fffaf1;
-
-  color:
-    var(--color-orange);
-}
 
 
 /* =========================================
@@ -102,7 +58,7 @@
   color:
     var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -147,7 +103,7 @@
   color:
     var(--color-orange);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   cursor: pointer;
@@ -237,7 +193,7 @@
   color:
     var(--color-muted);
 
-  font-size: 8px;
+  font-size: var(--font-xs);
 
   text-transform: uppercase;
 
@@ -251,7 +207,7 @@
   color:
     var(--color-brown);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 
   text-overflow: ellipsis;
 
@@ -347,7 +303,7 @@
   color:
     var(--color-brown);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
@@ -358,7 +314,7 @@
   color:
     var(--color-muted);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 
   line-height: 1.45;
 }
@@ -400,7 +356,7 @@
   color:
     var(--color-muted);
 
-  font-size: 8px;
+  font-size: var(--font-xs);
 
   text-transform: uppercase;
 
@@ -412,7 +368,7 @@
   color:
     var(--color-text);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 
   font-weight: 600;
 }
@@ -495,7 +451,7 @@
   color:
     var(--color-muted);
 
-  font-size: 8px;
+  font-size: var(--font-xs);
 }
 
 
@@ -505,7 +461,7 @@
   color:
     var(--color-text);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -558,7 +514,7 @@
   color:
     var(--color-orange);
 
-  font-size: 8px;
+  font-size: var(--font-xs);
   font-weight: 800;
 }
 
@@ -572,7 +528,7 @@
   color:
     var(--color-brown);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -583,7 +539,7 @@
   color:
     var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 
   line-height: 1.65;
 }
@@ -631,7 +587,7 @@
   color:
     var(--color-muted);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -657,7 +613,7 @@
   color:
     var(--color-brown);
 
-  font-size: 18px;
+  font-size: var(--font-lg);
 }
 
 
@@ -669,7 +625,7 @@
   color:
     var(--color-orange);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 
   font-weight: 700;
 }
@@ -682,7 +638,7 @@
   color:
     var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -764,7 +720,7 @@
   color:
     var(--color-text);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -774,7 +730,7 @@
   color:
     var(--color-muted);
 
-  font-size: 8px;
+  font-size: var(--font-xs);
 
   text-overflow: ellipsis;
 
@@ -789,9 +745,9 @@
   gap: 4px;
 
   color:
-    #4a8a55;
+    var(--color-success);
 
-  font-size: 8px;
+  font-size: var(--font-xs);
 
   font-weight: 700;
 }
@@ -833,7 +789,7 @@
   color:
     var(--color-muted);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -841,7 +797,7 @@
   color:
     var(--color-brown);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 
   text-align: right;
 }
@@ -889,8 +845,7 @@
   color:
     var(--color-orange);
 
-  font-size:
-    8px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -910,7 +865,7 @@
   color:
     var(--color-brown);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
@@ -921,7 +876,7 @@
   color:
     var(--color-muted);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 
   line-height: 1.5;
 }
@@ -962,7 +917,7 @@
   font-family:
     inherit;
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -1067,8 +1022,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    22px;
+  font-size: var(--font-h3);
 }
 
 
@@ -1079,8 +1033,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 }
 
 
@@ -1271,7 +1224,7 @@
   color:
     var(--color-brown);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 
   font-weight: 700;
 }
@@ -1285,7 +1238,7 @@
   color:
     var(--color-muted);
 
-  font-size: 8px;
+  font-size: var(--font-xs);
 
   text-overflow:
     ellipsis;
@@ -1326,8 +1279,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    9px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -1359,8 +1311,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    8px;
+  font-size: var(--font-xs);
 }
 
 
@@ -1440,8 +1391,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -1455,8 +1405,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    8px;
+  font-size: var(--font-xs);
 
   line-height:
     1.5;
@@ -1495,8 +1444,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    8px;
+  font-size: var(--font-xs);
 
   font-weight:
     600;
@@ -1531,7 +1479,7 @@
     #f5fbf5;
 
   color:
-    #4a8a55;
+    var(--color-success);
 }
 
 
@@ -1551,8 +1499,7 @@
   color:
     #377a42;
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -1560,8 +1507,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    9px;
+  font-size: var(--font-xs);
 
   line-height:
     1.5;
@@ -1588,8 +1534,7 @@
   color:
     #b34b3d;
 
-  font-size:
-    12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -1600,8 +1545,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    9px;
+  font-size: var(--font-xs);
 
   line-height:
     1.6;
@@ -1630,26 +1574,26 @@
 ========================================= */
 
 .application-details__header-meta {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .application-details__review-item small {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .application-details__review-item strong {
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
 /* CARD HEADINGS */
 
 .application-details__card-heading h2 {
-  font-size: 16px;
+  font-size: var(--font-md);
 }
 
 .application-details__card-heading p {
-  font-size: 11px;
+  font-size: var(--font-xs);
   line-height: 1.5;
 }
 
@@ -1657,37 +1601,37 @@
 /* GENERAL DETAILS */
 
 .application-details__detail span {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .application-details__detail strong {
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
 /* CONTACT DETAILS */
 
 .application-details__contact-row small {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .application-details__contact-row strong {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
 /* APPLICATION QUESTIONS */
 
 .application-details__question-number {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .application-details__question strong {
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 .application-details__question p {
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 1.7;
 }
 
@@ -1695,90 +1639,90 @@
 /* SELECTED ANIMAL */
 
 .application-details__animal-info h3 {
-  font-size: 20px;
+  font-size: var(--font-h3);
 }
 
 .application-details__animal-type {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .application-details__animal-info p {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
 /* DOCUMENTS */
 
 .application-details__document-info strong {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .application-details__document-info span {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .application-details__document-status {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
 /* REVIEW SUMMARY */
 
 .application-details__review-row span {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .application-details__review-row strong {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
 /* HOME PHOTO SECTION */
 
 .application-details__photo-placeholder span {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .application-details__photo-placeholder small {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .application-details__photo-checklist > span {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .application-details__photo-checklist small {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
 /* TERMS */
 
 .application-details__terms-status strong {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .application-details__terms-status span {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
 /* DECISION AREA */
 
 .application-details__decision-eyebrow {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .application-details__decision h2 {
-  font-size: 16px;
+  font-size: var(--font-md);
 }
 
 .application-details__decision p {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .application-details__actions button {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 /* =========================================
@@ -1801,7 +1745,7 @@
 .application-details__question strong {
   display: block;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 1.45;
 }
 
@@ -1810,6 +1754,6 @@
 .application-details__question p {
   margin-top: 7px;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   line-height: 1.65;
 }

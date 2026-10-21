@@ -1,72 +1,57 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AuthContext } from "./authContext.js";
 import {
   CITIZEN,
   hasPermission,
   ROLE_LABELS,
-  ROLES,
   rolePermissions,
 } from "../config/rolePermissions.js";
-
-const STORAGE_KEY = "pawmilya.mockUser";
-
-// Temporary mock users, one per role. Later the user comes from Laravel.
-const MOCK_USERS = {
-  [CITIZEN]: { id: 100, name: "Citizen", email: "citizen@pawmilya.local" },
-  [ROLES.KENNEL_MANAGER]: {
-    id: 1,
-    name: "Kennel Manager",
-    email: "manager@pawmilya.local",
-  },
-  [ROLES.ADOPTION_COUNSELOR]: {
-    id: 2,
-    name: "Adoption Counselor",
-    email: "counselor@pawmilya.local",
-  },
-  [ROLES.VET_TECH]: {
-    id: 3,
-    name: "Vet Tech",
-    email: "vettech@pawmilya.local",
-  },
-  [ROLES.POUND_STAFF]: {
-    id: 4,
-    name: "Pound Staff",
-    email: "poundstaff@pawmilya.local",
-  },
-};
-
-function readStoredUser() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return saved && MOCK_USERS[saved.role] ? saved : null;
-  } catch {
-    return null;
-  }
-}
+import {
+  changePasswordRequest,
+  clearToken,
+  fetchCurrentUser,
+  getStoredToken,
+  loginRequest,
+  logoutRequest,
+  registerRequest,
+} from "../services/authService.js";
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(readStoredUser);
+  const [user, setUser] = useState(null);
+  // Wait for /api/me before guards decide, when a token is already stored
+  const [loading, setLoading] = useState(() => Boolean(getStoredToken()));
 
-  const login = useCallback((role) => {
-    if (!MOCK_USERS[role]) return;
+  useEffect(() => {
+    if (!getStoredToken()) return;
 
-    const next = { ...MOCK_USERS[role], role };
+    fetchCurrentUser()
+      .then(setUser)
+      .catch(() => clearToken())
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Both throw an Axios error on failure (422 with field errors, 403 if deactivated)
+  const login = useCallback(async (email, password) => {
+    const next = await loginRequest(email, password);
     setUser(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      /* storage can be blocked; the login still works for this visit */
-    }
+    return next;
+  }, []);
+
+  const register = useCallback(async (payload) => {
+    const next = await registerRequest(payload);
+    setUser(next);
+    return next;
+  }, []);
+
+  const changePassword = useCallback(async (payload) => {
+    await changePasswordRequest(payload);
+    setUser((current) => (current ? { ...current, mustChangePassword: false } : current));
   }, []);
 
   const logout = useCallback(() => {
     setUser(null);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignore storage errors */
-    }
+    logoutRequest();
   }, []);
 
   const value = useMemo(() => {
@@ -75,14 +60,17 @@ export function AuthProvider({ children }) {
     return {
       user,
       role,
+      loading,
       isLoggedIn: Boolean(user),
       isStaff: Boolean(user) && role !== CITIZEN && role in rolePermissions,
       roleLabel: ROLE_LABELS[role] || "Guest",
       can: (permission) => hasPermission(role, permission),
       login,
+      register,
+      changePassword,
       logout,
     };
-  }, [user, login, logout]);
+  }, [user, loading, login, register, changePassword, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

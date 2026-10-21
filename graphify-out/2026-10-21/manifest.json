@@ -1,0 +1,1556 @@
+{
+  "Proposal Documentation.pdf": {
+    "mtime": 1792510828.5229743,
+    "seen": 1792554424.0413036,
+    "ast_hash": "cbf7d8d4fb81f538a6dc974682bf0883",
+    "semantic_hash": "cbf7d8d4fb81f538a6dc974682bf0883"
+  },
+  "backend/app/Http/Controllers/Controller.php": {
+    "mtime": 1792510836.332212,
+    "seen": 1792554424.0413036,
+    "ast_hash": "25a307335c0719bc9a91b3f7babd186d",
+    "semantic_hash": "25a307335c0719bc9a91b3f7babd186d"
+  },
+  "backend/app/Models/User.php": {
+    "mtime": 1792515912.6343513,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1ac6b4ec57d7799e87b09a7a4a55e444",
+    "semantic_hash": ""
+  },
+  "backend/app/Providers/AppServiceProvider.php": {
+    "mtime": 1792510836.370755,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c0094f35cad6bba7636002a62186dae4",
+    "semantic_hash": "c0094f35cad6bba7636002a62186dae4"
+  },
+  "backend/artisan": {
+    "mtime": 1792510836.2462606,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e66bb13691f6184c762c196427d8e685",
+    "semantic_hash": "e66bb13691f6184c762c196427d8e685"
+  },
+  "backend/bootstrap/app.php": {
+    "mtime": 1792515916.191671,
+    "seen": 1792554424.0413036,
+    "ast_hash": "28e51b3d24456fb686c56703a6b615ba",
+    "semantic_hash": ""
+  },
+  "backend/bootstrap/providers.php": {
+    "mtime": 1792510836.395368,
+    "seen": 1792554424.0413036,
+    "ast_hash": "888c810b5a4720916f07aa05dd2c2dd3",
+    "semantic_hash": "888c810b5a4720916f07aa05dd2c2dd3"
+  },
+  "backend/composer.json": {
+    "mtime": 1792510836.255689,
+    "seen": 1792554424.0413036,
+    "ast_hash": "48e7ce04309fe7db5d48d18baeefdc07",
+    "semantic_hash": "48e7ce04309fe7db5d48d18baeefdc07"
+  },
+  "backend/config/app.php": {
+    "mtime": 1792516721.3891208,
+    "seen": 1792554424.0413036,
+    "ast_hash": "77bd843e088f4a3f6ef7483e146b9631",
+    "semantic_hash": ""
+  },
+  "backend/config/auth.php": {
+    "mtime": 1792510836.458523,
+    "seen": 1792554424.0413036,
+    "ast_hash": "26354511ab860b301f2a3554bc388b91",
+    "semantic_hash": "26354511ab860b301f2a3554bc388b91"
+  },
+  "backend/config/cache.php": {
+    "mtime": 1792510836.46843,
+    "seen": 1792554424.0413036,
+    "ast_hash": "022fdf20e95ddb79949954243e367003",
+    "semantic_hash": "022fdf20e95ddb79949954243e367003"
+  },
+  "backend/config/cors.php": {
+    "mtime": 1792510836.4877708,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d60315191fe9b30d0f841ba8c482a301",
+    "semantic_hash": "d60315191fe9b30d0f841ba8c482a301"
+  },
+  "backend/config/database.php": {
+    "mtime": 1792510836.4961104,
+    "seen": 1792554424.0413036,
+    "ast_hash": "3cd69c7ecc842e4552e44eade546d91f",
+    "semantic_hash": "3cd69c7ecc842e4552e44eade546d91f"
+  },
+  "backend/config/filesystems.php": {
+    "mtime": 1792510836.5054965,
+    "seen": 1792554424.0413036,
+    "ast_hash": "bde1aa1027f0448f17348dbd93f3d7ea",
+    "semantic_hash": "bde1aa1027f0448f17348dbd93f3d7ea"
+  },
+  "backend/config/logging.php": {
+    "mtime": 1792510836.5170825,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d8255a5c07d3da72c7c9363f0c44bddd",
+    "semantic_hash": "d8255a5c07d3da72c7c9363f0c44bddd"
+  },
+  "backend/config/mail.php": {
+    "mtime": 1792510836.530306,
+    "seen": 1792554424.0413036,
+    "ast_hash": "18601a927b48d38337ba2077426a7d60",
+    "semantic_hash": "18601a927b48d38337ba2077426a7d60"
+  },
+  "backend/config/queue.php": {
+    "mtime": 1792510836.5391483,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f98ce92e7bf51db1fabaf8a30e12fc5a",
+    "semantic_hash": "f98ce92e7bf51db1fabaf8a30e12fc5a"
+  },
+  "backend/config/sanctum.php": {
+    "mtime": 1792510836.5507994,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e3887ebee464a1b2c014cb16696a2b50",
+    "semantic_hash": "e3887ebee464a1b2c014cb16696a2b50"
+  },
+  "backend/config/services.php": {
+    "mtime": 1792510836.564927,
+    "seen": 1792554424.0413036,
+    "ast_hash": "534a1b7af7009c373ea4ebfa18823d57",
+    "semantic_hash": "534a1b7af7009c373ea4ebfa18823d57"
+  },
+  "backend/config/session.php": {
+    "mtime": 1792510836.573331,
+    "seen": 1792554424.0413036,
+    "ast_hash": "6d9336e9ca1183588abbce7ff7a6f29a",
+    "semantic_hash": "6d9336e9ca1183588abbce7ff7a6f29a"
+  },
+  "backend/database/factories/UserFactory.php": {
+    "mtime": 1792510836.6077733,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1c9f381f9c2bc3027971a3bfdbe99164",
+    "semantic_hash": "1c9f381f9c2bc3027971a3bfdbe99164"
+  },
+  "backend/database/migrations/0001_01_01_000000_create_users_table.php": {
+    "mtime": 1792510836.628688,
+    "seen": 1792554424.0413036,
+    "ast_hash": "138280095e9d19f2ba6fb830415602e2",
+    "semantic_hash": "138280095e9d19f2ba6fb830415602e2"
+  },
+  "backend/database/migrations/0001_01_01_000001_create_cache_table.php": {
+    "mtime": 1792510836.63813,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f3f38b41650112a6282c8dd1f635afb0",
+    "semantic_hash": "f3f38b41650112a6282c8dd1f635afb0"
+  },
+  "backend/database/migrations/0001_01_01_000002_create_jobs_table.php": {
+    "mtime": 1792510836.6533055,
+    "seen": 1792554424.0413036,
+    "ast_hash": "ead9cce2650b36345454f85e8c0214a0",
+    "semantic_hash": "ead9cce2650b36345454f85e8c0214a0"
+  },
+  "backend/database/migrations/2026_10_16_151838_create_personal_access_tokens_table.php": {
+    "mtime": 1792510836.6621737,
+    "seen": 1792554424.0413036,
+    "ast_hash": "eb77af89d184f92ec893eff344c34999",
+    "semantic_hash": "eb77af89d184f92ec893eff344c34999"
+  },
+  "backend/database/seeders/DatabaseSeeder.php": {
+    "mtime": 1792515557.199047,
+    "seen": 1792554424.0413036,
+    "ast_hash": "6d50a2f0b40ae0997e984803a95709b9",
+    "semantic_hash": ""
+  },
+  "backend/package.json": {
+    "mtime": 1792510836.27511,
+    "seen": 1792554424.0413036,
+    "ast_hash": "07d7440dc017382991f9a7bd0151005a",
+    "semantic_hash": "07d7440dc017382991f9a7bd0151005a"
+  },
+  "backend/public/index.php": {
+    "mtime": 1792510836.7238016,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d8eda274115af5fd2aaa8230af329ef7",
+    "semantic_hash": "d8eda274115af5fd2aaa8230af329ef7"
+  },
+  "backend/resources/js/app.js": {
+    "mtime": 1792510836.7761686,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1ccf2b9101110f40ecaab1608a6f91cf",
+    "semantic_hash": "1ccf2b9101110f40ecaab1608a6f91cf"
+  },
+  "backend/resources/js/bootstrap.js": {
+    "mtime": 1792510836.7834914,
+    "seen": 1792554424.0413036,
+    "ast_hash": "78f909acc19aea4717eddca5a87c1ba3",
+    "semantic_hash": "78f909acc19aea4717eddca5a87c1ba3"
+  },
+  "backend/resources/views/welcome.blade.php": {
+    "mtime": 1792510836.7975893,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f9f90b3bab40fd1d366e9b54466deac7",
+    "semantic_hash": "f9f90b3bab40fd1d366e9b54466deac7"
+  },
+  "backend/routes/api.php": {
+    "mtime": 1792520626.9932613,
+    "seen": 1792554424.0413036,
+    "ast_hash": "162ecf22733c01da0626a852b77fb960",
+    "semantic_hash": ""
+  },
+  "backend/routes/console.php": {
+    "mtime": 1792510836.8170335,
+    "seen": 1792554424.0413036,
+    "ast_hash": "3c6ce2e6d16444282b24a9aa63885563",
+    "semantic_hash": "3c6ce2e6d16444282b24a9aa63885563"
+  },
+  "backend/routes/web.php": {
+    "mtime": 1792510836.82645,
+    "seen": 1792554424.0413036,
+    "ast_hash": "84625c52e743b1a4178bb27b7afb3615",
+    "semantic_hash": "84625c52e743b1a4178bb27b7afb3615"
+  },
+  "backend/tests/Feature/ExampleTest.php": {
+    "mtime": 1792510837.0094278,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0f4d91c9c5bbcd4e2f46cf885acb7fb6",
+    "semantic_hash": "0f4d91c9c5bbcd4e2f46cf885acb7fb6"
+  },
+  "backend/tests/TestCase.php": {
+    "mtime": 1792510836.9941275,
+    "seen": 1792554424.0413036,
+    "ast_hash": "7e567dc27e68d5b57bae16af07f68907",
+    "semantic_hash": "7e567dc27e68d5b57bae16af07f68907"
+  },
+  "backend/tests/Unit/ExampleTest.php": {
+    "mtime": 1792510837.0279713,
+    "seen": 1792554424.0413036,
+    "ast_hash": "3f679e9508c834f0ad95943455fcd836",
+    "semantic_hash": "3f679e9508c834f0ad95943455fcd836"
+  },
+  "backend/vite.config.js": {
+    "mtime": 1792510836.2995293,
+    "seen": 1792554424.0413036,
+    "ast_hash": "60c40741a9c5b915a5e5542cfb23bc25",
+    "semantic_hash": "60c40741a9c5b915a5e5542cfb23bc25"
+  },
+  "frontend/.oxlintrc.json": {
+    "mtime": 1792510837.0662677,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5e6e3cea3e89137071c142dd7835b0ef",
+    "semantic_hash": "5e6e3cea3e89137071c142dd7835b0ef"
+  },
+  "frontend/package.json": {
+    "mtime": 1792510837.096228,
+    "seen": 1792554424.0413036,
+    "ast_hash": "587c998be687832ce83a2b048fa137dd",
+    "semantic_hash": "587c998be687832ce83a2b048fa137dd"
+  },
+  "frontend/src/App.jsx": {
+    "mtime": 1792510837.3034782,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1bbb83b704bc31b1e87f99cd32b37da4",
+    "semantic_hash": "1bbb83b704bc31b1e87f99cd32b37da4"
+  },
+  "frontend/src/main.jsx": {
+    "mtime": 1792510837.3269918,
+    "seen": 1792554424.0413036,
+    "ast_hash": "4fd36e9b35c46fa1644ecc394fb8dc6c",
+    "semantic_hash": ""
+  },
+  "frontend/vite.config.js": {
+    "mtime": 1792510837.1140468,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5d54447744c19ccd28638a5c668d15ea",
+    "semantic_hash": "5d54447744c19ccd28638a5c668d15ea"
+  },
+  "CLAUDE.md": {
+    "mtime": 1792520940.2835977,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0af9ab16c7fba912ee855085e245960d",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1792520389.019623,
+    "seen": 1792554424.0413036,
+    "ast_hash": "62eeaace291858ecd0fd1b3fa50a07d9",
+    "semantic_hash": ""
+  },
+  "frontend/index.html": {
+    "mtime": 1792510837.077345,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5dfbc97d5ca1bee32cd62483fdb6e217",
+    "semantic_hash": "5dfbc97d5ca1bee32cd62483fdb6e217"
+  },
+  "Wireframes/Staff Side/Screenshot 2026-10-16 225228.png": {
+    "mtime": 1792510841.9565673,
+    "seen": 1792554424.0413036,
+    "ast_hash": "bc2cb4d03743d2e0f725184eb7070c5c",
+    "semantic_hash": "bc2cb4d03743d2e0f725184eb7070c5c"
+  },
+  "Wireframes/Staff Side/Screenshot 2026-10-16 225247.png": {
+    "mtime": 1792510841.9744427,
+    "seen": 1792554424.0413036,
+    "ast_hash": "27e6deb1ace47107fc06fa5958d9e0e9",
+    "semantic_hash": "27e6deb1ace47107fc06fa5958d9e0e9"
+  },
+  "Wireframes/Staff Side/Screenshot 2026-10-16 225339.png": {
+    "mtime": 1792510841.9923475,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8d945978754fa6c3781fe6e3d8c08476",
+    "semantic_hash": "8d945978754fa6c3781fe6e3d8c08476"
+  },
+  "Wireframes/Staff Side/Screenshot 2026-10-16 233047.png": {
+    "mtime": 1792510842.008512,
+    "seen": 1792554424.0413036,
+    "ast_hash": "498013f220e96eddf5ad5ab20ddbb53e",
+    "semantic_hash": "498013f220e96eddf5ad5ab20ddbb53e"
+  },
+  "Wireframes/Staff Side/Screenshot 2026-10-16 233124.png": {
+    "mtime": 1792510842.0284543,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b470ba6387bb42d83da59a4bb6303265",
+    "semantic_hash": "b470ba6387bb42d83da59a4bb6303265"
+  },
+  "Wireframes/Staff Side/Screenshot 2026-10-16 233312.png": {
+    "mtime": 1792510842.044653,
+    "seen": 1792554424.0413036,
+    "ast_hash": "2c08bccc3d80ea0f31870616ffc6ab7b",
+    "semantic_hash": "2c08bccc3d80ea0f31870616ffc6ab7b"
+  },
+  "Wireframes/Staff Side/Screenshot 2026-10-16 233321.png": {
+    "mtime": 1792510842.0620782,
+    "seen": 1792554424.0413036,
+    "ast_hash": "4ae710ba6d7cfdb9a288e202e9b679f8",
+    "semantic_hash": "4ae710ba6d7cfdb9a288e202e9b679f8"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 224907.png": {
+    "mtime": 1792510842.0923057,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e85b18d13476340b8914509ab3e4f071",
+    "semantic_hash": "e85b18d13476340b8914509ab3e4f071"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 225010.png": {
+    "mtime": 1792510842.1149566,
+    "seen": 1792554424.0413036,
+    "ast_hash": "db23abac1ba49eba16ee82e233db5d7f",
+    "semantic_hash": "db23abac1ba49eba16ee82e233db5d7f"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 225053.png": {
+    "mtime": 1792510842.1317856,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c06e6b242d165b978479f531addd3782",
+    "semantic_hash": "c06e6b242d165b978479f531addd3782"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 225148.png": {
+    "mtime": 1792510842.1494348,
+    "seen": 1792554424.0413036,
+    "ast_hash": "ffb5428058d6be032c2cab3a94da4b3f",
+    "semantic_hash": "ffb5428058d6be032c2cab3a94da4b3f"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 233409.png": {
+    "mtime": 1792510842.1665685,
+    "seen": 1792554424.0413036,
+    "ast_hash": "16ff1dc0d06a04550bf345003d7c19ff",
+    "semantic_hash": "16ff1dc0d06a04550bf345003d7c19ff"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 233417.png": {
+    "mtime": 1792510842.1838322,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5424c2bfb708db4a2a834e424f70190a",
+    "semantic_hash": "5424c2bfb708db4a2a834e424f70190a"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 233426.png": {
+    "mtime": 1792510842.2039738,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c7e916adb78aa5a8105845e6821c6efd",
+    "semantic_hash": "c7e916adb78aa5a8105845e6821c6efd"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 233431.png": {
+    "mtime": 1792510842.2309875,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f94bdd4f94e1b58b43f00a48fd9c4a2b",
+    "semantic_hash": "f94bdd4f94e1b58b43f00a48fd9c4a2b"
+  },
+  "Wireframes/User Side/Screenshot 2026-10-16 233514.png": {
+    "mtime": 1792510842.2544785,
+    "seen": 1792554424.0413036,
+    "ast_hash": "72d5e9be93393133b76093e595475707",
+    "semantic_hash": "72d5e9be93393133b76093e595475707"
+  },
+  "frontend/src/assets/images/placeholders/index.js": {
+    "mtime": 1792510837.5101101,
+    "seen": 1792554424.0413036,
+    "ast_hash": "23c8dcb8db276da48ec22bdd085b7237",
+    "semantic_hash": "23c8dcb8db276da48ec22bdd085b7237"
+  },
+  "frontend/src/components/admin/AdminHeader.jsx": {
+    "mtime": 1792510837.650251,
+    "seen": 1792554424.0413036,
+    "ast_hash": "acc5d54b0da878617f1625daac51823e",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/admin/AdminSidebar.jsx": {
+    "mtime": 1792520288.3257976,
+    "seen": 1792554424.0413036,
+    "ast_hash": "50ef89790f248af198d0f19573bc50eb",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/admin/AdminStatCard.jsx": {
+    "mtime": 1792510837.6711605,
+    "seen": 1792554424.0413036,
+    "ast_hash": "af20006c892b11552bdc90e49b683399",
+    "semantic_hash": "af20006c892b11552bdc90e49b683399"
+  },
+  "frontend/src/components/common/BackButton.jsx": {
+    "mtime": 1792510837.7231333,
+    "seen": 1792554424.0413036,
+    "ast_hash": "bc4c620b7c7d55f6e95f83c55f6a1dcd",
+    "semantic_hash": "bc4c620b7c7d55f6e95f83c55f6a1dcd"
+  },
+  "frontend/src/components/common/Button.jsx": {
+    "mtime": 1792510837.7333517,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "frontend/src/components/common/FilterDropdown.jsx": {
+    "mtime": 1792510837.7587564,
+    "seen": 1792554424.0413036,
+    "ast_hash": "029ed7f01d9fc8d0310cab2b732aa2b1",
+    "semantic_hash": "029ed7f01d9fc8d0310cab2b732aa2b1"
+  },
+  "frontend/src/components/common/Modal.jsx": {
+    "mtime": 1792510837.789975,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d918cca4db58ada921f32fbfc8e74da8",
+    "semantic_hash": "d918cca4db58ada921f32fbfc8e74da8"
+  },
+  "frontend/src/components/common/Pagination.jsx": {
+    "mtime": 1792510837.822006,
+    "seen": 1792554424.0413036,
+    "ast_hash": "501e6f88b83e62679fdc03582ee6dedc",
+    "semantic_hash": "501e6f88b83e62679fdc03582ee6dedc"
+  },
+  "frontend/src/components/common/RequireSignIn.jsx": {
+    "mtime": 1792515960.395346,
+    "seen": 1792554424.0413036,
+    "ast_hash": "99f6b2a78d9d5f142a2060582e50509e",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/common/SearchBar.jsx": {
+    "mtime": 1792510837.8518019,
+    "seen": 1792554424.0413036,
+    "ast_hash": "92aca5a6393beee5dc4cadb239155d9f",
+    "semantic_hash": "92aca5a6393beee5dc4cadb239155d9f"
+  },
+  "frontend/src/components/common/SignInModal.jsx": {
+    "mtime": 1792510837.8733933,
+    "seen": 1792554424.0413036,
+    "ast_hash": "218279b1cdb5b7d4eac9bd3f32380d99",
+    "semantic_hash": "218279b1cdb5b7d4eac9bd3f32380d99"
+  },
+  "frontend/src/components/common/StatusBadge.jsx": {
+    "mtime": 1792510837.8813026,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "frontend/src/components/common/StatusHelp/StatusHelp.jsx": {
+    "mtime": 1792510837.9111962,
+    "seen": 1792554424.0413036,
+    "ast_hash": "4a0304493f5ffe6e8cc18f2c4666a027",
+    "semantic_hash": "4a0304493f5ffe6e8cc18f2c4666a027"
+  },
+  "frontend/src/components/landing/ArticleCard.jsx": {
+    "mtime": 1792510837.9316747,
+    "seen": 1792554424.0413036,
+    "ast_hash": "52ac507885a52e7fde26e86bc7df49c2",
+    "semantic_hash": "52ac507885a52e7fde26e86bc7df49c2"
+  },
+  "frontend/src/components/landing/EmergencyButton.jsx": {
+    "mtime": 1792510837.9530742,
+    "seen": 1792554424.0413036,
+    "ast_hash": "570911bd4479dd12c3c6d7c6d57930dc",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/landing/PetPreviewCard.jsx": {
+    "mtime": 1792510837.9609041,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5fdb8d68ec164d03a32a5574c4b3bd10",
+    "semantic_hash": "5fdb8d68ec164d03a32a5574c4b3bd10"
+  },
+  "frontend/src/components/landing/PreviewStatus.jsx": {
+    "mtime": 1792510837.9829514,
+    "seen": 1792554424.0413036,
+    "ast_hash": "39f0348d51366c8adaf5b3f3c9666b54",
+    "semantic_hash": "39f0348d51366c8adaf5b3f3c9666b54"
+  },
+  "frontend/src/components/landing/ScrollStrip.jsx": {
+    "mtime": 1792510838.0033462,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f696ea1f3910e8b75a48c4b0b97f6ac7",
+    "semantic_hash": "f696ea1f3910e8b75a48c4b0b97f6ac7"
+  },
+  "frontend/src/components/report/EmergencyReportModal.jsx": {
+    "mtime": 1792519492.4596899,
+    "seen": 1792554424.0413036,
+    "ast_hash": "4c2a4d899701c37092da2e6f0fff959d",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/report/ImageDropzone.jsx": {
+    "mtime": 1792510838.0614889,
+    "seen": 1792554424.0413036,
+    "ast_hash": "21d62004a3165f2fb0676eddb8794625",
+    "semantic_hash": "21d62004a3165f2fb0676eddb8794625"
+  },
+  "frontend/src/components/user/DonateInKindModal.jsx": {
+    "mtime": 1792510838.0991611,
+    "seen": 1792554424.0413036,
+    "ast_hash": "086435cc74db2e6a4c7466b8c33032ef",
+    "semantic_hash": "086435cc74db2e6a4c7466b8c33032ef"
+  },
+  "frontend/src/components/user/UserFooter.jsx": {
+    "mtime": 1792510838.1222692,
+    "seen": 1792554424.0413036,
+    "ast_hash": "325dedfc3df38fd56c5b758e0001da88",
+    "semantic_hash": "325dedfc3df38fd56c5b758e0001da88"
+  },
+  "frontend/src/components/user/UserNavbar.jsx": {
+    "mtime": 1792519479.532688,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8bae40c39a5228b97561a8f0fe6d3c1c",
+    "semantic_hash": ""
+  },
+  "frontend/src/context/ModalProvider.jsx": {
+    "mtime": 1792510838.214327,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e2d84115fe057b1c727067ffe5730198",
+    "semantic_hash": ""
+  },
+  "frontend/src/context/modalContext.js": {
+    "mtime": 1792510838.200672,
+    "seen": 1792554424.0413036,
+    "ast_hash": "a8c7385f861a5e6bddca761fabe509bd",
+    "semantic_hash": "a8c7385f861a5e6bddca761fabe509bd"
+  },
+  "frontend/src/data/applications.js": {
+    "mtime": 1792510838.2355733,
+    "seen": 1792554424.0413036,
+    "ast_hash": "44e37b77a4c9911d37657ccb1cbd32b0",
+    "semantic_hash": ""
+  },
+  "frontend/src/data/articles.js": {
+    "mtime": 1792510838.2455833,
+    "seen": 1792554424.0413036,
+    "ast_hash": "42ee9609b48c293a80c5a6ef7ecea009",
+    "semantic_hash": "42ee9609b48c293a80c5a6ef7ecea009"
+  },
+  "frontend/src/data/inKindWishlist.js": {
+    "mtime": 1792510838.2538831,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b871c3ff6de7eaa7f39b67f7b9b0c4dc",
+    "semantic_hash": "b871c3ff6de7eaa7f39b67f7b9b0c4dc"
+  },
+  "frontend/src/data/legalPages.js": {
+    "mtime": 1792510838.2627535,
+    "seen": 1792554424.0413036,
+    "ast_hash": "de65336b675029a05946619352bd73aa",
+    "semantic_hash": "de65336b675029a05946619352bd73aa"
+  },
+  "frontend/src/data/missingPets.js": {
+    "mtime": 1792510838.2696488,
+    "seen": 1792554424.0413036,
+    "ast_hash": "fbb361e8596161e5fbd080011327be97",
+    "semantic_hash": ""
+  },
+  "frontend/src/data/pets.js": {
+    "mtime": 1792510838.27817,
+    "seen": 1792554424.0413036,
+    "ast_hash": "bd15f3e71a511ff6e8ce9ea9c4305a5c",
+    "semantic_hash": ""
+  },
+  "frontend/src/data/siteInfo.js": {
+    "mtime": 1792510838.2855358,
+    "seen": 1792554424.0413036,
+    "ast_hash": "4d7150c8afc3e6d8e3f72a2e095aca59",
+    "semantic_hash": "4d7150c8afc3e6d8e3f72a2e095aca59"
+  },
+  "frontend/src/data/users.js": {
+    "mtime": 1792510838.2938795,
+    "seen": 1792554424.0413036,
+    "ast_hash": "7229553ed4a05f014771204e4a657a81",
+    "semantic_hash": "7229553ed4a05f014771204e4a657a81"
+  },
+  "frontend/src/data/vaccinations.js": {
+    "mtime": 1792510838.3007798,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c470b488a70acc2bd44bc8dbadab524a",
+    "semantic_hash": "c470b488a70acc2bd44bc8dbadab524a"
+  },
+  "frontend/src/hooks/useActiveSection.js": {
+    "mtime": 1792510838.3190887,
+    "seen": 1792554424.0413036,
+    "ast_hash": "2424c09a240347a942e767969e80f7d6",
+    "semantic_hash": "2424c09a240347a942e767969e80f7d6"
+  },
+  "frontend/src/hooks/useModals.js": {
+    "mtime": 1792510838.3454363,
+    "seen": 1792554424.0413036,
+    "ast_hash": "603606afd939464933cc929dd6778228",
+    "semantic_hash": "603606afd939464933cc929dd6778228"
+  },
+  "frontend/src/hooks/useScrollReveal.js": {
+    "mtime": 1792510838.3517618,
+    "seen": 1792554424.0413036,
+    "ast_hash": "eb4e062333faba126f22a7d99373b6ef",
+    "semantic_hash": "eb4e062333faba126f22a7d99373b6ef"
+  },
+  "frontend/src/hooks/useSectionScroll.js": {
+    "mtime": 1792510838.361823,
+    "seen": 1792554424.0413036,
+    "ast_hash": "79b76ffeada17eba39b4a5b8b7cc9b79",
+    "semantic_hash": "79b76ffeada17eba39b4a5b8b7cc9b79"
+  },
+  "frontend/src/layouts/AdminLayout.jsx": {
+    "mtime": 1792515959.2199774,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8317b27fe6925496e566d043a8e65a7d",
+    "semantic_hash": ""
+  },
+  "frontend/src/layouts/UserLayout.jsx": {
+    "mtime": 1792510838.3963532,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f12a862c17d481a083304e9047db4170",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/AddAnimal/AddAnimal.jsx": {
+    "mtime": 1792516917.2786856,
+    "seen": 1792554424.0413036,
+    "ast_hash": "a1fef60ac27713d6780f1a7a9200bf2b",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/AddVaccination/AddVaccination.jsx": {
+    "mtime": 1792510838.4780343,
+    "seen": 1792554424.0413036,
+    "ast_hash": "212ed62557b40218215c9e843d880340",
+    "semantic_hash": "212ed62557b40218215c9e843d880340"
+  },
+  "frontend/src/pages/admin/AdoptionApplicationDetails/AdoptionApplicationDetails.jsx": {
+    "mtime": 1792518584.9538848,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c85cc279988090ba59e0c93d81e1303d",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/AdoptionApplications/AdoptionApplications.jsx": {
+    "mtime": 1792518595.5475225,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b1edab3c7a870ce78a893a457e5a09bc",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/AnimalDetails/AnimalDetails.jsx": {
+    "mtime": 1792520927.399076,
+    "seen": 1792554424.0413036,
+    "ast_hash": "dcc7d7084041f43048404e01455a7684",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/Animals/Animals.jsx": {
+    "mtime": 1792516851.607044,
+    "seen": 1792554424.0413036,
+    "ast_hash": "bccb4db6d2e810c36640fbb4da08d6e1",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/Dashboard/Dashboard.jsx": {
+    "mtime": 1792510838.6088047,
+    "seen": 1792554424.0413036,
+    "ast_hash": "316c1963e3479abdc98a854490b67854",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/EditAnimal/EditAnimal.jsx": {
+    "mtime": 1792516897.3242815,
+    "seen": 1792554424.0413036,
+    "ast_hash": "2385fddcc736f8610ef3ac13c7e24cb5",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/MissingPetReportDetails/MissingPetReportDetails.jsx": {
+    "mtime": 1792519479.5303967,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1d8acbd3fbff879cf39fe87f9758b3b8",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/MissingPetReports/MissingPetReports.jsx": {
+    "mtime": 1792519479.5262842,
+    "seen": 1792554424.0413036,
+    "ast_hash": "349a2416e4569d4a54843e3e3293534f",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/Reports/Reports.jsx": {
+    "mtime": 1792520288.3242743,
+    "seen": 1792554424.0413036,
+    "ast_hash": "69f7528ded3ca33e6b784208fb9b0e4a",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/Settings/Settings.jsx": {
+    "mtime": 1792520288.3242743,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0ebf0cd83309d3c85c366c9cde5bf242",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/Users/Users.jsx": {
+    "mtime": 1792510839.0922167,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b6ac9f4744d4d89becbebdb1eff36be8",
+    "semantic_hash": "b6ac9f4744d4d89becbebdb1eff36be8"
+  },
+  "frontend/src/pages/admin/Vaccinations/Vaccinations.jsx": {
+    "mtime": 1792520148.3878636,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e58836397234f26125cc356a44baccaa",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/AdoptablePets/AdoptablePets.jsx": {
+    "mtime": 1792516952.9610016,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1bc390a19543c2bd853e1bce2d20d206",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/AdoptionApplication/AdoptionApplication.jsx": {
+    "mtime": 1792518566.1307614,
+    "seen": 1792554424.0413036,
+    "ast_hash": "286a1f963865bef1a3c84f93362959f6",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/ArticleDetails/ArticleDetails.jsx": {
+    "mtime": 1792510839.3760707,
+    "seen": 1792554424.0413036,
+    "ast_hash": "34b8ac48dd5a36bc3a0a1aa69c7d1736",
+    "semantic_hash": "34b8ac48dd5a36bc3a0a1aa69c7d1736"
+  },
+  "frontend/src/pages/user/Articles/Articles.jsx": {
+    "mtime": 1792510839.4200833,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0c2d2ff7235af75d44f8255b21ed9bb0",
+    "semantic_hash": "0c2d2ff7235af75d44f8255b21ed9bb0"
+  },
+  "frontend/src/pages/user/Home/Home.jsx": {
+    "mtime": 1792519479.522651,
+    "seen": 1792554424.0413036,
+    "ast_hash": "a8b1c5bd8c3e6f090c8d2c90cee05fa6",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/LegalPage/LegalPage.jsx": {
+    "mtime": 1792510839.554459,
+    "seen": 1792554424.0413036,
+    "ast_hash": "eb0f820470460e3ea164a92bf6743fdd",
+    "semantic_hash": "eb0f820470460e3ea164a92bf6743fdd"
+  },
+  "frontend/src/pages/user/Login/Login.jsx": {
+    "mtime": 1792515987.4658992,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f4c1cd720d96d3330bcfe4dd713f107a",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/MissingPetDetails/MissingPetDetails.jsx": {
+    "mtime": 1792519479.5241947,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5d76086cf867a3aa7fd916369ebd2c3c",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/MissingPets/MissingPets.jsx": {
+    "mtime": 1792519479.5236802,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f86ab1550621bfc54d8a96f01915d1a5",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/MyApplications/MyApplications.jsx": {
+    "mtime": 1792518566.1312811,
+    "seen": 1792554424.0413036,
+    "ast_hash": "a8b93833645066c2f917d18ea74b4cd2",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/MyMissingPetReports/MyMissingPetReports.jsx": {
+    "mtime": 1792519409.786538,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8583c9145e350baf6dca25bcd850127c",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/PetDetails/PetDetails.jsx": {
+    "mtime": 1792516937.5726485,
+    "seen": 1792554424.0413036,
+    "ast_hash": "9c12f4f771a4be2384730e1e1801b22f",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/Profile/Profile.jsx": {
+    "mtime": 1792510839.9232929,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d18f305a3e37c6c08531b7e42b069fe4",
+    "semantic_hash": "d18f305a3e37c6c08531b7e42b069fe4"
+  },
+  "frontend/src/pages/user/ReportMissingPet/ReportMissingPet.jsx": {
+    "mtime": 1792519433.6107016,
+    "seen": 1792554424.0413036,
+    "ast_hash": "fa4613e32e41820479ff7fcc1be2d24b",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/Signup/Signup.jsx": {
+    "mtime": 1792516002.2359235,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1c3e5d1639f3333ec5163d50a49bbbe6",
+    "semantic_hash": ""
+  },
+  "frontend/src/routes/AdminRoutes.jsx": {
+    "mtime": 1792510840.0553577,
+    "seen": 1792554424.0413036,
+    "ast_hash": "ee35f5c1ce25262210a8fa319a302818",
+    "semantic_hash": "ee35f5c1ce25262210a8fa319a302818"
+  },
+  "frontend/src/routes/AppRoutes.jsx": {
+    "mtime": 1792520927.399076,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f909b37369bc0d98f0b714f4071c6d3f",
+    "semantic_hash": ""
+  },
+  "frontend/src/routes/UserRoutes.jsx": {
+    "mtime": 1792510840.0830915,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8add581421edecc0e8d21cab9537fde9",
+    "semantic_hash": "8add581421edecc0e8d21cab9537fde9"
+  },
+  "frontend/src/services/adoptionService.js": {
+    "mtime": 1792518548.449209,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d4c4364852d22d6c0f8ea52f4afbd1e5",
+    "semantic_hash": ""
+  },
+  "frontend/src/services/api.js": {
+    "mtime": 1792510840.1141737,
+    "seen": 1792554424.0413036,
+    "ast_hash": "7f3db9759a4914a9604e95afed194ddd",
+    "semantic_hash": "7f3db9759a4914a9604e95afed194ddd"
+  },
+  "frontend/src/services/authService.js": {
+    "mtime": 1792515955.6093462,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b2bac325a6a10c8f2065718d0888a8cd",
+    "semantic_hash": ""
+  },
+  "frontend/src/services/missingPetService.js": {
+    "mtime": 1792519407.6644282,
+    "seen": 1792554424.0413036,
+    "ast_hash": "9b98ec55e9c8ac2813e39c19e1a5bb0e",
+    "semantic_hash": ""
+  },
+  "frontend/src/services/petService.js": {
+    "mtime": 1792510840.1422985,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "frontend/src/services/previewService.js": {
+    "mtime": 1792519479.5221388,
+    "seen": 1792554424.0413036,
+    "ast_hash": "7b2bd3b026784b41afa193d865832e76",
+    "semantic_hash": ""
+  },
+  "frontend/src/utils/filterHelpers.js": {
+    "mtime": 1792510840.3109164,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b5c9aeebf961125994350c548b27ffaa",
+    "semantic_hash": "b5c9aeebf961125994350c548b27ffaa"
+  },
+  "frontend/src/utils/formatDateTime.js": {
+    "mtime": 1792510840.321357,
+    "seen": 1792554424.0413036,
+    "ast_hash": "69bec3ab1b574d2fbe5459cecfb8ebfe",
+    "semantic_hash": "69bec3ab1b574d2fbe5459cecfb8ebfe"
+  },
+  "frontend/src/utils/liveSearch.js": {
+    "mtime": 1792510840.3362067,
+    "seen": 1792554424.0413036,
+    "ast_hash": "679e1bcf6b090d32febfca6fcd66060c",
+    "semantic_hash": "679e1bcf6b090d32febfca6fcd66060c"
+  },
+  "frontend/src/utils/petName.js": {
+    "mtime": 1792510840.3456821,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5f4c3e530c67ae7c66c7e438aa373fb4",
+    "semantic_hash": "5f4c3e530c67ae7c66c7e438aa373fb4"
+  },
+  "backend/README.md": {
+    "mtime": 1792510836.292201,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c9fd29cc7c9057820aebcdcd6bbddca3",
+    "semantic_hash": "c9fd29cc7c9057820aebcdcd6bbddca3"
+  },
+  "backend/public/robots.txt": {
+    "mtime": 1792510836.7357001,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b6216d61c03e6ce0c9aea6ca7808f7ca",
+    "semantic_hash": "b6216d61c03e6ce0c9aea6ca7808f7ca"
+  },
+  "frontend/README.md": {
+    "mtime": 1792510837.1052163,
+    "seen": 1792554424.0413036,
+    "ast_hash": "75eb386f17caf77fd6fe3ce1d90968ee",
+    "semantic_hash": "75eb386f17caf77fd6fe3ce1d90968ee"
+  },
+  "frontend/public/favicon.svg": {
+    "mtime": 1792510837.257764,
+    "seen": 1792554424.0413036,
+    "ast_hash": "7e840862161341271697daa99a40d76b",
+    "semantic_hash": "7e840862161341271697daa99a40d76b"
+  },
+  "frontend/public/icons.svg": {
+    "mtime": 1792510837.2681768,
+    "seen": 1792554424.0413036,
+    "ast_hash": "3b4fcfcf393eca4d264dca4a4663bc37",
+    "semantic_hash": "3b4fcfcf393eca4d264dca4a4663bc37"
+  },
+  "frontend/src/assets/hero.png": {
+    "mtime": 1792510837.3403158,
+    "seen": 1792554424.0413036,
+    "ast_hash": "aead493361b27e7510691c5d7072dfc1",
+    "semantic_hash": "aead493361b27e7510691c5d7072dfc1"
+  },
+  "frontend/src/assets/images/placeholders/about-1.svg": {
+    "mtime": 1792510837.406579,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1cc21f2cd9d0fb2b3bb753d50da53474",
+    "semantic_hash": "1cc21f2cd9d0fb2b3bb753d50da53474"
+  },
+  "frontend/src/assets/images/placeholders/about-2.svg": {
+    "mtime": 1792510837.421369,
+    "seen": 1792554424.0413036,
+    "ast_hash": "85b5c829ed860ec0ae5ef7cb8c2d0af3",
+    "semantic_hash": "85b5c829ed860ec0ae5ef7cb8c2d0af3"
+  },
+  "frontend/src/assets/images/placeholders/article-1.svg": {
+    "mtime": 1792510837.4339654,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e126ecf4a667794225c2ae5098c7d6ab",
+    "semantic_hash": "e126ecf4a667794225c2ae5098c7d6ab"
+  },
+  "frontend/src/assets/images/placeholders/article-2.svg": {
+    "mtime": 1792510837.4479327,
+    "seen": 1792554424.0413036,
+    "ast_hash": "9f3884aaeb50acbd5bd7d7966e1cdc01",
+    "semantic_hash": "9f3884aaeb50acbd5bd7d7966e1cdc01"
+  },
+  "frontend/src/assets/images/placeholders/article-3.svg": {
+    "mtime": 1792510837.4569347,
+    "seen": 1792554424.0413036,
+    "ast_hash": "ca04a22cab603df70dd0a39e18f51258",
+    "semantic_hash": "ca04a22cab603df70dd0a39e18f51258"
+  },
+  "frontend/src/assets/images/placeholders/article-4.svg": {
+    "mtime": 1792510837.4690008,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c9de0461f05151ebbf48ede4c7a873ae",
+    "semantic_hash": "c9de0461f05151ebbf48ede4c7a873ae"
+  },
+  "frontend/src/assets/images/placeholders/article-5.svg": {
+    "mtime": 1792510837.4795945,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e222828d19ed7e694cb11511797ccd15",
+    "semantic_hash": "e222828d19ed7e694cb11511797ccd15"
+  },
+  "frontend/src/assets/images/placeholders/article-6.svg": {
+    "mtime": 1792510837.4921696,
+    "seen": 1792554424.0413036,
+    "ast_hash": "01ffaa05136a127e089804efe0759a83",
+    "semantic_hash": "01ffaa05136a127e089804efe0759a83"
+  },
+  "frontend/src/assets/images/placeholders/donation-qr-placeholder.svg": {
+    "mtime": 1792510837.502825,
+    "seen": 1792554424.0413036,
+    "ast_hash": "611c258249b247036307dc705cb555f0",
+    "semantic_hash": "611c258249b247036307dc705cb555f0"
+  },
+  "frontend/src/assets/images/placeholders/pet-cat.svg": {
+    "mtime": 1792510837.520617,
+    "seen": 1792554424.0413036,
+    "ast_hash": "527ed7e478be092658329c3989fd70a5",
+    "semantic_hash": "527ed7e478be092658329c3989fd70a5"
+  },
+  "frontend/src/assets/images/placeholders/pet-dog.svg": {
+    "mtime": 1792510837.5291407,
+    "seen": 1792554424.0413036,
+    "ast_hash": "79627323f4b07b089d65ed178925e372",
+    "semantic_hash": "79627323f4b07b089d65ed178925e372"
+  },
+  "frontend/src/assets/images/placeholders/pet-other.svg": {
+    "mtime": 1792510837.536985,
+    "seen": 1792554424.0413036,
+    "ast_hash": "7dcd7ef1e2e6d2b4d3b5937975c2e792",
+    "semantic_hash": "7dcd7ef1e2e6d2b4d3b5937975c2e792"
+  },
+  "frontend/src/assets/images/users/home/MyApplications-hero.jpg": {
+    "mtime": 1792510837.5932975,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e1f91853590791eb8e179aa1382c0fdd",
+    "semantic_hash": "e1f91853590791eb8e179aa1382c0fdd"
+  },
+  "frontend/src/assets/images/users/home/adoptablePets-hero.jpg": {
+    "mtime": 1792510837.5700445,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5016e54f788ef8058f1ba0e03be40edd",
+    "semantic_hash": "5016e54f788ef8058f1ba0e03be40edd"
+  },
+  "frontend/src/assets/images/users/home/home-hero.jpg": {
+    "mtime": 1792510837.5821319,
+    "seen": 1792554424.0413036,
+    "ast_hash": "26d29d2cb42724f8d86fe4f64af4361e",
+    "semantic_hash": "26d29d2cb42724f8d86fe4f64af4361e"
+  },
+  "frontend/src/assets/images/users/missing-pets/missing-pets-hero.jpg": {
+    "mtime": 1792510837.6211886,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c78e0478bddf9be55b1067f5bc7cd725",
+    "semantic_hash": "c78e0478bddf9be55b1067f5bc7cd725"
+  },
+  "frontend/src/assets/react.svg": {
+    "mtime": 1792510837.353803,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f0402b67b6ce880f65666bb49e841696",
+    "semantic_hash": "f0402b67b6ce880f65666bb49e841696"
+  },
+  "frontend/src/assets/vite.svg": {
+    "mtime": 1792510837.368577,
+    "seen": 1792554424.0413036,
+    "ast_hash": "9960a24288958394ac50e57ff638b036",
+    "semantic_hash": "9960a24288958394ac50e57ff638b036"
+  },
+  "frontend/src/components/admin/RequirePermission.jsx": {
+    "mtime": 1792510837.6870322,
+    "seen": 1792554424.0413036,
+    "ast_hash": "fa11280cede6c4c7e29a2357c9ce454c",
+    "semantic_hash": ""
+  },
+  "frontend/src/config/animalStatus.js": {
+    "mtime": 1792510838.1597137,
+    "seen": 1792554424.0413036,
+    "ast_hash": "aff0961889148faf49b1ab1ba3e8d8d6",
+    "semantic_hash": ""
+  },
+  "frontend/src/config/rolePermissions.js": {
+    "mtime": 1792516012.4447374,
+    "seen": 1792554424.0413036,
+    "ast_hash": "068423a3fca982dc7c319bf540fa57f6",
+    "semantic_hash": ""
+  },
+  "frontend/src/context/AuthProvider.jsx": {
+    "mtime": 1792515956.8161738,
+    "seen": 1792554424.0413036,
+    "ast_hash": "ef600e7b0fc40cc0531afb324bd6b525",
+    "semantic_hash": ""
+  },
+  "frontend/src/context/authContext.js": {
+    "mtime": 1792515958.013595,
+    "seen": 1792554424.0413036,
+    "ast_hash": "27eb02c143a7471e628419143c27ed00",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/useAuth.js": {
+    "mtime": 1792510838.3349216,
+    "seen": 1792554424.0413036,
+    "ast_hash": "566799d6ad49c012a903197a7708ca6c",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/dashboards/AdoptionCounselorDashboard.jsx": {
+    "mtime": 1792520311.8325253,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d707caf09b94956d9a1d09b52b211157",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/dashboards/KennelManagerDashboard.jsx": {
+    "mtime": 1792520311.825233,
+    "seen": 1792554424.0413036,
+    "ast_hash": "2ce1765fdcb1b2021228fe0e86fe3878",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/dashboards/PoundStaffDashboard.jsx": {
+    "mtime": 1792520311.8299823,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b3317985a9b0c89d2f5d19ad854b200c",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/dashboards/VetTechDashboard.jsx": {
+    "mtime": 1792520311.8310134,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d9f4540e4ec6aa45e9a062f9346882d5",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/AdoptionApplicationController.php": {
+    "mtime": 1792520895.7105126,
+    "seen": 1792554424.0413036,
+    "ast_hash": "a9750720d3b94eb2b82c9695ed04a385",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/AnimalController.php": {
+    "mtime": 1792520625.869181,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b290d49e06b8c5de8c44e1d0a2476196",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/AuditLogController.php": {
+    "mtime": 1792519891.47751,
+    "seen": 1792554424.0413036,
+    "ast_hash": "eccf2776df0fbd57f19606cd91c030de",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/AuthController.php": {
+    "mtime": 1792515911.5147016,
+    "seen": 1792554424.0413036,
+    "ast_hash": "db33a00d37bb982711b78c90ebc65ef5",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/MissingPetReportController.php": {
+    "mtime": 1792519296.2352922,
+    "seen": 1792554424.0413036,
+    "ast_hash": "a63c0bff2a262181287f339e081bed32",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/MyShiftController.php": {
+    "mtime": 1792519924.9919047,
+    "seen": 1792554424.0413036,
+    "ast_hash": "a1f246a2e0d8528a99e34f22ccc226b2",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/PublicAnimalController.php": {
+    "mtime": 1792516719.6289265,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5f8207e15669a6b509b8f5595532d617",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/ScheduleController.php": {
+    "mtime": 1792519922.7907133,
+    "seen": 1792554424.0413036,
+    "ast_hash": "62d002c26e07878b9e3d32328939a2c0",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/UserManagementController.php": {
+    "mtime": 1792519890.3779142,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5814d05eaccdf9efb397918919a305de",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Controllers/VaccinationController.php": {
+    "mtime": 1792520623.6288157,
+    "seen": 1792554424.0413036,
+    "ast_hash": "b9790b3e3513e4e83bc2627ff563e721",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Middleware/EnsurePermission.php": {
+    "mtime": 1792515908.320604,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f2d26a2a79658d136694814468bbeb71",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Middleware/EnsureRole.php": {
+    "mtime": 1792515907.2672522,
+    "seen": 1792554424.0413036,
+    "ast_hash": "ef15d0fe98a6c1862265a7ea6786ba9c",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/Adoption/StoreApplicationRequest.php": {
+    "mtime": 1792518419.2800689,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c5d22c40cf57a21cc8b423f0891a6747",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/Animal/StoreAnimalRequest.php": {
+    "mtime": 1792516690.3580315,
+    "seen": 1792554424.0413036,
+    "ast_hash": "4b76e84798902ed88af784e7d6d84ded",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/Animal/UpdateAnimalRequest.php": {
+    "mtime": 1792516691.4606867,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c81a0223a90226bcdb4d74b1bbe821eb",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/Auth/LoginRequest.php": {
+    "mtime": 1792515910.4205904,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5fb0730f12a8fca2ceff217112d0c974",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/Auth/RegisterRequest.php": {
+    "mtime": 1792515909.3755548,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0d8b46fa4721f78e6cba5e469134b910",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/MissingPet/StoreMissingPetRequest.php": {
+    "mtime": 1792519264.35207,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0ec260ff7a8c3cb740b482b6ccd7f07f",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/Shift/AssignShiftRequest.php": {
+    "mtime": 1792519923.8905265,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f076e21da67637f6fd24a0eed0b615b0",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/Vaccination/StoreVaccinationRequest.php": {
+    "mtime": 1792519860.081882,
+    "seen": 1792554424.0413036,
+    "ast_hash": "71e3e784e7d519e54002c1daf8d9fe71",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Requests/Vaccination/UpdateVaccinationRequest.php": {
+    "mtime": 1792519861.1875556,
+    "seen": 1792554424.0413036,
+    "ast_hash": "ced030d380c8bbec0bc024cde7b57368",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Resources/AnimalResource.php": {
+    "mtime": 1792516672.21338,
+    "seen": 1792554424.0413036,
+    "ast_hash": "dd5d52681699b4ebd61117e3ab8d7555",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Resources/ApplicationResource.php": {
+    "mtime": 1792518420.4051569,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e5e1f3ad2ffd9c885e1eb65b5bbf2b23",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Resources/MissingPetResource.php": {
+    "mtime": 1792519265.4011788,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5495e860e2b57494f7046ec1d0472f03",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Resources/MyApplicationResource.php": {
+    "mtime": 1792518421.5286405,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8ae00fd5e63ccb30a2a2e7945d8c5ea1",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Resources/PublicAnimalResource.php": {
+    "mtime": 1792516673.3546243,
+    "seen": 1792554424.0413036,
+    "ast_hash": "3e5e97a93c247959f24fc45825622e89",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Resources/ShiftAssignmentResource.php": {
+    "mtime": 1792519921.5305645,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f9bfa9509bbf92b2adae764d3037719c",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Resources/StaffMissingPetResource.php": {
+    "mtime": 1792519266.439051,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8fbde18c973ee6fca337f604acbae753",
+    "semantic_hash": ""
+  },
+  "backend/app/Http/Resources/VaccinationResource.php": {
+    "mtime": 1792519858.9465325,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d6764f469ed6b3e25018d52e332fa73a",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/AdoptionApplication.php": {
+    "mtime": 1792518399.5674531,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e8f6fb48f04fb483451108d167f98008",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/Animal.php": {
+    "mtime": 1792519857.8492925,
+    "seen": 1792554424.0413036,
+    "ast_hash": "eadcb9e1ab1590b7ec9c1f3e13d847fc",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/AnimalPhoto.php": {
+    "mtime": 1792516670.0833635,
+    "seen": 1792554424.0413036,
+    "ast_hash": "130c9743f07be2fdbf6f251e117863c3",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/AuditLog.php": {
+    "mtime": 1792515515.4048882,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0380954a00ccdde246743d1509a92190",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/HealthLog.php": {
+    "mtime": 1792520089.6292784,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5277cbf5d3c50b71cca97c12a1dfacbf",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/MissingPetPhoto.php": {
+    "mtime": 1792519242.6479905,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d8234da4c59b539af915cd538c465e0b",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/MissingPetReport.php": {
+    "mtime": 1792519241.6054134,
+    "seen": 1792554424.0413036,
+    "ast_hash": "f4815f413046aa8955baf50979aef035",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/Setting.php": {
+    "mtime": 1792515518.8226137,
+    "seen": 1792554424.0413036,
+    "ast_hash": "7a2a8e74fe95087be100722d7b498c6d",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/Shift.php": {
+    "mtime": 1792515516.5690897,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0428b4bc7633fa86174de8d9fb377cb8",
+    "semantic_hash": ""
+  },
+  "backend/app/Models/StaffShift.php": {
+    "mtime": 1792520089.5506842,
+    "seen": 1792554424.0413036,
+    "ast_hash": "1c7ad1ead25316348170d979d5d42d81",
+    "semantic_hash": ""
+  },
+  "backend/app/Support/Audit.php": {
+    "mtime": 1792516671.13844,
+    "seen": 1792554424.0413036,
+    "ast_hash": "67d11fbad72f65b17f6aefc8a1be173a",
+    "semantic_hash": ""
+  },
+  "backend/app/Support/PoundMatcher.php": {
+    "mtime": 1792519371.048422,
+    "seen": 1792554424.0413036,
+    "ast_hash": "84dfad181f7810b379b027b5c876f0fb",
+    "semantic_hash": ""
+  },
+  "backend/app/Support/ShiftService.php": {
+    "mtime": 1792519892.5968754,
+    "seen": 1792554424.0413036,
+    "ast_hash": "2abe9c42867318a2f5bca729d72054e6",
+    "semantic_hash": ""
+  },
+  "backend/config/permissions.php": {
+    "mtime": 1792515906.2116008,
+    "seen": 1792554424.0413036,
+    "ast_hash": "691b91156065c48ff3938fa848f7cea7",
+    "semantic_hash": ""
+  },
+  "backend/config/vaccines.php": {
+    "mtime": 1792519855.5811872,
+    "seen": 1792554424.0413036,
+    "ast_hash": "d8bd0a197f6ae0e5a0a9b0a03a759d94",
+    "semantic_hash": ""
+  },
+  "backend/database/migrations/2026_10_21_000100_add_role_fields_to_users_table.php": {
+    "mtime": 1792515445.4067152,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8e1554673e82dd2c224b2b6cc1729104",
+    "semantic_hash": ""
+  },
+  "backend/database/migrations/2026_10_21_000200_create_animals_table.php": {
+    "mtime": 1792516649.3333843,
+    "seen": 1792554424.0413036,
+    "ast_hash": "acfbd562c3c8d69b0b8f84f4871ba499",
+    "semantic_hash": ""
+  },
+  "backend/database/migrations/2026_10_21_000250_create_animal_photos_table.php": {
+    "mtime": 1792516649.538758,
+    "seen": 1792554424.0413036,
+    "ast_hash": "52488e55507db089beb3f0216c3cf167",
+    "semantic_hash": ""
+  },
+  "backend/database/migrations/2026_10_21_000300_create_health_logs_table.php": {
+    "mtime": 1792519854.451269,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0911292c4c25e016b2845b057833a501",
+    "semantic_hash": ""
+  },
+  "backend/database/migrations/2026_10_21_000400_create_adoption_applications_table.php": {
+    "mtime": 1792518399.3551023,
+    "seen": 1792554424.0413036,
+    "ast_hash": "05c9ac17c14f7aba0775c8b29a9bb721",
+    "semantic_hash": ""
+  },
+  "backend/database/migrations/2026_10_21_000500_create_missing_pet_reports_table.php": {
+    "mtime": 1792519240.4967923,
+    "seen": 1792554424.0413036,
+    "ast_hash": "c89e3d0ea67f12bbdb301572bb724e1e",
+    "semantic_hash": ""
+  },
+  "backend/database/migrations/2026_10_21_000600_create_audit_logs_table.php": {
+    "mtime": 1792515451.1197085,
+    "seen": 1792554424.0413036,
+    "ast_hash": "090ed54e715d18806750a3c58325bdee",
+    "semantic_hash": ""
+  },
+  "backend/database/migrations/2026_10_21_000700_create_shifts_tables.php": {
+    "mtime": 1792515452.2550375,
+    "seen": 1792554424.0413036,
+    "ast_hash": "bf40526a2cdf7c56a03ebe6e8f4eea98",
+    "semantic_hash": ""
+  },
+  "backend/database/seeders/AdoptionApplicationSeeder.php": {
+    "mtime": 1792518526.8448813,
+    "seen": 1792554424.0413036,
+    "ast_hash": "e53659f156ac9dd850fcf3f987ffecdc",
+    "semantic_hash": ""
+  },
+  "backend/database/seeders/AnimalSeeder.php": {
+    "mtime": 1792516674.6722798,
+    "seen": 1792554424.0413036,
+    "ast_hash": "3bfd756c3f14d9dea71503de9a7804a0",
+    "semantic_hash": ""
+  },
+  "backend/database/seeders/MissingPetSeeder.php": {
+    "mtime": 1792519321.0277147,
+    "seen": 1792554424.0413036,
+    "ast_hash": "268b3ae5f5ca0e94645c297d44466b8f",
+    "semantic_hash": ""
+  },
+  "backend/database/seeders/ShiftSeeder.php": {
+    "mtime": 1792519959.0824616,
+    "seen": 1792554424.0413036,
+    "ast_hash": "9aea5a2194c75da4a119390d338df31d",
+    "semantic_hash": ""
+  },
+  "backend/database/seeders/UserSeeder.php": {
+    "mtime": 1792515551.7981744,
+    "seen": 1792554424.0413036,
+    "ast_hash": "3873535b46b080428bef840e747ae0ca",
+    "semantic_hash": ""
+  },
+  "backend/tests/Feature/AdoptionApplicationApiTest.php": {
+    "mtime": 1792520896.7882168,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8f88ff262ba120f9ca7df7a78a104154",
+    "semantic_hash": ""
+  },
+  "backend/tests/Feature/AnimalApiTest.php": {
+    "mtime": 1792520628.4579415,
+    "seen": 1792554424.0413036,
+    "ast_hash": "dc24fa6d6fa3df50d6cfb940a27caac3",
+    "semantic_hash": ""
+  },
+  "backend/tests/Feature/AuthTest.php": {
+    "mtime": 1792515935.6892953,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5507b1782fb5d0b878df6d115b8567e7",
+    "semantic_hash": ""
+  },
+  "backend/tests/Feature/MissingPetApiTest.php": {
+    "mtime": 1792519358.592786,
+    "seen": 1792554424.0413036,
+    "ast_hash": "7d8bba808dffcbc519e4e5397e1c3d05",
+    "semantic_hash": ""
+  },
+  "backend/tests/Feature/RoleMiddlewareTest.php": {
+    "mtime": 1792515937.0095565,
+    "seen": 1792554424.0413036,
+    "ast_hash": "a88210e14edf88bfe4151646c3f89e0a",
+    "semantic_hash": ""
+  },
+  "backend/tests/Feature/ShiftsApiTest.php": {
+    "mtime": 1792520055.0963156,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5f9cc3f0e1c10442f2d01b09c17ceb6d",
+    "semantic_hash": ""
+  },
+  "backend/tests/Feature/UserManagementApiTest.php": {
+    "mtime": 1792520005.5179415,
+    "seen": 1792554424.0413036,
+    "ast_hash": "740b1f8e22f64b8e1b4d84021266acfb",
+    "semantic_hash": ""
+  },
+  "backend/tests/Feature/VaccinationApiTest.php": {
+    "mtime": 1792520100.3207438,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5a9feca4c7c4951c42da7d5b8913be9b",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/admin/MyShifts.jsx": {
+    "mtime": 1792520192.9047675,
+    "seen": 1792554424.0413036,
+    "ast_hash": "76c9e8b31aaed6a033d68166e24f0917",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/admin/OnDutyToday.jsx": {
+    "mtime": 1792520193.9590683,
+    "seen": 1792554424.0413036,
+    "ast_hash": "ea4f8a33f479e10696063a3ac7f3a914",
+    "semantic_hash": ""
+  },
+  "frontend/src/config/petBreeds.js": {
+    "mtime": 1792519408.7136948,
+    "seen": 1792554424.0413036,
+    "ast_hash": "5ebbe331b868f00ecbbc9ba30ce9992f",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/useAdminLists.js": {
+    "mtime": 1792520122.7429771,
+    "seen": 1792554424.0413036,
+    "ast_hash": "294b8c31f2f445c9ebacda76493273c2",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/useDebouncedValue.js": {
+    "mtime": 1792516814.3730035,
+    "seen": 1792554424.0413036,
+    "ast_hash": "2bc9471ef1f8a5e3b994ba71bc95b2b2",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/useFetch.js": {
+    "mtime": 1792516959.6908195,
+    "seen": 1792554424.0413036,
+    "ast_hash": "94c1a72378a144d86883460fa955db42",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/AuditLogs/AuditLogs.jsx": {
+    "mtime": 1792520231.4179041,
+    "seen": 1792554424.0413036,
+    "ast_hash": "3c3a2d4e65f66934f44e2a9e1eb6cc09",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/CollarTag/CollarTag.jsx": {
+    "mtime": 1792520925.027086,
+    "seen": 1792554424.0413036,
+    "ast_hash": "25896bb2a4fca28700cddd38ec838d08",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/admin/StaffSchedule/StaffSchedule.jsx": {
+    "mtime": 1792520311.8340547,
+    "seen": 1792554424.0413036,
+    "ast_hash": "18d9fb13efe5dc8bbc44afea54c94553",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/user/StrayInfo/StrayInfo.jsx": {
+    "mtime": 1792516974.8532758,
+    "seen": 1792554424.0413036,
+    "ast_hash": "0aef811f93264f5c63acdcc183ce7fa2",
+    "semantic_hash": ""
+  },
+  "frontend/src/services/adminService.js": {
+    "mtime": 1792520120.5709162,
+    "seen": 1792554424.0413036,
+    "ast_hash": "8f19f042a2d4af6d396dd805b597b954",
+    "semantic_hash": ""
+  },
+  "frontend/src/services/animalService.js": {
+    "mtime": 1792520656.626441,
+    "seen": 1792554424.0413036,
+    "ast_hash": "66591bd9aec716720d9712ce9cba2542",
+    "semantic_hash": ""
+  },
+  "frontend/src/services/shiftService.js": {
+    "mtime": 1792520121.649868,
+    "seen": 1792554424.0413036,
+    "ast_hash": "02cf596c4437096c3304930e78064e5d",
+    "semantic_hash": ""
+  },
+  "frontend/src/services/vaccinationService.js": {
+    "mtime": 1792520656.626441,
+    "seen": 1792554424.0413036,
+    "ast_hash": "426fe63f25029f9caca78ad0bfcbaed2",
+    "semantic_hash": ""
+  },
+  "frontend/src/utils/shiftFormat.js": {
+    "mtime": 1792520190.760836,
+    "seen": 1792554424.0413036,
+    "ast_hash": "056980b88305f094fb2ecae194f065e2",
+    "semantic_hash": ""
+  }
+}

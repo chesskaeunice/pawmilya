@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import {
@@ -6,21 +7,121 @@ import {
   MapPin,
   PawPrint,
   Pencil,
+  QrCode,
   Syringe,
 } from "lucide-react";
 
-import pets from "../../../data/pets.js";
-import { statusClass } from "../../../config/animalStatus.js";
+import useAuth from "../../../hooks/useAuth.js";
+import useFetch from "../../../hooks/useFetch.js";
+import {
+  getAnimal,
+  getAnimalHistory,
+  getAnimalQr,
+} from "../../../services/animalService.js";
+import { listVaccinations } from "../../../services/vaccinationService.js";
+import { healthStatusClass, statusClass } from "../../../config/animalStatus.js";
 
 import "./AnimalDetails.css";
+import BackButton from "../../../components/common/BackButton.jsx";
+
+const TABS = [
+  { id: "about", label: "About", icon: PawPrint },
+  { id: "medical", label: "Medical Records", icon: HeartPulse },
+  { id: "vaccinations", label: "Vaccinations", icon: Syringe },
+  { id: "history", label: "History", icon: null },
+];
+
+const VACCINATION_STATUS_CLASS = {
+  "Up to date": "staff-status--current",
+  "Due Soon": "staff-status--due",
+  Overdue: "staff-status--overdue",
+};
+
+// How an audit entry reads on the History tab
+function describeHistory(entry) {
+  const details = entry.details ?? {};
+
+  switch (entry.action) {
+    case "animal.created":
+      return "Animal record created";
+    case "animal.updated": {
+      const changed = Object.keys(details.to ?? {});
+      const parts = changed.map((field) => {
+        const label = field.replace("_", " ");
+        const from = details.from?.[field];
+        const to = details.to[field];
+        return typeof to === "object" ? label : `${label}: ${from ?? "-"} → ${to}`;
+      });
+      return `Updated ${parts.join(", ") || "details"}`;
+    }
+    case "vaccination.created":
+      return `Vaccination recorded: ${details.vaccine}`;
+    case "vaccination.updated":
+      return `Vaccination record updated: ${details.vaccine}`;
+    case "vaccination.deleted":
+      return `Vaccination record deleted: ${details.vaccine}`;
+    case "application.submitted":
+      return "Adoption application submitted";
+    case "application.approved":
+      return "Adoption application approved (animal adopted)";
+    case "application.rejected":
+      return `Adoption application rejected${details.reason ? `: ${details.reason}` : ""}`;
+    default:
+      return entry.action;
+  }
+}
+
+const formatDateTime = (iso) =>
+  new Date(iso).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+const formatDate = (value) =>
+  value
+    ? new Date(value).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "-";
 
 function AnimalDetails() {
   const { animalId } = useParams();
+  const { can } = useAuth();
 
-  const pet = pets.find(
-    (item) =>
-      item.id === Number(animalId)
+  const { data: pet, loading } = useFetch(() => getAnimal(animalId), [animalId]);
+  const { data: qrSvg } = useFetch(
+    () => (can("qr.generate") ? getAnimalQr(animalId) : Promise.resolve("")),
+    [animalId]
   );
+
+  // The tabs below the photos
+  const [tab, setTab] = useState("about");
+  const { data: vaccinationData } = useFetch(
+    () => listVaccinations({ animal_id: animalId }),
+    [animalId]
+  );
+  const { data: historyData } = useFetch(() => getAnimalHistory(animalId), [animalId]);
+
+  const vaccinations = vaccinationData ?? [];
+  const history = historyData ?? [];
+
+  // index of the photo shown large
+  const [photoIndex, setPhotoIndex] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="staff-page">
+      <BackButton fallback="/admin/animals" />
+
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!pet) {
     return (
@@ -30,8 +131,18 @@ function AnimalDetails() {
     );
   }
 
+  const name = pet.name || "Unnamed";
+  const mainPhoto = pet.images[photoIndex] ?? pet.image;
+  const canEdit =
+    can("animals.edit") ||
+    can("animals.adoptionUpdate") ||
+    can("animals.healthUpdate") ||
+    can("animals.husbandryUpdate");
+
   return (
     <div className="staff-page">
+      <BackButton fallback="/admin/animals" />
+
 
       <div className="staff-page__top">
 
@@ -43,9 +154,9 @@ function AnimalDetails() {
           <div className="animal-details__title-row">
 
             <h1 className="staff-page__title">
-              {pet.name}{" "}
+              {name}{" "}
               <span>
-                (A-{String(pet.id).padStart(3, "0")})
+                ({pet.animal_code})
               </span>
             </h1>
 
@@ -58,13 +169,15 @@ function AnimalDetails() {
         </div>
 
 
-        <Link
-          to={`/admin/animals/${pet.id}/edit`}
-          className="staff-button"
-        >
-          <Pencil size={13} />
-          Edit Profile
-        </Link>
+        {canEdit && (
+          <Link
+            to={`/admin/animals/${pet.id}/edit`}
+            className="staff-button"
+          >
+            <Pencil size={13} />
+            Edit Profile
+          </Link>
+        )}
 
       </div>
 
@@ -74,23 +187,34 @@ function AnimalDetails() {
         <div className="animal-details__gallery">
 
           <div className="animal-details__main-photo">
-            Animal Photo
+            {mainPhoto ? (
+              <img
+                src={mainPhoto}
+                alt={`Photo of ${name}`}
+                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
+              />
+            ) : (
+              "Animal Photo"
+            )}
           </div>
 
 
           <div className="animal-details__thumbnails">
 
-            <button type="button">
-              Photo
-            </button>
-
-            <button type="button">
-              Photo
-            </button>
-
-            <button type="button">
-              Photo
-            </button>
+            {pet.images.slice(0, 4).map((url, index) => (
+              <button
+                type="button"
+                key={url}
+                onClick={() => setPhotoIndex(index)}
+                aria-label={`Show photo ${index + 1}`}
+              >
+                <img
+                  src={url}
+                  alt=""
+                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
+                />
+              </button>
+            ))}
 
           </div>
 
@@ -133,7 +257,7 @@ function AnimalDetails() {
             <DetailRow
               icon={<CalendarDays size={13} />}
               label="Age"
-              value={pet.ageLabel}
+              value={pet.ageLabel || "-"}
             />
 
             <DetailRow
@@ -145,7 +269,7 @@ function AnimalDetails() {
             <DetailRow
               icon={<CalendarDays size={13} />}
               label="Date Rescued"
-              value="Sep 26, 2026"
+              value={formatDate(pet.dateAdded)}
             />
 
             <DetailRow
@@ -161,39 +285,144 @@ function AnimalDetails() {
       </section>
 
 
-      <section className="animal-details__tabs">
+      <section className="animal-details__tabs" role="tablist">
 
-        <button
-          type="button"
-          className="animal-details__tab animal-details__tab--active"
-        >
-          <PawPrint size={13} />
-          About
-        </button>
-
-        <button type="button" className="animal-details__tab">
-          <HeartPulse size={13} />
-          Medical Records
-        </button>
-
-        <button type="button" className="animal-details__tab">
-          <Syringe size={13} />
-          Vaccinations
-        </button>
-
-        <button type="button" className="animal-details__tab">
-          History
-        </button>
+        {TABS.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            aria-selected={tab === id}
+            className={
+              tab === id
+                ? "animal-details__tab animal-details__tab--active"
+                : "animal-details__tab"
+            }
+            onClick={() => setTab(id)}
+          >
+            {Icon && <Icon size={13} />}
+            {label}
+          </button>
+        ))}
 
       </section>
 
 
+      {tab === "medical" && (
+        <section className="staff-detail-card">
+
+          <h2 className="staff-detail-card__title">
+            Medical Records
+          </h2>
+
+          <p>
+            Health status:{" "}
+            <span className={`staff-status ${healthStatusClass(pet.health_status)}`}>
+              {pet.health_status}
+            </span>
+          </p>
+
+          <p>
+            Vaccinations on record: {vaccinations.length}
+            {" · "}
+            Overdue: {vaccinations.filter((record) => record.status === "Overdue").length}
+            {" · "}
+            Due soon: {vaccinations.filter((record) => record.status === "Due Soon").length}
+          </p>
+
+          <p>
+            Vaccination details are on the Vaccinations tab. Health status changes
+            are on the History tab.
+          </p>
+
+        </section>
+      )}
+
+
+      {tab === "vaccinations" && (
+        <section className="staff-detail-card">
+
+          <h2 className="staff-detail-card__title">
+            Vaccinations
+          </h2>
+
+          {vaccinations.length === 0 ? (
+            <p>No vaccinations recorded for {name} yet.</p>
+          ) : (
+            <table className="staff-table">
+              <thead>
+                <tr>
+                  <th>Vaccine</th>
+                  <th>Date Given</th>
+                  <th>Next Due</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {vaccinations.map((record) => (
+                  <tr key={record.id}>
+                    <td>{record.vaccine}</td>
+                    <td>{formatDate(record.date)}</td>
+                    <td>{formatDate(record.nextDue)}</td>
+                    <td>
+                      <span className={`staff-status ${VACCINATION_STATUS_CLASS[record.status]}`}>
+                        {record.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+        </section>
+      )}
+
+
+      {tab === "history" && (
+        <section className="staff-detail-card">
+
+          <h2 className="staff-detail-card__title">
+            History
+          </h2>
+
+          {history.length === 0 ? (
+            <p>Nothing has been recorded for {name} yet.</p>
+          ) : (
+            <table className="staff-table">
+              <thead>
+                <tr>
+                  <th>When</th>
+                  <th>What happened</th>
+                  <th>By</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {history.map((entry) => (
+                  <tr key={entry.id}>
+                    <td>{formatDateTime(entry.createdAt)}</td>
+                    <td>{describeHistory(entry)}</td>
+                    <td>{entry.user ?? "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+        </section>
+      )}
+
+
+      {tab === "about" && (
+      <>
       <section className="staff-detail-card animal-details__about">
 
         <div>
 
           <h2>
-            About {pet.name}
+            About {name}
           </h2>
 
           <p>
@@ -234,9 +463,8 @@ function AnimalDetails() {
             </strong>
 
             <p>
-              A safe and responsible household that can
-              provide appropriate care, attention, and
-              long-term support.
+              {pet.ideal_home ||
+                "A safe and responsible household that can provide appropriate care, attention, and long-term support."}
             </p>
 
           </div>
@@ -244,6 +472,48 @@ function AnimalDetails() {
         </div>
 
       </section>
+
+
+      {can("qr.generate") && (
+      <section className="staff-detail-card animal-details__about">
+
+        <div>
+
+          <h2>
+            <QrCode size={14} /> Stray QR Code
+          </h2>
+
+          <p>
+            Scanning this code opens a public page with {name}&apos;s
+            information and the owner&apos;s contact details, if known.
+          </p>
+
+          <p>
+            Owner: {pet.owner_name || "Not known"}
+            {pet.owner_contact ? ` (${pet.owner_contact})` : ""}
+          </p>
+
+          <Link
+            to={`/admin/animals/${pet.id}/collar-tag`}
+            className="staff-button"
+          >
+            <QrCode size={13} />
+            Generate QR / Collar Tag
+          </Link>
+
+        </div>
+
+
+        <div
+          style={{ maxWidth: 260 }}
+          // The SVG comes from our own API
+          dangerouslySetInnerHTML={{ __html: qrSvg ?? "" }}
+        />
+
+      </section>
+      )}
+      </>
+      )}
 
     </div>
   );

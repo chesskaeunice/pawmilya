@@ -30,7 +30,7 @@
 .dashboard-stat strong {
   color: var(--color-brown);
 
-  font-size: 30px;
+  font-size: var(--font-h1);
 
   line-height: 1;
 }
@@ -41,7 +41,7 @@
 
   color: #5c534a;
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -96,7 +96,7 @@
 .dashboard__section-heading h2 {
   margin: 0;
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -107,7 +107,7 @@
 
   color: var(--color-orange);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -131,7 +131,7 @@
 
   border-bottom: 1px solid #f2eadf;
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -161,7 +161,7 @@
 
   border-bottom: 1px solid #f2eadf;
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 

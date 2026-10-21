@@ -16,8 +16,8 @@ import {
   NotebookPen,
 } from "lucide-react";
 
-import animals from "../../../data/pets.js";
-import missingPets from "../../../data/missingPets.js";
+import useAdminLists from "../../../hooks/useAdminLists.js";
+import MyShifts from "../../../components/admin/MyShifts.jsx";
 
 import "./PoundStaffDashboard.css";
 
@@ -57,6 +57,8 @@ const getAnimalStatus = (animal) =>
 
 
 function PoundStaffDashboard() {
+  const { animals, missingPets } = useAdminLists();
+
 
   /* =========================================
      ANIMAL STATISTICS
@@ -80,7 +82,7 @@ function PoundStaffDashboard() {
               !getAnimalNotes(animal)
           ).length,
       };
-    }, []);
+    }, [animals]);
 
 
   /* =========================================
@@ -113,7 +115,7 @@ function PoundStaffDashboard() {
             item.tasks.length > 0
         )
         .slice(0, 4);
-    }, []);
+    }, [animals]);
 
 
   /* =========================================
@@ -129,7 +131,7 @@ function PoundStaffDashboard() {
             getAnimalDate(a)
         )
         .slice(0, 4);
-    }, []);
+    }, [animals]);
 
 
   /* =========================================
@@ -151,7 +153,7 @@ function PoundStaffDashboard() {
             new Date(b.reportedAt) -
             new Date(a.reportedAt)
         );
-    }, []);
+    }, [missingPets]);
 
 
   const visibleMissingReports =
@@ -671,6 +673,9 @@ function PoundStaffDashboard() {
         </div>
 
       </section>
+
+
+      <MyShifts />
 
     </div>
   );

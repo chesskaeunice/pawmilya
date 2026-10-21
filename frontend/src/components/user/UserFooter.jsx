@@ -6,7 +6,7 @@ import { checkHealth } from "../../services/api";
 import { sectionLinks, siteInfo } from "../../data/siteInfo.js";
 import { useGoToSection } from "../../hooks/useSectionScroll.js";
 import DonateInKindModal from "./DonateInKindModal.jsx";
-import donationQr from "../../assets/images/placeholders/donation-qr-placeholder.svg";
+import useSiteInfo from "../../hooks/useSiteInfo.js";
 
 import "./UserFooter.css";
 
@@ -28,7 +28,13 @@ function UserFooter() {
       .catch(() => setApiStatus("offline"));
   }, []);
 
-  const { contact, donation, legalLinks, brandName } = siteInfo;
+  const { legalLinks, brandName } = siteInfo;
+
+  // Staff-edited details; any empty value is simply not shown
+  const site = useSiteInfo();
+  const contact = site?.pound ?? {};
+  const donation = site?.donation ?? {};
+  const hasContact = Boolean(contact.address || contact.phone || contact.email || contact.hours);
 
   // Columns, left to right: Donate, In-Kind, Explore, Legal, Contact Us
   return (
@@ -36,19 +42,21 @@ function UserFooter() {
 
       <div className="site-footer__container">
 
-        <section className="site-footer__column site-footer__column--donate">
-          <h3 className="site-footer__heading">Donate</h3>
+        {donation.qr && (
+          <section className="site-footer__column site-footer__column--donate">
+            <h3 className="site-footer__heading">Donate</h3>
 
-          <img
-            src={donationQr}
-            alt="Donation QR code (placeholder)"
-            className="site-footer__qr"
-            width="120"
-            height="120"
-          />
+            <img
+              src={donation.qr}
+              alt="Donation QR code"
+              className="site-footer__qr"
+              width="120"
+              height="120"
+            />
 
-          <p className="site-footer__qr-caption">{donation.caption}</p>
-        </section>
+            {donation.caption && <p className="site-footer__qr-caption">{donation.caption}</p>}
+          </section>
+        )}
 
 
         <section className="site-footer__column site-footer__column--inkind">
@@ -106,28 +114,42 @@ function UserFooter() {
         </nav>
 
 
-        <section className="site-footer__column site-footer__column--contact">
-          <h3 className="site-footer__heading">Contact Us</h3>
+        {hasContact && (
+          <section className="site-footer__column site-footer__column--contact">
+            <h3 className="site-footer__heading">Contact Us</h3>
 
-          <ul className="site-footer__list site-footer__contact">
-            <li>
-              <MapPin size={16} aria-hidden="true" />
-              <span>{contact.address}</span>
-            </li>
-            <li>
-              <Phone size={16} aria-hidden="true" />
-              <span>{contact.phone}</span>
-            </li>
-            <li>
-              <Mail size={16} aria-hidden="true" />
-              <span>{contact.email}</span>
-            </li>
-            <li>
-              <Clock size={16} aria-hidden="true" />
-              <span>{contact.hours}</span>
-            </li>
-          </ul>
-        </section>
+            <ul className="site-footer__list site-footer__contact">
+              {contact.address && (
+                <li>
+                  <MapPin size={16} aria-hidden="true" />
+                  {contact.map_link ? (
+                    <a href={contact.map_link} target="_blank" rel="noopener noreferrer">{contact.address}</a>
+                  ) : (
+                    <span>{contact.address}</span>
+                  )}
+                </li>
+              )}
+              {contact.phone && (
+                <li>
+                  <Phone size={16} aria-hidden="true" />
+                  <span>{contact.phone}</span>
+                </li>
+              )}
+              {contact.email && (
+                <li>
+                  <Mail size={16} aria-hidden="true" />
+                  <span>{contact.email}</span>
+                </li>
+              )}
+              {contact.hours && (
+                <li>
+                  <Clock size={16} aria-hidden="true" />
+                  <span>{contact.hours}</span>
+                </li>
+              )}
+            </ul>
+          </section>
+        )}
 
       </div>
 

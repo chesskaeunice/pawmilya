@@ -23,7 +23,6 @@
   body .filter-dropdown__reset,
   body .back-button,
   body .pet-details__apply,
-  body .missing-detail__back,
   body .strip__pause,
   body .mform__primary,
   body .mform__secondary {
@@ -51,7 +50,6 @@
   body .filter-dropdown__reset:hover,
   body .back-button:hover,
   body .pet-details__apply:hover,
-  body .missing-detail__back:hover,
   body .strip__pause:hover,
   body .mform__primary:hover:not(:disabled),
   body .mform__secondary:hover:not(:disabled) {
@@ -75,7 +73,6 @@
   body .filter-dropdown__reset:active,
   body .back-button:active,
   body .pet-details__apply:active,
-  body .missing-detail__back:active,
   body .strip__pause:active,
   body .mform__primary:active:not(:disabled),
   body .mform__secondary:active:not(:disabled) {

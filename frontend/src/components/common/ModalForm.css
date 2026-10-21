@@ -19,7 +19,7 @@
 
 .mform__label {
   color: var(--color-brown);
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 700;
 }
 
@@ -41,7 +41,7 @@
   background-color: var(--color-white);
   color: var(--color-text);
 
-  font-size: 16px;
+  font-size: var(--font-md);
   line-height: 1.5;
 
   transition:
@@ -57,7 +57,7 @@
 .mform__input::placeholder,
 .mform__textarea::placeholder {
   color: #7d7266;
-  font-size: 16px;
+  font-size: var(--font-md);
   line-height: 1.5;
   opacity: 1;
 }
@@ -80,7 +80,7 @@
   margin: 0;
 
   color: var(--color-danger);
-  font-size: 13px;
+  font-size: var(--font-xs);
   line-height: 1.4;
 }
 
@@ -96,7 +96,7 @@
   border: 2px solid var(--color-brown);
   border-radius: 999px;
 
-  font-size: 15px;
+  font-size: var(--font-label);
   font-weight: 700;
 
   transition:
@@ -155,7 +155,7 @@
   margin: 0;
 
   color: var(--color-muted);
-  font-size: 15px;
+  font-size: var(--font-label);
 }
 
 .mform input:focus-visible,
@@ -192,7 +192,7 @@
 .mform__success h3 {
   margin: 0;
 
-  font-size: 22px;
+  font-size: var(--font-h3);
 }
 
 .mform__success p {

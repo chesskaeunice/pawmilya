@@ -1,8 +1,8 @@
 // Landing page data helpers. They read mock data now; replace the bodies with
 // API calls later and keep the same return shapes.
-import pets from "../data/pets.js";
+import { listPets } from "./animalService.js";
 import { ADOPTABLE_STATUS } from "../config/animalStatus.js";
-import missingPets from "../data/missingPets.js";
+import { listMissingPets } from "./missingPetService.js";
 import articles from "../data/articles.js";
 
 const newestFirst = (field) => (a, b) =>
@@ -19,20 +19,14 @@ export function isAdoptable(pet) {
   return pet?.status === ADOPTABLE_STATUS;
 }
 
+// Newest adoptable pets from the API (a promise)
 export function getLatestAdoptablePets(limit = 6) {
-  return pets
-    .filter(isAdoptable)
-    .sort(newestFirst("dateAdded"))
-    .slice(0, limit);
+  return listPets({ per_page: limit }).then((result) => result.data);
 }
 
-// All adoptable pets, newest first (used by the Adoptable Pets page)
-export function getAllAdoptablePets() {
-  return getLatestAdoptablePets(Infinity);
-}
-
+// Newest missing pet reports from the API (a promise)
 export function getLatestMissingReports(limit = 6) {
-  return [...missingPets].sort(newestFirst("reportedAt")).slice(0, limit);
+  return listMissingPets({ per_page: limit });
 }
 
 export function getAllArticles() {

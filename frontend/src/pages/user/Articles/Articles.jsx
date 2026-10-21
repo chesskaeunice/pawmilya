@@ -13,6 +13,7 @@ import {
 } from "../../../utils/filterHelpers.js";
 
 import "./Articles.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 const ARTICLES_PER_PAGE = 6;
 
@@ -61,6 +62,8 @@ function Articles() {
 
   return (
     <div className="articles-page">
+      <BackButton fallback="/" />
+
 
       <header className="articles-page__header">
         <p className="articles-page__eyebrow">Learn</p>

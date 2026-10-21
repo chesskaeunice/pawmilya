@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 
 import {
-  ArrowLeft,
   CalendarDays,
   Clock3,
   FileImage,
@@ -20,9 +19,16 @@ import {
   UserRound,
 } from "lucide-react";
 
-import missingPets from "../../../data/missingPets.js";
+import useFetch from "../../../hooks/useFetch.js";
+import {
+  getReportMatches,
+  getStaffReport,
+  updateReportStatus,
+} from "../../../services/missingPetService.js";
+import { formatApiError } from "../../../services/authService.js";
 
 import "./MissingPetReportDetails.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 
 const STATUS_OPTIONS = [
@@ -30,9 +36,6 @@ const STATUS_OPTIONS = [
   "Sighted",
   "Found",
   "Reunited",
-  "Adopted",
-  "Transfer",
-  "Adoptable",
 ];
 
 
@@ -41,44 +44,51 @@ function MissingPetReportDetails() {
     useParams();
 
 
-  const pet =
-    missingPets.find(
-      (item) =>
-        item.id ===
-        Number(reportId)
+  const { data: pet, loading, reload } =
+    useFetch(
+      () => getStaffReport(reportId),
+      [reportId]
     );
 
 
-  const [currentStatus, setCurrentStatus] =
-    useState(
-      pet?.status ||
-        "Lost"
+  // Animals in the pound that could be this pet
+  const { data: matchData } =
+    useFetch(
+      () => getReportMatches(reportId),
+      [reportId]
     );
 
+  const matches =
+    matchData ?? [];
 
+
+  // null = nothing chosen yet (the dropdown shows the saved status)
   const [selectedStatus, setSelectedStatus] =
-    useState(
-      pet?.status ||
-        "Lost"
-    );
+    useState(null);
+
+
+  const [saving, setSaving] =
+    useState(false);
 
 
   const [selectedPhoto, setSelectedPhoto] =
     useState(0);
 
 
+  if (loading) {
+    return (
+      <div className="staff-page">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+
   if (!pet) {
     return (
       <div className="staff-page">
 
-        <Link
-          to="/admin/missing-pets"
-          className="missing-details__back"
-        >
-          <ArrowLeft size={15} />
-
-          Back to Missing Pet Reports
-        </Link>
+        <BackButton fallback="/admin/missing-pets" />
 
 
         <div className="missing-details__not-found">
@@ -123,24 +133,36 @@ function MissingPetReportDetails() {
 
 
   const reporterName =
-    [
-      pet.reporterFirstName,
-      pet.reporterLastName,
-    ]
-      .filter(Boolean)
-      .join(" ") ||
+    pet.reporterName ||
     "Not provided";
 
 
-  const handleUpdateStatus = () => {
-    setCurrentStatus(
-      selectedStatus
-    );
+  const currentStatus =
+    pet.status;
 
 
-    window.alert(
-      `Status changed to ${selectedStatus}. This is frontend-only until Laravel is connected.`
-    );
+  const chosenStatus =
+    selectedStatus ?? currentStatus;
+
+
+  const handleUpdateStatus = async () => {
+    setSaving(true);
+
+    try {
+      await updateReportStatus(
+        pet.id,
+        chosenStatus
+      );
+
+      setSelectedStatus(null);
+      reload();
+    } catch (error) {
+      window.alert(
+        formatApiError(error).message
+      );
+    }
+
+    setSaving(false);
   };
 
 
@@ -151,14 +173,7 @@ function MissingPetReportDetails() {
           BACK
       ====================================== */}
 
-      <Link
-        to="/admin/missing-pets"
-        className="missing-details__back"
-      >
-        <ArrowLeft size={15} />
-
-        Back to Missing Pet Reports
-      </Link>
+      <BackButton fallback="/admin/missing-pets" />
 
 
       {/* =====================================
@@ -428,6 +443,111 @@ function MissingPetReportDetails() {
 
           </section>
 
+
+          {/* POSSIBLE MATCHES IN THE POUND */}
+
+          <section className="missing-details__card">
+
+            <div className="missing-details__section-heading">
+
+              <div>
+
+                <h2>
+                  Possible Matches in the Pound
+                </h2>
+
+                <p>
+                  Animals currently in the pound
+                  with the same type and a similar
+                  name, breed or color.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            {matches.length === 0 ? (
+
+              <p className="missing-details__description">
+                No similar animals were found in the pound.
+              </p>
+
+            ) : (
+
+              <ul
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                  display: "grid",
+                  gap: 12,
+                }}
+              >
+
+                {matches.map((match) => (
+
+                  <li
+                    key={match.id}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                    }}
+                  >
+
+                    {match.image ? (
+                      <img
+                        src={match.image}
+                        alt={match.name || "Animal"}
+                        style={{ width: 56, height: 56, objectFit: "cover", borderRadius: 8 }}
+                      />
+                    ) : (
+                      <div
+                        style={{ width: 56, height: 56, borderRadius: 8, background: "#faf7f1" }}
+                      />
+                    )}
+
+
+                    <div style={{ flex: 1 }}>
+
+                      <strong>
+                        {match.name || "Unnamed"}
+                      </strong>
+                      {" "}
+                      ({match.animal_code})
+
+                      <br />
+
+                      <small>
+                        {[match.breed, match.color, match.sex, match.status]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </small>
+
+                      <br />
+
+                      <small>
+                        {match.reasons.join(", ")}
+                      </small>
+
+                    </div>
+
+
+                    <Link to={`/admin/animals/${match.id}`}>
+                      View animal
+                    </Link>
+
+                  </li>
+
+                ))}
+
+              </ul>
+
+            )}
+
+          </section>
+
         </div>
 
 
@@ -675,7 +795,7 @@ function MissingPetReportDetails() {
               <select
                 id="reportStatus"
                 value={
-                  selectedStatus
+                  chosenStatus
                 }
                 onChange={(event) =>
                   setSelectedStatus(
@@ -704,7 +824,8 @@ function MissingPetReportDetails() {
                   handleUpdateStatus
                 }
                 disabled={
-                  selectedStatus ===
+                  saving ||
+                  chosenStatus ===
                   currentStatus
                 }
               >

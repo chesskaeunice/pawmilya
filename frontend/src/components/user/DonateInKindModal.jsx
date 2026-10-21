@@ -1,17 +1,19 @@
 import { Check, Home, Info, PawPrint } from "lucide-react";
 
 import Modal from "../common/Modal.jsx";
-import inKindWishlist from "../../data/inKindWishlist.js";
-import { siteInfo } from "../../data/siteInfo.js";
+import useSiteInfo from "../../hooks/useSiteInfo.js";
 
 import "./DonateInKindModal.css";
 
 const ICONS = { PawPrint, Home };
 
 // "Donate In-Kind" pop-up opened from the footer (guests and logged-in users).
-// Wishlists come from data/inKindWishlist.js; drop-off details from data/siteInfo.js.
+// Wishlists and drop-off details are edited by staff (Settings) and come from the API.
 function DonateInKindModal({ isOpen, onClose }) {
-  const { address, hours, phone, email } = siteInfo.contact;
+  const site = useSiteInfo();
+  const inKindWishlist = site?.inKind ?? [];
+  const { address, hours, phone, email } = site?.pound ?? {};
+  const contactLine = [phone, email].filter(Boolean).join(" · ");
 
   return (
     <Modal
@@ -26,12 +28,16 @@ function DonateInKindModal({ isOpen, onClose }) {
       </p>
 
       <div className="inkind__lists">
-        {inKindWishlist.map((list) => {
-          const Icon = ICONS[list.icon] || PawPrint;
+        {inKindWishlist.length === 0 && (
+          <p className="inkind__intro">Our wishlist is being updated. Please check back soon.</p>
+        )}
+
+        {inKindWishlist.map((list, index) => {
+          const Icon = ICONS[index % 2 === 0 ? "PawPrint" : "Home"];
 
           return (
-            <section className="inkind__card" key={list.id} aria-labelledby={`inkind-${list.id}`}>
-              <h3 className="inkind__card-title" id={`inkind-${list.id}`}>
+            <section className="inkind__card" key={list.title} aria-labelledby={`inkind-${index}`}>
+              <h3 className="inkind__card-title" id={`inkind-${index}`}>
                 <span className="inkind__card-icon">
                   <Icon size={18} aria-hidden="true" />
                 </span>
@@ -58,10 +64,14 @@ function DonateInKindModal({ isOpen, onClose }) {
         </span>
       </p>
 
-      <p className="inkind__how">
-        <strong>How to donate:</strong> Drop off your donations at {address}.
-        Hours: {hours}. Contact: {phone} · {email}.
-      </p>
+      {(address || hours || contactLine) && (
+        <p className="inkind__how">
+          <strong>How to donate:</strong>
+          {address && ` Drop off your donations at ${address}.`}
+          {hours && ` Hours: ${hours}.`}
+          {contactLine && ` Contact: ${contactLine}.`}
+        </p>
+      )}
     </Modal>
   );
 }

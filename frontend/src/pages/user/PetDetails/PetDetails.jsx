@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 
-import pets from "../../../data/pets.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { getPet } from "../../../services/animalService.js";
 
 import BackButton from "../../../components/common/BackButton.jsx";
 import PreviewStatus from "../../../components/landing/PreviewStatus.jsx";
@@ -16,10 +17,17 @@ function PetDetails() {
   const { isLoggedIn } = useAuth();
   const { openSignIn } = useModals();
 
-  const pet = pets.find(
-    (pet) => pet.id === Number(petId)
-  );
+  const { data: pet, loading } = useFetch(() => getPet(petId), [petId]);
 
+  if (loading) {
+    return (
+      <div className="pet-details__not-found">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  // the API only returns animals open for adoption
   if (!isAdoptable(pet)) {
     return (
       <div className="pet-details__not-found">
@@ -66,7 +74,7 @@ function PetDetails() {
 
             <div className="pet-details__main-image">
               <img
-                src={petPlaceholders[pet.type] || petPlaceholders.Other}
+                src={pet.image || petPlaceholders[pet.type] || petPlaceholders.Other}
                 alt={`Photo of ${pet.name}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />

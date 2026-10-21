@@ -7,9 +7,12 @@ import useAuth from "../../hooks/useAuth.js";
 // "Please sign in to continue" pop-up opens. After logging in, the Login page
 // brings them back to the address they wanted.
 function RequireSignIn({ children, reason, fallback = () => "/" }) {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
   const location = useLocation();
   const params = useParams();
+
+  // Wait until the stored session is checked
+  if (loading) return null;
 
   if (!isLoggedIn) {
     return (

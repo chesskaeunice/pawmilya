@@ -1,13 +1,59 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import useAuth from "../../../hooks/useAuth.js";
+import { FieldError, PasswordHelp, PasswordInput } from "../../../components/user/PasswordInput.jsx";
+import { formatApiError } from "../../../services/authService.js";
 
 import "./Signup.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 function Signup() {
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [values, setValues] = useState({ firstName: "", lastName: "", email: "", password: "" });
+
+  const track = (key) => (event) => setValues({ ...values, [key]: event.target.value });
+
+  // Creates a citizen account and logs in
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+
+    setErrors({});
+    setFormError("");
+    setSubmitting(true);
+
+    try {
+      await register({
+        first_name: values.firstName.trim(),
+        last_name: values.lastName.trim(),
+        email: values.email.trim().toLowerCase(),
+        phone: form.get("phone").trim(),
+        password: form.get("password"),
+        password_confirmation: form.get("confirmPassword"),
+        terms: form.get("terms") === "on",
+      });
+      navigate("/", { replace: true });
+    } catch (err) {
+      const { message, fields } = formatApiError(err);
+      setErrors(fields);
+      setFormError(Object.keys(fields).length ? "" : message);
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="signup">
       <section className="signup__container">
 
         <div className="signup__intro">
+      <BackButton fallback="/" />
+
           <p className="signup__eyebrow">
             Join PAWmilya
           </p>
@@ -42,7 +88,11 @@ function Signup() {
           </div>
 
 
-          <form className="signup__form">
+          <form className="signup__form" onSubmit={handleSubmit}>
+
+            {formError && (
+              <p className="signup__error" role="alert">{formError}</p>
+            )}
 
             <div className="signup__name-grid">
 
@@ -55,8 +105,13 @@ function Signup() {
                   type="text"
                   id="firstName"
                   name="firstName"
+                  autoComplete="given-name"
+                  maxLength={100}
+                  value={values.firstName}
+                  onChange={track("firstName")}
                   placeholder="Enter first name"
                 />
+                <FieldError message={errors.first_name} />
               </div>
 
 
@@ -69,8 +124,13 @@ function Signup() {
                   type="text"
                   id="lastName"
                   name="lastName"
+                  autoComplete="family-name"
+                  maxLength={100}
+                  value={values.lastName}
+                  onChange={track("lastName")}
                   placeholder="Enter last name"
                 />
+                <FieldError message={errors.last_name} />
               </div>
 
             </div>
@@ -85,8 +145,12 @@ function Signup() {
                 type="email"
                 id="email"
                 name="email"
+                autoComplete="username"
+                value={values.email}
+                onChange={track("email")}
                 placeholder="name@email.com"
               />
+              <FieldError message={errors.email} />
             </div>
 
 
@@ -99,8 +163,10 @@ function Signup() {
                 type="tel"
                 id="phone"
                 name="phone"
+                autoComplete="tel"
                 placeholder="09XX XXX XXXX"
               />
+              <FieldError message={errors.phone} />
             </div>
 
 
@@ -111,12 +177,15 @@ function Signup() {
                   Password
                 </label>
 
-                <input
-                  type="password"
+                <PasswordInput
                   id="password"
                   name="password"
+                  autoComplete="new-password"
                   placeholder="Enter password"
+                  value={values.password}
+                  onChange={track("password")}
                 />
+                <FieldError message={errors.password} />
               </div>
 
 
@@ -125,15 +194,24 @@ function Signup() {
                   Confirm Password
                 </label>
 
-                <input
-                  type="password"
+                <PasswordInput
                   id="confirmPassword"
                   name="confirmPassword"
+                  autoComplete="new-password"
                   placeholder="Repeat password"
                 />
               </div>
 
             </div>
+
+
+            <PasswordHelp
+              password={values.password}
+              context={{
+                email: values.email,
+                name: `${values.firstName} ${values.lastName}`,
+              }}
+            />
 
 
             <label className="signup__terms">
@@ -148,13 +226,15 @@ function Signup() {
               </span>
 
             </label>
+            <FieldError message={errors.terms} />
 
 
             <button
               type="submit"
               className="signup__submit"
+              disabled={submitting}
             >
-              Create Account
+              {submitting ? "Creating account..." : "Create Account"}
             </button>
 
           </form>

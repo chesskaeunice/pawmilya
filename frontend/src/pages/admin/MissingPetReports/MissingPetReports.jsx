@@ -14,12 +14,17 @@ import {
   Search,
 } from "lucide-react";
 
-import missingPets from "../../../data/missingPets.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { listStaffReports } from "../../../services/missingPetService.js";
 
 import "./MissingPetReports.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 
 const REPORTS_PER_PAGE = 9;
+
+// stable empty list while the API call is loading
+const NO_REPORTS = [];
 
 const STATUS_OPTIONS = [
   "All",
@@ -27,13 +32,13 @@ const STATUS_OPTIONS = [
   "Sighted",
   "Found",
   "Reunited",
-  "Adopted",
-  "Transfer",
-  "Adoptable",
 ];
 
 
 function MissingPetReports() {
+  const { data: reports } = useFetch(() => listStaffReports(), []);
+  const missingPets = reports ?? NO_REPORTS;
+
   const [search, setSearch] =
     useState("");
 
@@ -143,8 +148,8 @@ function MissingPetReports() {
           if (
             sort === "Name A-Z"
           ) {
-            return a.name.localeCompare(
-              b.name
+            return (a.name || "").localeCompare(
+              b.name || ""
             );
           }
 
@@ -152,8 +157,8 @@ function MissingPetReports() {
           if (
             sort === "Name Z-A"
           ) {
-            return b.name.localeCompare(
-              a.name
+            return (b.name || "").localeCompare(
+              a.name || ""
             );
           }
 
@@ -166,6 +171,7 @@ function MissingPetReports() {
       );
 
     }, [
+      missingPets,
       search,
       type,
       status,
@@ -237,6 +243,8 @@ function MissingPetReports() {
 
   return (
     <div className="staff-page missing-admin">
+      <BackButton fallback="/admin/dashboard" />
+
 
       {/* =====================================
           HEADER

@@ -7,7 +7,7 @@
 
 
 .animal-details__title-row h1 span {
-  font-size: 17px;
+  font-size: var(--font-lg);
 }
 
 
@@ -44,9 +44,9 @@
 
   background-color: #faf7f1;
 
-  color: #b0a79d;
+  color: var(--color-muted);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
@@ -68,9 +68,9 @@
 
   background-color: #faf7f1;
 
-  color: #b0a79d;
+  color: var(--color-muted);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -99,7 +99,7 @@
 
   border-bottom: 1px solid #f2eadf;
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -151,7 +151,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -182,7 +182,7 @@
 .animal-details__about h2 {
   margin: 0 0 10px;
 
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 
@@ -191,7 +191,7 @@
 
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   line-height: 1.7;
 }
 
@@ -215,7 +215,7 @@
 
   color: var(--color-brown);
 
-  font-size: 9px;
+  font-size: var(--font-xs);
   font-weight: 600;
 }
 
@@ -234,7 +234,7 @@
 
   color: var(--color-brown);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 

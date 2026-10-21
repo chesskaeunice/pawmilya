@@ -9,7 +9,7 @@
 .animals__view {
   color: var(--color-orange);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 

@@ -9,36 +9,8 @@
 
 /* BACK */
 
-.missing-detail__back {
-  min-height: 40px;
-
-  display: inline-flex;
-  align-items: center;
-
-  gap: 7px;
-
-  margin-bottom: 28px;
-  padding: 0 14px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-
-  background-color: white;
-
-  color: var(--color-brown);
-
-  font-size: 12px;
-  font-weight: 700;
-
-  cursor: pointer;
-}
 
 
-.missing-detail__back:hover {
-  border-color: var(--color-orange);
-
-  color: var(--color-orange);
-}
 
 
 /* HEADER */
@@ -53,7 +25,7 @@
 
   color: var(--color-orange);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   letter-spacing: 1.8px;
@@ -87,7 +59,7 @@
 
   color: var(--color-muted);
 
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 
@@ -100,7 +72,7 @@
 
   color: white;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -113,7 +85,7 @@
 .missing-detail__status--sighted {
   background-color: #f4a261;
 
-  color: #4d2a00;
+  color: var(--color-brown);
 }
 
 
@@ -137,7 +109,7 @@
 .missing-detail__status--transfer {
   background-color: #e9c46a;
 
-  color: #4d2a00;
+  color: var(--color-brown);
 }
 
 
@@ -184,7 +156,7 @@
 
   color: var(--color-brown);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   font-weight: 600;
 }
 
@@ -216,7 +188,7 @@
 
   color: var(--color-brown);
 
-  font-size: 19px;
+  font-size: var(--font-h3);
 }
 
 
@@ -253,14 +225,14 @@
 .missing-detail__row-label {
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 
 .missing-detail__row strong {
   color: var(--color-text);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
 }
 
 
@@ -314,7 +286,7 @@
 .missing-detail__location-grid small {
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 
   text-transform: uppercase;
 
@@ -325,7 +297,7 @@
 .missing-detail__location-grid strong {
   color: var(--color-brown);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 1.5;
 }
 
@@ -337,7 +309,7 @@
 
   color: var(--color-muted);
 
-  font-size: 13px;
+  font-size: var(--font-xs);
   line-height: 1.75;
 }
 
@@ -380,7 +352,7 @@
 
 
   .missing-detail__title-row h1 {
-    font-size: 36px;
+    font-size: var(--font-h1);
   }
 
 
@@ -428,7 +400,7 @@
 
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 1.6;
 }
 
@@ -501,7 +473,7 @@
 
 
 .missing-detail__gallery-placeholder span {
-  font-size: 12px;
+  font-size: var(--font-xs);
   font-weight: 700;
 }
 
@@ -509,7 +481,7 @@
 .missing-detail__gallery-placeholder small {
   color: var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 

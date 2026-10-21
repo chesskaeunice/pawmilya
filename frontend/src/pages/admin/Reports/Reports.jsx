@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -12,12 +12,12 @@ import {
   X,
 } from "lucide-react";
 
-import pets from "../../../data/pets.js";
-import applications from "../../../data/applications.js";
-import missingPets from "../../../data/missingPets.js";
-import initialVaccinations from "../../../data/vaccinations.js";
+import useAdminLists from "../../../hooks/useAdminLists.js";
+import { updateVaccination } from "../../../services/vaccinationService.js";
+import { formatApiError } from "../../../services/authService.js";
 
 import "./Reports.css";
+import BackButton from "../../../components/common/BackButton.jsx";
 
 /* ---------- vaccination date + status helpers (kept in this file) ---------- */
 
@@ -95,30 +95,17 @@ const normalizeVaccination = (record) => {
   return { ...record, date, nextDue, status: getStatus(nextDue) };
 };
 
-/* Session store: keeps vaccination records (and anything logged from the
-   Needs Attention list) when you switch between report tabs. */
-let vaccinationRecords = initialVaccinations.map(normalizeVaccination);
+/* The animals, applications, missing pet reports and vaccinations come from the API
+   (loaded once by Reports and shared with the tabs). */
+const ReportDataContext = createContext({
+  animals: [],
+  applications: [],
+  missingPets: [],
+  vaccinations: [],
+  reload: () => {},
+});
 
-const vaccinationListeners = new Set();
-
-const subscribeToVaccinations = (listener) => {
-  vaccinationListeners.add(listener);
-  return () => vaccinationListeners.delete(listener);
-};
-
-const getVaccinations = () => vaccinationRecords;
-
-const setVaccinations = (next) => {
-  vaccinationRecords =
-    typeof next === "function" ? next(vaccinationRecords) : next;
-
-  vaccinationListeners.forEach((listener) => listener());
-};
-
-function useVaccinations() {
-  const records = useSyncExternalStore(subscribeToVaccinations, getVaccinations);
-  return [records, setVaccinations];
-}
+const useReportData = () => useContext(ReportDataContext);
 
 /* ---------- tabs + role access (from the RBAC matrix) ---------- */
 
@@ -180,6 +167,8 @@ const countOf = (rows, label) => rows.find((r) => r.label === label)?.value ?? 0
 /* ---------- main page ---------- */
 
 function Reports({ role = "kennel_manager" }) {
+  const lists = useAdminLists();
+
   const allowedTabs = ROLE_TABS[role] ?? [];
   const tabs = TABS.filter((tab) => allowedTabs.includes(tab.id));
 
@@ -189,6 +178,8 @@ function Reports({ role = "kennel_manager" }) {
 
   return (
     <div className="staff-page">
+      <BackButton fallback="/admin/dashboard" />
+
       <div className="staff-page__top">
         <div>
           <h1 className="staff-page__title">Reports</h1>
@@ -230,10 +221,12 @@ function Reports({ role = "kennel_manager" }) {
             id={`reports-panel-${activeTab}`}
             aria-labelledby={`reports-tab-${activeTab}`}
           >
-            {activeTab === "animals" && <AnimalsReport />}
-            {activeTab === "adoptions" && <AdoptionsReport />}
-            {activeTab === "missing" && <MissingReport />}
-            {activeTab === "vaccinations" && <VaccinationsReport />}
+            <ReportDataContext.Provider value={lists}>
+              {activeTab === "animals" && <AnimalsReport />}
+              {activeTab === "adoptions" && <AdoptionsReport />}
+              {activeTab === "missing" && <MissingReport />}
+              {activeTab === "vaccinations" && <VaccinationsReport />}
+            </ReportDataContext.Provider>
           </div>
         </>
       )}
@@ -277,7 +270,8 @@ const matchesRange = (record, range) => {
 function VaccinationsReport() {
   const navigate = useNavigate();
 
-  const [records, setRecords] = useVaccinations();
+  const { vaccinations, reload } = useReportData();
+  const records = useMemo(() => vaccinations.map(normalizeVaccination), [vaccinations]);
 
   const [range, setRange] = useState("all");
   const [type, setType] = useState("all");
@@ -424,7 +418,7 @@ function VaccinationsReport() {
     }));
   };
 
-  const saveLog = () => {
+  const saveLog = async () => {
     if (!logging.date) {
       setLogging({ ...logging, error: "Enter the date the vaccine was given." });
       return;
@@ -440,19 +434,17 @@ function VaccinationsReport() {
       return;
     }
 
-    setRecords((current) =>
-      current.map((item) =>
-        item.id === logging.id
-          ? {
-              ...item,
-              date: logging.date,
-              nextDue: logging.nextDue,
-              status: getStatus(logging.nextDue),
-            }
-          : item
-      )
-    );
+    try {
+      await updateVaccination(logging.id, {
+        administered_at: logging.date,
+        next_due_date: logging.nextDue,
+      });
+    } catch (error) {
+      setLogging({ ...logging, error: formatApiError(error).message });
+      return;
+    }
 
+    reload();
     setToast(`${logging.vaccine} logged for ${logging.petName}.`);
     setLogging(null);
   };
@@ -824,15 +816,16 @@ const typeIcon = (label) =>
 
 function AnimalsReport() {
   const go = useDrillDown();
+  const { animals: pets, applications, missingPets } = useReportData();
 
   const [type, setType] = useState("all");
   const [showAllActivity, setShowAllActivity] = useState(false);
 
-  const petTypes = useMemo(() => [...new Set(pets.map((p) => p.type))].sort(), []);
+  const petTypes = useMemo(() => [...new Set(pets.map((p) => p.type))].sort(), [pets]);
 
   const scoped = useMemo(
     () => (type === "all" ? pets : pets.filter((p) => p.type === type)),
-    [type]
+    [pets, type]
   );
 
   const typeParam = type === "all" ? "" : type;
@@ -892,9 +885,9 @@ function AnimalsReport() {
         />
 
         <ReportStat
-          value={missingPets.filter((p) => p.status === "Active").length}
+          value={missingPets.filter((p) => p.status !== "Reunited").length}
           label="Missing Pet Reports"
-          onClick={() => go("/admin/missing-pets", { status: "Active" })}
+          onClick={() => go("/admin/missing-pets")}
         />
       </section>
 
@@ -979,6 +972,7 @@ function AnimalsReport() {
 
 function AdoptionsReport() {
   const go = useDrillDown();
+  const { applications } = useReportData();
 
   const [showAll, setShowAll] = useState(false);
 
@@ -990,10 +984,10 @@ function AdoptionsReport() {
           color: { Pending: "#e7b04f", Approved: "#8aa96b", Rejected: "#c4533f" }[row.label],
         }))
       ),
-    []
+    [applications]
   );
 
-  const petRows = useMemo(() => countBy(applications, (a) => a.petName).slice(0, 5), []);
+  const petRows = useMemo(() => countBy(applications, (a) => a.petName).slice(0, 5), [applications]);
 
   const visible = showAll ? applications : applications.slice(0, 6);
 
@@ -1114,6 +1108,7 @@ function AdoptionsReport() {
 
 function MissingReport() {
   const go = useDrillDown();
+  const { missingPets } = useReportData();
 
   const [showAll, setShowAll] = useState(false);
 
@@ -1121,12 +1116,13 @@ function MissingReport() {
     () =>
       countBy(missingPets, (p) => p.status).map((row) => ({
         ...row,
-        color: { Active: "#e7b04f", Reunited: "#8aa96b" }[row.label] || "#9d6328",
+        color:
+          { Lost: "#c4533f", Sighted: "#e7b04f", Found: "#d69a3a", Reunited: "#8aa96b" }[row.label] || "#9d6328",
       })),
-    []
+    [missingPets]
   );
 
-  const locationRows = useMemo(() => countBy(missingPets, (p) => p.location).slice(0, 5), []);
+  const locationRows = useMemo(() => countBy(missingPets, (p) => p.location).slice(0, 5), [missingPets]);
 
   const visible = showAll ? missingPets : missingPets.slice(0, 6);
 
@@ -1154,9 +1150,9 @@ function MissingReport() {
         />
 
         <ReportStat
-          value={countOf(statusRows, "Active")}
+          value={missingPets.length - reunited}
           label="Still Missing"
-          onClick={() => go("/admin/missing-pets", { status: "Active" })}
+          onClick={() => go("/admin/missing-pets")}
         />
 
         <ReportStat

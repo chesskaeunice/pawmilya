@@ -1,0 +1,524 @@
+/* =====================================================================
+   Shared UI system (buttons, fields, cards, tables, badges, page header)
+   Built only from the tokens in variables.css.
+
+   New code: use the .ui-* classes below.
+   Existing pages keep their own class names; the grouped selectors in each
+   section give them the same look. They use `:is(button, a).class` so they
+   win over page CSS without !important.
+   ===================================================================== */
+
+
+/* ---------- BUTTONS ----------
+   .ui-btn + one of: --primary (default) --secondary --danger --ghost --danger-ghost --icon
+   sizes: --sm --lg (medium is the default) */
+
+.ui-btn,
+:is(button, a).add-animal__submit,
+:is(button, a).adoption-form__submit,
+:is(button, a).home__primary-button,
+:is(button, a).login__submit,
+:is(button, a).signup__submit,
+:is(button, a).report-pet__submit,
+:is(button, a).mform__primary,
+:is(button, a).signin-modal__primary,
+:is(button, a).staff-button,
+:is(button, a).reports__row-btn--primary,
+:is(button, a).add-animal__cancel,
+:is(button, a).adoption-form__cancel,
+:is(button, a).home__secondary-button,
+:is(button, a).mform__secondary,
+:is(button, a).signin-modal__secondary,
+:is(button, a).staff-button--outline,
+:is(button, a).landing-section__button,
+:is(button, a).staff-action-button,
+:is(button, a).reports__row-btn,
+:is(button, a).mform__primary--danger,
+:is(button, a).vaccinations__danger {
+  min-height: var(--control-height-md);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: var(--space-2);
+
+  padding: 0 var(--space-4);
+
+  border: 2px solid var(--color-brown);
+  border-radius: var(--radius-small);
+
+  background-color: var(--color-brown);
+  color: var(--color-white);
+
+  font-size: var(--font-sm);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  text-decoration: none;
+
+  box-shadow: none;
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.ui-btn:hover,
+:is(button, a).add-animal__submit:hover,
+:is(button, a).adoption-form__submit:hover,
+:is(button, a).home__primary-button:hover,
+:is(button, a).login__submit:hover,
+:is(button, a).signup__submit:hover,
+:is(button, a).report-pet__submit:hover,
+:is(button, a).mform__primary:hover,
+:is(button, a).signin-modal__primary:hover,
+:is(button, a).staff-button:hover,
+:is(button, a).reports__row-btn--primary:hover {
+  border-color: var(--color-orange);
+  background-color: var(--color-orange);
+  color: var(--color-white);
+}
+
+/* secondary: white with a brown outline */
+.ui-btn--secondary,
+:is(button, a).add-animal__cancel,
+:is(button, a).adoption-form__cancel,
+:is(button, a).home__secondary-button,
+:is(button, a).mform__secondary,
+:is(button, a).signin-modal__secondary,
+:is(button, a).staff-button--outline,
+:is(button, a).landing-section__button,
+:is(button, a).staff-action-button,
+:is(button, a).reports__row-btn {
+  background-color: var(--color-white);
+  color: var(--color-brown);
+}
+
+.ui-btn--secondary:hover,
+:is(button, a).add-animal__cancel:hover,
+:is(button, a).adoption-form__cancel:hover,
+:is(button, a).home__secondary-button:hover,
+:is(button, a).mform__secondary:hover,
+:is(button, a).signin-modal__secondary:hover,
+:is(button, a).staff-button--outline:hover,
+:is(button, a).landing-section__button:hover,
+:is(button, a).staff-action-button:hover,
+:is(button, a).reports__row-btn:hover {
+  border-color: var(--color-brown);
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+}
+
+/* danger: filled red */
+.ui-btn--danger,
+:is(button, a).mform__primary--danger,
+:is(button, a).vaccinations__danger {
+  border-color: var(--color-danger);
+  background-color: var(--color-danger);
+  color: var(--color-white);
+}
+
+.ui-btn--danger:hover,
+:is(button, a).mform__primary--danger:hover,
+:is(button, a).vaccinations__danger:hover {
+  border-color: #8a2e2e;
+  background-color: #8a2e2e;
+  color: var(--color-white);
+}
+
+/* ghost: text button for row actions */
+.ui-btn--ghost,
+.ui-btn--danger-ghost {
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--color-brown);
+}
+
+.ui-btn--ghost:hover {
+  border-color: transparent;
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+}
+
+.ui-btn--danger-ghost {
+  color: var(--color-danger);
+}
+
+.ui-btn--danger-ghost:hover {
+  border-color: transparent;
+  background-color: var(--badge-danger-bg);
+  color: var(--badge-danger-fg);
+}
+
+/* icon-only button (give it an aria-label) */
+.ui-btn--icon {
+  width: var(--control-height-md);
+  padding: 0;
+}
+
+.ui-btn--sm {
+  min-height: var(--control-height-sm);
+  padding: 0 var(--space-3);
+  font-size: var(--font-xs);
+}
+
+.ui-btn--lg,
+:is(button, a).home__primary-button,
+:is(button, a).home__secondary-button,
+:is(button, a).login__submit,
+:is(button, a).signup__submit {
+  min-height: var(--control-height-lg);
+  padding: 0 var(--space-6);
+  font-size: var(--font-md);
+}
+
+.ui-btn:disabled,
+:is(button, a)[class*="__submit"]:disabled,
+:is(button, a).staff-button:disabled,
+:is(button, a).mform__primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ui-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* row of row-action buttons in tables */
+.vaccinations__actions,
+.ui-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+
+/* ---------- FORM FIELDS ----------
+   label (14-15px, semibold), control (42px, 8px radius), helper and error text, focus ring */
+
+.ui-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ui-field > label,
+.mform__field > label,
+.adoption-form__field > label,
+.login__field > label,
+.signup__field > label,
+.staff-form__field > label,
+.add-animal__field > label,
+.settings__fields label,
+.filter-dropdown__field > span {
+  color: var(--color-text);
+
+  font-size: var(--font-sm);
+  font-weight: var(--weight-semibold);
+}
+
+/* required marker: <span className="ui-required">*</span> */
+.ui-required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+.ui-help {
+  color: var(--color-muted);
+  font-size: var(--font-xs);
+}
+
+.ui-error,
+.auth-field-error {
+  color: var(--badge-danger-fg);
+  font-size: var(--font-xs);
+}
+
+.ui-input,
+.mform__input,
+.mform__select,
+.mform__textarea,
+.adoption-form__field :is(input, select, textarea),
+.login__field input,
+.signup__field input,
+.staff-form__field :is(input, select, textarea),
+.add-animal__field :is(input, select, textarea),
+.settings__fields :is(input, select),
+.search-bar__input,
+.filter-dropdown__field :is(input, select),
+.staff-filters :is(input, select) {
+  width: 100%;
+  min-height: var(--control-height-md);
+
+  padding: 0 var(--space-3);
+
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-small);
+
+  background-color: var(--color-white);
+  color: var(--color-text);
+
+  font-size: var(--font-md);
+}
+
+.ui-input:is(textarea),
+.mform__textarea,
+.adoption-form__field textarea,
+.staff-form__field textarea,
+.add-animal__field textarea,
+.settings__textarea {
+  min-height: 96px;
+  padding: var(--space-3);
+}
+
+.ui-input:focus,
+.mform__input:focus,
+.mform__select:focus,
+.mform__textarea:focus,
+.adoption-form__field :is(input, select, textarea):focus,
+.login__field input:focus,
+.signup__field input:focus,
+.staff-form__field :is(input, select, textarea):focus,
+.add-animal__field :is(input, select, textarea):focus,
+.settings__fields :is(input, select):focus,
+.search-bar__input:focus,
+.filter-dropdown__field :is(input, select):focus {
+  border-color: var(--color-gold);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.mform__field--invalid :is(input, select, textarea) {
+  border-color: var(--color-danger);
+}
+
+:is(input, select, textarea):disabled {
+  background-color: var(--color-surface-alt);
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+::placeholder {
+  color: var(--color-muted);
+  opacity: 0.85;
+}
+
+
+/* ---------- CARDS AND SECTIONS ---------- */
+
+.ui-card,
+.staff-detail-card,
+.staff-form__section,
+.staff-card,
+.staff-table-card,
+.login__card,
+.signup__card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+
+  background-color: var(--color-surface);
+
+  box-shadow: var(--shadow-card);
+}
+
+.ui-card,
+.staff-detail-card,
+.staff-form__section {
+  padding: var(--space-6);
+}
+
+
+/* ---------- TABLES ---------- */
+
+.staff-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.staff-table th {
+  padding: var(--space-3) var(--space-4);
+
+  border-bottom: 1px solid var(--color-border-strong);
+
+  background-color: var(--color-surface-alt);
+  color: var(--color-muted);
+
+  font-size: var(--font-xs);
+  font-weight: var(--weight-bold);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.staff-table td {
+  padding: var(--space-3) var(--space-4);
+
+  border-bottom: 1px solid var(--color-border);
+
+  font-size: var(--font-sm);
+  vertical-align: middle;
+}
+
+.staff-table tbody tr:nth-child(even) {
+  background-color: var(--color-surface-alt);
+}
+
+.staff-table tbody tr:hover {
+  background-color: var(--color-cream);
+}
+
+/* table wrappers scroll instead of overflowing the page */
+.staff-table-card {
+  overflow-x: auto;
+}
+
+
+/* ---------- STATUS BADGES ----------
+   One color system for animal, health, application, missing-pet, vaccination and shift statuses.
+   Use <span className="ui-badge ui-badge--success|warning|danger|info|neutral"> in new code. */
+
+.ui-badge,
+.staff-status,
+.missing-pets__status {
+  display: inline-flex;
+  align-items: center;
+
+  padding: var(--space-1) var(--space-3);
+
+  border-radius: var(--radius-pill);
+
+  background-color: var(--badge-neutral-bg);
+  color: var(--badge-neutral-fg);
+
+  font-size: var(--font-xs);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.ui-badge--success,
+.staff-status--available,
+.staff-status--approved,
+.staff-status--current,
+.staff-status--active,
+.missing-pets__status--found,
+.missing-pets__status--reunited,
+.missing-pets__status--adoptable {
+  background-color: var(--badge-success-bg);
+  color: var(--badge-success-fg);
+}
+
+.ui-badge--warning,
+.staff-status--pending,
+.staff-status--due,
+.missing-pets__status--sighted,
+.missing-pets__status--pending-adoption {
+  background-color: var(--badge-warning-bg);
+  color: var(--badge-warning-fg);
+}
+
+.ui-badge--danger,
+.staff-status--rejected,
+.staff-status--overdue,
+.missing-pets__status--lost {
+  background-color: var(--badge-danger-bg);
+  color: var(--badge-danger-fg);
+}
+
+.ui-badge--info {
+  background-color: var(--badge-info-bg);
+  color: var(--badge-info-fg);
+}
+
+
+/* ---------- PAGE HEADER ----------
+   Same order on every page: back button, title, subtitle, page actions.
+   Staff pages use .staff-page__top, citizen pages use their own wrappers;
+   the back button looks and sits the same on both. */
+
+.back-button {
+  margin-bottom: var(--space-4);
+}
+
+.staff-page__title,
+.ui-page-title {
+  margin: 0;
+  font-size: var(--font-h1);
+  line-height: var(--line-height-tight);
+}
+
+.staff-page__subtitle,
+.ui-page-subtitle {
+  margin: var(--space-1) 0 0;
+  color: var(--color-muted);
+  font-size: var(--font-sm);
+}
+
+
+/* ---------- EMPTY / LOADING / ERROR STATES ---------- */
+
+.ui-state {
+  padding: var(--space-8) var(--space-4);
+
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.ui-state--error {
+  color: var(--badge-danger-fg);
+}
+
+
+/* ---------- LINKS ---------- */
+
+.ui-link {
+  color: var(--color-orange);
+  font-weight: var(--weight-semibold);
+}
+
+.ui-link:hover {
+  text-decoration: underline;
+}
+
+
+/* ---------- PHONES ---------- */
+
+@media (max-width: 600px) {
+  .staff-table th,
+  .staff-table td {
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+
+/* ---------- DASHBOARDS ----------
+   The four role dashboards share one stat-card and panel style. */
+
+.counselor-dashboard__stat,
+.manager-dashboard__stat,
+.pound-dashboard__stat,
+.vettech-dashboard__stat,
+.dashboard-stat {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+
+  background: var(--color-surface);
+
+  box-shadow: var(--shadow-card);
+}
+
+.counselor-dashboard__card,
+.manager-dashboard__card,
+.pound-dashboard__card,
+.vettech-dashboard__card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+
+  background: var(--color-surface);
+
+  box-shadow: var(--shadow-card);
+}

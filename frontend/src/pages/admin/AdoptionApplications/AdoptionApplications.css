@@ -33,7 +33,7 @@
   color:
     var(--color-orange);
 
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 700;
 
   cursor: pointer;
@@ -159,7 +159,7 @@
   color:
     var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   font-weight: 600;
 
   text-overflow: ellipsis;
@@ -171,7 +171,7 @@
   color:
     var(--color-brown);
 
-  font-size: 22px;
+  font-size: var(--font-h3);
   line-height: 1;
 }
 
@@ -301,13 +301,13 @@
 
   font-family: inherit;
 
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
 .adoption-applications__search input::placeholder {
   color:
-    #a49b90;
+    var(--color-muted);
 }
 
 
@@ -335,8 +335,7 @@
   font-family:
     inherit;
 
-  font-size:
-    11px;
+  font-size: var(--font-xs);
 
   outline:
     none;
@@ -396,8 +395,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    12px;
+  font-size: var(--font-xs);
 }
 
 
@@ -405,8 +403,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -437,8 +434,7 @@
   color:
     var(--color-orange);
 
-  font-size:
-    9px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -516,8 +512,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -525,8 +520,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    8px;
+  font-size: var(--font-xs);
 }
 
 
@@ -560,8 +554,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    9px;
+  font-size: var(--font-xs);
 
   font-weight:
     800;
@@ -572,8 +565,7 @@
   color:
     var(--color-text);
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -593,8 +585,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -602,8 +593,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    9px;
+  font-size: var(--font-xs);
 }
 
 
@@ -660,8 +650,7 @@
   color:
     var(--color-orange);
 
-  font-size:
-    9px;
+  font-size: var(--font-xs);
 
   font-weight:
     700;
@@ -812,8 +801,7 @@
   font-family:
     inherit;
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 
   text-align:
     left;
@@ -886,8 +874,7 @@
   color:
     var(--color-brown);
 
-  font-size:
-    13px;
+  font-size: var(--font-xs);
 }
 
 
@@ -895,8 +882,7 @@
   color:
     var(--color-muted);
 
-  font-size:
-    10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -925,7 +911,7 @@
   color:
     var(--color-muted);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 
@@ -961,7 +947,7 @@
   color:
     var(--color-brown);
 
-  font-size: 10px;
+  font-size: var(--font-xs);
   font-weight: 600;
 
   cursor: pointer;
@@ -1013,55 +999,55 @@
 ========================================= */
 
 .adoption-applications__summary-card span {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__summary-card strong {
-  font-size: 24px;
+  font-size: var(--font-h2);
 }
 
 .adoption-applications__search input,
 .adoption-applications__filter-card select {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__table-header strong {
-  font-size: 14px;
+  font-size: var(--font-sm);
 }
 
 .adoption-applications__table-header span {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__table thead th {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__table tbody td {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__id strong,
 .adoption-applications__applicant strong,
 .adoption-applications__pet strong {
-  font-size: 12px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__id > div > span,
 .adoption-applications__pet span {
-  font-size: 10px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__review {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__pagination > span {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 .adoption-applications__pages button {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 
 
