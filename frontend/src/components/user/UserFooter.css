@@ -29,7 +29,7 @@
 .site-footer__text {
   margin: 0;
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   line-height: 1.5;
   color: #d9ccb8;
 }
@@ -38,7 +38,7 @@
   margin: 0 0 14px;
 
   color: var(--color-cream);
-  font-size: var(--font-label);
+  font-size: 15px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -52,7 +52,7 @@
   display: grid;
   gap: 10px;
 
-  font-size: var(--font-sm);
+  font-size: 14px;
 }
 
 .site-footer__list a {
@@ -91,7 +91,7 @@
 .site-footer__qr-caption {
   margin: 10px 0 0;
 
-  font-size: var(--font-xs);
+  font-size: 13px;
   line-height: 1.4;
   color: #d9ccb8;
 }
@@ -112,7 +112,7 @@
   background-color: transparent;
   color: var(--color-cream);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
 
@@ -146,7 +146,7 @@
 
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
   color: #d9ccb8;
 }
 

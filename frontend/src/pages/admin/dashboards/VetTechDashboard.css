@@ -91,7 +91,7 @@
 .vettech-dashboard__stat-label {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -99,7 +99,7 @@
 .vettech-dashboard__stat strong {
   color: var(--color-brown);
 
-  font-size: var(--font-h2);
+  font-size: 27px;
   line-height: 1;
 }
 
@@ -107,7 +107,7 @@
 .vettech-dashboard__stat small {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -208,7 +208,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-lg);
+  font-size: 17px;
 }
 
 
@@ -218,7 +218,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 
   line-height: 1.5;
 }
@@ -234,7 +234,7 @@
 
   color: var(--color-orange);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
   font-weight: 700;
 
   text-decoration: none;
@@ -316,7 +316,7 @@
   color:
     var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 11px;
   font-weight: 800;
 }
 
@@ -334,14 +334,14 @@
 .vettech-dashboard__vaccination-user strong {
   color: var(--color-text);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 
 .vettech-dashboard__vaccination-user span {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -358,7 +358,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 11px;
 }
 
 
@@ -390,7 +390,7 @@
 
   color: var(--color-orange);
 
-  font-size: var(--font-xs);
+  font-size: 11px;
   font-weight: 700;
 
   text-decoration: none;
@@ -423,7 +423,7 @@
 
   border-radius: 999px;
 
-  font-size: var(--font-xs);
+  font-size: 10px;
   font-weight: 700;
 }
 
@@ -533,14 +533,14 @@
 .vettech-dashboard__activity-info strong {
   color: var(--color-text);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 
 .vettech-dashboard__activity-info span {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -562,7 +562,7 @@
 .vettech-dashboard__activity-meta > span:last-child {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 }
 
 
@@ -662,14 +662,14 @@
 .vettech-dashboard__attention-title strong {
   color: var(--color-brown);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
 }
 
 
 .vettech-dashboard__attention-info > span {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -683,14 +683,14 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 11px;
 }
 
 
 .vettech-dashboard__attention-info small {
-  color: var(--color-muted);
+  color: #9b9186;
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 }
 
 
@@ -705,7 +705,7 @@
 
   color: white;
 
-  font-size: var(--font-xs);
+  font-size: 9px;
   font-weight: 700;
 }
 
@@ -722,7 +722,7 @@
 
 .vettech-dashboard__health-status--needs-checkup {
   background: #f4a261;
-  color: var(--color-brown);
+  color: #4d2a00;
 }
 
 
@@ -816,14 +816,14 @@
 .vettech-dashboard__quick-action strong {
   color: var(--color-brown);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
 }
 
 
 .vettech-dashboard__quick-action span {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -858,7 +858,7 @@
 .vettech-dashboard__empty strong {
   color: var(--color-brown);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
 }
 
 
@@ -867,7 +867,7 @@
 
   margin: 0;
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 

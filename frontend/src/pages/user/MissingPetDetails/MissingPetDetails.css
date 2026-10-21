@@ -9,6 +9,8 @@
 
 /* BACK */
 
+.missing-detail__back {
+  min-height: 40px;
 
 
 
@@ -25,7 +27,7 @@
 
   color: var(--color-orange);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
   font-weight: 700;
 
   letter-spacing: 1.8px;
@@ -59,7 +61,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
 }
 
 
@@ -72,7 +74,7 @@
 
   color: white;
 
-  font-size: var(--font-xs);
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -109,7 +111,7 @@
 .missing-detail__status--transfer {
   background-color: #e9c46a;
 
-  color: var(--color-brown);
+  color: #4d2a00;
 }
 
 
@@ -154,9 +156,9 @@
       rgba(242, 169, 0, 0.12)
     );
 
-  color: var(--color-brown);
+  color: #4d2a00;
 
-  font-size: var(--font-xs);
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -188,7 +190,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-h3);
+  font-size: 19px;
 }
 
 
@@ -225,14 +227,14 @@
 .missing-detail__row-label {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 
 .missing-detail__row strong {
   color: var(--color-text);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -286,7 +288,7 @@
 .missing-detail__location-grid small {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 
   text-transform: uppercase;
 
@@ -297,7 +299,7 @@
 .missing-detail__location-grid strong {
   color: var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -309,7 +311,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
   line-height: 1.75;
 }
 
@@ -352,7 +354,7 @@
 
 
   .missing-detail__title-row h1 {
-    font-size: var(--font-h1);
+    font-size: 36px;
   }
 
 
@@ -400,7 +402,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -473,7 +475,7 @@
 
 
 .missing-detail__gallery-placeholder span {
-  font-size: var(--font-xs);
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -481,7 +483,7 @@
 .missing-detail__gallery-placeholder small {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 

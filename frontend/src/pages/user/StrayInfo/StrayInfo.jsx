@@ -76,7 +76,7 @@ function StrayInfo() {
 
           <div>
             <dt>Currently at</dt>
-            <dd>{pet.location || pet.pound?.name || "The animal pound"}</dd>
+            <dd>{pet.location || "Pawmilya Animal Pound"}</dd>
           </div>
         </dl>
 
@@ -93,9 +93,7 @@ function StrayInfo() {
           ) : (
             <p>
               The owner is not known. If this is your pet, please contact the
-              {pet.pound?.name ? ` ${pet.pound.name}` : " animal pound"}
-              {pet.pound?.phone ? ` at ${pet.pound.phone}` : ""}
-              {pet.pound?.address ? ` (${pet.pound.address})` : ""}.
+              Pawmilya animal pound.
             </p>
           )}
         </section>

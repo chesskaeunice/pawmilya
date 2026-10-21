@@ -766,21 +766,21 @@ function Vaccinations() {
                 <td>
                   <div className="vaccinations__actions">
                     {canEdit && (
-                      <button type="button" className="ui-btn ui-btn--ghost ui-btn--sm" onClick={() => recordBooster(record)}>
+                      <button type="button" className="vaccinations__action" onClick={() => recordBooster(record)}>
                         <RefreshCw size={14} />
                         Booster
                       </button>
                     )}
 
                     {canEdit && (
-                      <button type="button" className="ui-btn ui-btn--ghost ui-btn--sm" onClick={() => openEdit(record)}>
+                      <button type="button" className="vaccinations__action" onClick={() => openEdit(record)}>
                         <Pencil size={14} />
                         Edit
                       </button>
                     )}
 
                     {canDelete && (
-                      <button type="button" className="ui-btn ui-btn--danger-ghost ui-btn--sm" onClick={() => setDeleting(record)}>
+                      <button type="button" className="vaccinations__action vaccinations__action--danger" onClick={() => setDeleting(record)}>
                         <Trash2 size={14} />
                         Delete
                       </button>

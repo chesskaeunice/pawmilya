@@ -43,7 +43,7 @@
 
 .modal__title {
   margin: 0;
-  font-size: var(--font-h3);
+  font-size: 22px;
 }
 
 .modal__close {

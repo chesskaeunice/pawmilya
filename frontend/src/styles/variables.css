@@ -3,7 +3,7 @@
 
   --color-cream: #f9e6a8;
   --color-gold: #f2a900;
-  --color-orange: #a85a00; /* darkened from #cc6f00 so orange text passes AA (4.5:1) on white and cream */
+  --color-orange: #cc6f00;
   --color-orange-bright: #cc6f00; /* fills and icons only, never small text */
   --color-brown: #4d2a00;
   --color-white: #ffffff;
@@ -15,14 +15,14 @@
   --color-surface-alt: #fbf8f2; /* zebra rows, subtle panels */
 
   --color-text: #2f271f;
-  --color-muted: #6b6157; /* AA on white and on the background */
+  --color-muted: #756b61; /* AA on white and on the background */
 
   --color-border: #e6ded2;
   --color-border-strong: #cfc4b3;
 
-  --color-success: #2f6b45;
-  --color-danger: #a83a3a;
-  --color-info: #3d6491;
+  --color-success: #39734d;
+  --color-danger: #b64646;
+  --color-info: #476f9e;
   --color-warning: #8a5a00;
 
   /* status badge fills (text uses the matching strong color) */
@@ -39,8 +39,7 @@
 
   /* ---------- Typography ---------- */
 
-  --font-family:
-    "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-family: Arial, Helvetica, sans-serif;
 
   /* Type scale. Rule: no text below --font-xs (13px). */
   --font-xs: 0.8125rem; /* 13px  badges, table headers, helper text, captions */

@@ -5,7 +5,7 @@ import { Download, Printer } from "lucide-react";
 
 import useFetch from "../../../hooks/useFetch.js";
 import { getAnimal, getAnimalQr } from "../../../services/animalService.js";
-import useSiteInfo from "../../../hooks/useSiteInfo.js";
+import { siteInfo } from "../../../data/siteInfo.js";
 
 import "./CollarTag.css";
 import BackButton from "../../../components/common/BackButton.jsx";
@@ -16,7 +16,6 @@ const COPY_OPTIONS = [1, 6, 12];
 // the name, the animal code and who to contact. Print it on a sheet and cut along the dashed line.
 function CollarTag() {
   const { animalId } = useParams();
-  const pound = useSiteInfo()?.pound ?? {};
 
   const { data: animal, loading } = useFetch(() => getAnimal(animalId), [animalId]);
   const { data: qrSvg } = useFetch(() => getAnimalQr(animalId), [animalId]);
@@ -111,8 +110,10 @@ function CollarTag() {
               <strong className="collar-tag__lead">If found, scan me</strong>
               <span className="collar-tag__name">{name}</span>
               <span>{animal.animal_code}</span>
-              {pound.name && <span className="collar-tag__pound">{pound.name}</span>}
-              {pound.phone && <span>{pound.phone}</span>}
+              <span className="collar-tag__pound">
+                {siteInfo.brandName} Animal Pound
+              </span>
+              <span>{siteInfo.contact.phone}</span>
             </div>
 
           </div>

@@ -1,29 +1,29 @@
-# Graph Report - Pawmilya-merged  (2026-10-21)
+# Graph Report - Pawmilya-merged  (2026-10-22)
 
 ## Corpus Check
-- 241 files · ~153,072 words
+- 239 files · ~152,494 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 87 file(s) not represented in the graph (top: .css 65, (none) 18, .example 2)
+- Unclassified: 86 file(s) not represented in the graph (top: .css 64, (none) 18, .example 2)
 
 ## Summary
-- 1743 nodes · 4168 edges · 132 communities (84 shown, 48 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 130 edges (avg confidence: 0.88)
+- 1735 nodes · 4128 edges · 119 communities (76 shown, 43 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 129 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4cab1d30`
+- Built from commit: `5568f93d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - index.js
 - AppRoutes.jsx
-- UserLayout.jsx
+- MyShiftController
 - PoundCare Proposal Concepts
 - frontend/package.json
-- ShiftsApiTest
-- StoreMissingPetRequest
-- StaffSchedule.jsx
+- ShiftService
+- Shift
+- KennelManagerDashboard.jsx
 - Search, Filters & Pagination
 - ShiftsApiTest
 - Illuminate\Database\Schema\Blueprint
@@ -63,96 +63,83 @@
 - Other Pet Placeholder
 - React Logo
 - Animal
-- Illuminate\Http\Request
+- Illuminate\Http\JsonResponse
 - Illuminate\Database\Eloquent\Model
 - Reports.jsx
 - vaccinations.js
 - AdoptionApplicationDetails.jsx
 - authService.js
-- PetPreviewCard.jsx
+- Home.jsx
 - AdminRoutes.jsx
 - Pawmilya
-- react
+- EmergencyReportModal.jsx
 - AdoptionApplication
 - Pawmilya
 - backend/README.md
-- React + Vite frontend
+- main.jsx
 - MissingPetReportDetails.jsx
 - TestCase
 - Development phases 0-8
-- react
+- VaccinationApiTest
 - React + Vite template (HMR)
 - dependencies
 - devDependencies
-- Vaccinations.jsx
+- StaffShift
 - AuthSecurityTest
 - Laravel 12 REST API backend
-- KennelManagerDashboard.jsx
+- AuditLog
 - MissingPetReport
 - AdoptionApplicationApiTest
 - MissingPetApiTest
 - User
 - AnimalApiTest
-- BackButton
-- AddAnimal.jsx
-- Illuminate\Http\Resources\Json\JsonResource
+- AdoptionApplication.jsx
+- lucide-react
+- Illuminate\Http\Request
 - Illuminate\Database\Seeder
-- formatApiError
-- MissingPetReportController.php
+- Animal.php
+- devDependencies
 - User Page Hero Banner Pattern (warm pet photography header)
 - AddVaccination.jsx
 - AuthController.php
 - applications.js
 - missingPets.js
-- AppRoutes
-- VetTechDashboard.jsx
-- PoundStaffDashboard.jsx
-- AdoptionCounselorDashboard.jsx
+- BackButton
+- scripts
+- scripts
+- frontend/vite.config.js
 - ChangePasswordRequest
 - RbacMatrixTest
-- Home.jsx
-- Illuminate\Foundation\Http\FormRequest
-- UserFooter.jsx
 - AuthTest
 - SiteContentApiTest
-- Illuminate\Contracts\Validation\Validator
-- useSiteInfo
-- SiteContentForm.jsx
+- Illuminate\Foundation\Http\FormRequest
+- LegalPage.jsx
 - UserManagementApiTest
-- previewService.js
-- ReportMissingPet.jsx
-- UpdateAnimalRequest.php
-- UserNavbar.jsx
-- RegisterRequest
-- liveSearch.js
-- StoreApplicationRequest
-- StoreAnimalRequest
-- StoreVaccinationRequest
-- UpdateVaccinationRequest
+- MissingPets.jsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `User` - 68 edges
 2. `BackButton()` - 62 edges
-3. `react` - 55 edges
-4. `useFetch()` - 51 edges
-5. `react-router-dom` - 50 edges
+3. `react` - 54 edges
+4. `react-router-dom` - 50 edges
+5. `useFetch()` - 49 edges
 6. `Animal` - 47 edges
 7. `useAuth()` - 44 edges
-8. `lucide-react` - 43 edges
-9. `AppRoutes()` - 43 edges
-10. `formatApiError()` - 38 edges
+8. `AppRoutes()` - 43 edges
+9. `lucide-react` - 42 edges
+10. `formatApiError()` - 35 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Mock login (no backend)` --references--> `useAuth()`  [INFERRED]
   README.md → frontend/src/hooks/useAuth.js
+- `API online/offline footer indicator` --references--> `api`  [INFERRED]
+  CLAUDE.md → frontend/src/services/api.js
 - `Auth (still mock)` --references--> `SignInModal()`  [INFERRED]
   CLAUDE.md → frontend/src/components/common/SignInModal.jsx
 - `Roles` --references--> `hasPermission()`  [INFERRED]
   CLAUDE.md → frontend/src/config/rolePermissions.js
-- `Folder structure (frontend/src)` --references--> `UserLayout()`  [INFERRED]
-  CLAUDE.md → frontend/src/layouts/UserLayout.jsx
-- `Known issues (not fixed yet)` --references--> `MyMissingPetReports()`  [INFERRED]
-  CLAUDE.md → frontend/src/pages/user/MyMissingPetReports/MyMissingPetReports.jsx
+- `Folder structure (frontend/src)` --references--> `useModals()`  [INFERRED]
+  CLAUDE.md → frontend/src/hooks/useModals.js
 
 ## Import Cycles
 - None detected.
@@ -184,47 +171,51 @@
 - **Staff Vaccinations Screen Layout** — wireframes_staff_side_screenshot_2026_10_16_233321_sidebar_navigation, wireframes_staff_side_screenshot_2026_10_16_233321_filter_toolbar, wireframes_staff_side_screenshot_2026_10_16_233321_vaccination_table, wireframes_staff_side_screenshot_2026_10_16_233321_pagination [INFERRED 0.85]
 - **User Pages Pet Photography Hero Banners** — frontend_src_assets_images_users_home_home_hero_home_hero_photo, frontend_src_assets_images_users_home_myapplications_hero_myapplications_hero_photo, frontend_src_assets_images_users_home_adoptablepets_hero_adoptablepets_hero_photo, frontend_src_assets_images_users_missing_pets_missing_pets_hero_missing_pets_hero_photo [INFERRED 0.85]
 
-## Communities (132 total, 48 thin omitted)
+## Communities (119 total, 43 thin omitted)
 
 ### Community 0 - "index.js"
-Cohesion: 0.15
-Nodes (9): Article Image 1 Placeholder, Article Image 2 Placeholder, Article Image 3 Placeholder, Article Image 4 Placeholder, Article Image 5 Placeholder, Article Image 6 Placeholder, Paw-Print Gradient Placeholder Template, Cat Photo Placeholder (+1 more)
+Cohesion: 0.12
+Nodes (10): Article Image 1 Placeholder, Article Image 2 Placeholder, Article Image 3 Placeholder, Article Image 4 Placeholder, Article Image 5 Placeholder, Article Image 6 Placeholder, aboutPlaceholders, Paw-Print Gradient Placeholder Template (+2 more)
 
 ### Community 1 - "AppRoutes.jsx"
-Cohesion: 0.23
-Nodes (13): Auth (still mock), Folder structure (frontend/src), AdminHeader(), AdminSidebar(), menuItems, RequirePermission(), RequireSignIn(), EmergencyButton() (+5 more)
+Cohesion: 0.17
+Nodes (27): Auth (still mock), Folder structure (frontend/src), AdminHeader(), AdminSidebar(), menuItems, RequirePermission(), RequireSignIn(), FieldError() (+19 more)
 
-### Community 2 - "UserLayout.jsx"
-Cohesion: 0.30
-Nodes (9): UserFooter(), ModalProvider(), prefersReducedMotion(), scrollToId(), useGoToSection(), useScrollOnNavigate(), FADE_PATHS, UserLayout() (+1 more)
+### Community 2 - "MyShiftController"
+Cohesion: 0.18
+Nodes (3): MyShiftController, AssignShiftRequest, ShiftAssignmentResource
 
 ### Community 3 - "PoundCare Proposal Concepts"
 Cohesion: 0.06
 Nodes (46): Adoption Application Management Feature, Adoption_Applications Table (Pending/Under Review/Approved/Rejected), Aiven for MySQL (managed free tier), Animal Record Management Feature, Animals Table (animal_code, species, status enum), REST API Endpoints (/api/animals, /api/adoption-applications, /api/missing-pets, /api/dashboard, /api/reports), Audit_Logs Table, AuthContext (Context API: user, role, token) (+38 more)
 
 ### Community 4 - "frontend/package.json"
-Cohesion: 0.13
-Nodes (14): axios, vite, name, private, scripts, build, dev, lint (+6 more)
+Cohesion: 0.22
+Nodes (8): axios, vite, name, private, type, version, @types/react, @types/react-dom
 
-### Community 5 - "ShiftsApiTest"
-Cohesion: 0.09
-Nodes (11): {closure#1}(), {closure#3}(), AssignShiftRequest, Setting, Shift, StaffShift, {closure#4}(), {closure#5}() (+3 more)
+### Community 5 - "ShiftService"
+Cohesion: 0.16
+Nodes (4): {closure#3}(), ScheduleController, {closure#1}(), ShiftService
 
-### Community 7 - "StaffSchedule.jsx"
-Cohesion: 0.21
-Nodes (21): MyShifts(), OnDutyToday(), addDays(), NONE, StaffSchedule(), STATUSES, assignShift(), changeAssignmentStatus() (+13 more)
+### Community 6 - "Shift"
+Cohesion: 0.18
+Nodes (3): {closure#1}(), Shift, {closure#3}()
+
+### Community 7 - "KennelManagerDashboard.jsx"
+Cohesion: 0.05
+Nodes (80): MyShifts(), OnDutyToday(), EMPTY, useAdminLists(), AdoptionCounselorDashboard(), DashboardCard(), EmptyState(), formatTimestamp() (+72 more)
 
 ### Community 8 - "Search, Filters & Pagination"
-Cohesion: 0.22
-Nodes (12): ALL_FIELDS, FilterDropdown(), Pagination(), SearchBar(), ArticleCard(), allArticles, Articles(), animalTypeOptions (+4 more)
+Cohesion: 0.17
+Nodes (16): ALL_FIELDS, FilterDropdown(), Pagination(), SearchBar(), useDebouncedValue(), AdoptablePets(), AGE_OPTIONS, allArticles (+8 more)
 
 ### Community 10 - "Illuminate\Database\Schema\Blueprint"
 Cohesion: 0.05
 Nodes (23): {closure#1}(), {closure#2}(), {closure#3}(), {closure#1}(), {closure#2}(), {closure#1}(), {closure#2}(), {closure#3}() (+15 more)
 
 ### Community 11 - "backend/package.json"
-Cohesion: 0.09
-Nodes (20): devDependencies, axios, concurrently, laravel-vite-plugin, tailwindcss, @tailwindcss/vite, vite, axios (+12 more)
+Cohesion: 0.20
+Nodes (9): axios, vite, private, $schema, type, concurrently, laravel-vite-plugin, tailwindcss (+1 more)
 
 ### Community 12 - "Admin Details Wireframes"
 Cohesion: 0.16
@@ -303,8 +294,8 @@ Cohesion: 0.38
 Nodes (7): Missing Pets Page (citizen wireframe), Footer (Socials, About, Contact, copyright), Hero Banner 'Help Bring Them Home' with Report Missing Pet CTA, Missing Pet Card Grid (image, name, breed, Active status, location found, date reported), Top Navbar (Home, Adoptable Pets, My Applications, Missing Pets, My Missing Pet Reports, Profile, Login, Sign Up), Report Missing Pet flow (CTA target), Search and Filter Bar (type, location, time, clear filters, sort by)
 
 ### Community 31 - "AppServiceProvider.php"
-Cohesion: 0.13
-Nodes (6): AppServiceProvider, {closure#1}(), {closure#2}(), {closure#3}(), {closure#4}(), PublicCache
+Cohesion: 0.15
+Nodes (5): AppServiceProvider, {closure#1}(), {closure#2}(), {closure#3}(), {closure#4}()
 
 ### Community 32 - "PHP Runtime Dependencies"
 Cohesion: 0.33
@@ -331,76 +322,72 @@ Cohesion: 0.67
 Nodes (3): extra, laravel, dont-discover
 
 ### Community 45 - "api.php"
-Cohesion: 0.12
-Nodes (5): AuditLogController, Controller, PasswordController, VaccinationController, GET /user()
+Cohesion: 0.08
+Nodes (6): AuditLogController, Controller, PasswordController, VaccinationController, StoreVaccinationRequest, GET /user()
 
 ### Community 59 - "Animal"
-Cohesion: 0.06
-Nodes (8): AnimalController, {closure#5}(), {closure#9}(), AnimalResource, Animal, {closure#1}(), {closure#2}(), VaccinationApiTest
+Cohesion: 0.08
+Nodes (5): AnimalController, {closure#5}(), UpdateAnimalRequest, AnimalResource, Animal
 
-### Community 60 - "Illuminate\Http\Request"
-Cohesion: 0.13
-Nodes (6): MyShiftController, ScheduleController, SiteContentController, UserManagementController, ShiftAssignmentResource, SiteContent
+### Community 60 - "Illuminate\Http\JsonResponse"
+Cohesion: 0.12
+Nodes (6): {closure#1}(), PublicAnimalController, {closure#1}(), SiteContentController, PublicCache, SiteContent
 
 ### Community 61 - "Illuminate\Database\Eloquent\Model"
-Cohesion: 0.08
-Nodes (6): {closure#5}(), {closure#2}(), AnimalPhoto, AuditLog, HealthLog, MissingPetPhoto
+Cohesion: 0.15
+Nodes (4): AnimalPhoto, HealthLog, MissingPetPhoto, Setting
 
 ### Community 63 - "Reports.jsx"
-Cohesion: 0.14
-Nodes (37): ACTIVITY, addDays(), AdoptionsReport(), AnimalsReport(), Bar(), countBy(), countOf(), daysFromToday() (+29 more)
+Cohesion: 0.08
+Nodes (58): ACTIVITY, addDays(), AdoptionsReport(), AnimalsReport(), Bar(), countBy(), countOf(), daysFromToday() (+50 more)
 
 ### Community 65 - "AdoptionApplicationDetails.jsx"
-Cohesion: 0.28
-Nodes (13): AdoptionApplicationDetails(), ContactRow(), Detail(), DocumentRow(), formatBirthDate(), OverviewItem(), Question(), ReviewRow() (+5 more)
+Cohesion: 0.23
+Nodes (15): AdoptionApplicationDetails(), ContactRow(), Detail(), DocumentRow(), formatBirthDate(), OverviewItem(), Question(), ReviewRow() (+7 more)
 
 ### Community 66 - "authService.js"
 Cohesion: 0.25
 Nodes (15): CITIZEN, hasPermission(), ROLE_LABELS, rolePermissions, ROLES, AuthContext, AuthProvider(), changePasswordRequest() (+7 more)
 
-### Community 67 - "PetPreviewCard.jsx"
-Cohesion: 0.24
-Nodes (8): articlePlaceholders, PetPreviewCard(), PreviewStatus(), ArticleDetails(), getAdoptableStatus(), getArticleById(), formatDate(), formatDateTime()
+### Community 67 - "Home.jsx"
+Cohesion: 0.11
+Nodes (25): articlePlaceholders, petPlaceholders, ArticleCard(), PetPreviewCard(), PreviewStatus(), getCurrentIndex(), isKeyboardFocus(), ScrollStrip() (+17 more)
 
 ### Community 68 - "AdminRoutes.jsx"
-Cohesion: 0.25
-Nodes (12): AdoptionApplications(), getApplicationDate(), getInitials(), NO_APPLICATIONS, SummaryCard(), Reports(), Settings(), AdminRoutes() (+4 more)
+Cohesion: 0.20
+Nodes (16): useFetch(), AdoptionApplications(), getApplicationDate(), getInitials(), NO_APPLICATIONS, SummaryCard(), AREAS, AuditLogs() (+8 more)
 
 ### Community 69 - "Pawmilya"
 Cohesion: 0.17
 Nodes (11): Data rules, Differences from Proposal Documentation.pdf, graphify-out knowledge graph, Pawmilya, Phases, Proposal Documentation.pdf (the paper), Required changes on top of the wireframes [CHANGE], Run (+3 more)
 
-### Community 70 - "react"
-Cohesion: 0.09
-Nodes (30): Modal(), SignInModal(), statuses, StatusHelp(), EmergencyReportFlow(), EmergencyReportModal(), emptyForm, isFutureDateTime() (+22 more)
+### Community 70 - "EmergencyReportModal.jsx"
+Cohesion: 0.07
+Nodes (36): Modal(), SignInModal(), EmergencyButton(), EmergencyReportFlow(), EmergencyReportModal(), emptyForm, isFutureDateTime(), joinList() (+28 more)
 
 ### Community 71 - "AdoptionApplication"
-Cohesion: 0.12
+Cohesion: 0.13
 Nodes (7): AdoptionApplicationController, {closure#1}(), {closure#5}(), {closure#6}(), ApplicationResource, {closure#1}(), AdoptionApplication
 
 ### Community 72 - "Pawmilya"
-Cohesion: 0.14
-Nodes (12): Backend, Configuration notes, Current status, Data rules, Differences from Proposal Documentation.pdf, First-time setup, Folder structure, Frontend (+4 more)
+Cohesion: 0.12
+Nodes (14): /api/health endpoint, API online/offline footer indicator, Backend, Configuration notes, Current status, Data rules, Differences from Proposal Documentation.pdf, First-time setup (+6 more)
 
 ### Community 73 - "backend/README.md"
 Cohesion: 0.22
 Nodes (8): About Laravel, Code of Conduct, Contributing, Laravel Sponsors, Learning Laravel, License, Premium Partners, Security Vulnerabilities
 
-### Community 74 - "React + Vite frontend"
-Cohesion: 0.15
-Nodes (14): /api/health endpoint, API online/offline footer indicator, AuthContext (planned), Open question: Continue with Google vs Sanctum only, React + Vite frontend, Reference UI (ui-reference/poundcare-frontend), Sanctum Bearer token auth, Wireframes (Staff Side / User Side screenshots) (+6 more)
+### Community 74 - "main.jsx"
+Cohesion: 0.22
+Nodes (7): Mock data (src/data, src/services/*Service.js), React + Vite frontend, frontend index.html (Pawmilya), Vite Lightning Bolt Favicon, App(), Vite Logo, react-dom
 
 ### Community 75 - "MissingPetReportDetails.jsx"
-Cohesion: 0.18
-Nodes (17): ContactRow(), Detail(), formatTimestamp(), InfoBox(), MissingPetReportDetails(), STATUS_OPTIONS, StatusBadge(), formatTimestamp() (+9 more)
+Cohesion: 0.16
+Nodes (20): Dashboard(), ContactRow(), Detail(), formatTimestamp(), InfoBox(), MissingPetReportDetails(), STATUS_OPTIONS, StatusBadge() (+12 more)
 
 ### Community 77 - "Development phases 0-8"
-Cohesion: 0.32
-Nodes (8): Adoption application (valid ID + proof of income uploads), [CHANGE] required changes on top of wireframes, Development phases 0-8, Missing Pet Reports (guest/citizen), Mock data (src/data, src/services/*Service.js), Vaccinations and health logs, Working rules, storage:link for uploaded photos/IDs
-
-### Community 78 - "react"
 Cohesion: 0.16
-Nodes (19): healthStatusClass(), statusClass(), useDebouncedValue(), AnimalDetails(), describeHistory(), DetailRow(), formatDate(), formatDateTime() (+11 more)
+Nodes (15): Adoption application (valid ID + proof of income uploads), AuthContext (planned), SVG QR codes (bacon/bacon-qr-code), [CHANGE] required changes on top of wireframes, Open question: Continue with Google vs Sanctum only, Development phases 0-8, Missing Pet Reports (guest/citizen), Reference UI (ui-reference/poundcare-frontend) (+7 more)
 
 ### Community 79 - "React + Vite template (HMR)"
 Cohesion: 0.29
@@ -414,113 +401,81 @@ Nodes (6): dependencies, axios, lucide-react, react, react-dom, react-router-dom
 Cohesion: 0.33
 Nodes (6): devDependencies, oxlint, @types/react, @types/react-dom, vite, @vitejs/plugin-react
 
-### Community 82 - "Vaccinations.jsx"
-Cohesion: 0.18
-Nodes (21): addDays(), catVaccines, dogVaccines, formatDate(), getStatus(), intervals, newRow(), nextDueFor() (+13 more)
+### Community 82 - "StaffShift"
+Cohesion: 0.23
+Nodes (4): StaffShift, {closure#4}(), {closure#5}(), {closure#6}()
 
 ### Community 84 - "Laravel 12 REST API backend"
-Cohesion: 0.17
-Nodes (10): robots.txt (allow all crawlers), Eloquent ORM, Laravel framework (default README), Schema migrations, SVG QR codes (bacon/bacon-qr-code), Laravel 12 REST API backend, MySQL / XAMPP MariaDB (DB poundcare), ProtectedRoute (planned) (+2 more)
+Cohesion: 0.20
+Nodes (8): robots.txt (allow all crawlers), Eloquent ORM, Laravel framework (default README), Schema migrations, Laravel 12 REST API backend, MySQL / XAMPP MariaDB (DB poundcare), ProtectedRoute (planned), Roles
 
-### Community 85 - "KennelManagerDashboard.jsx"
-Cohesion: 0.22
-Nodes (18): ACTIVE_MISSING_STATUSES, ATTENTION_STATUSES, BreakdownGroup(), countBy(), DashboardCard(), EmptyState(), formatTimestamp(), getDaysUntil() (+10 more)
+### Community 85 - "AuditLog"
+Cohesion: 0.20
+Nodes (3): {closure#9}(), {closure#5}(), AuditLog
 
 ### Community 86 - "MissingPetReport"
-Cohesion: 0.11
-Nodes (7): {closure#2}(), MissingPetReportController, MissingPetResource, StaffMissingPetResource, MissingPetReport, {closure#1}(), PoundMatcher
+Cohesion: 0.08
+Nodes (8): {closure#2}(), MissingPetReportController, StoreMissingPetRequest, MissingPetResource, StaffMissingPetResource, MissingPetReport, {closure#1}(), PoundMatcher
 
 ### Community 89 - "User"
-Cohesion: 0.16
-Nodes (4): {closure#2}(), {closure#1}(), User, UserFactory
+Cohesion: 0.14
+Nodes (3): {closure#2}(), User, UserFactory
 
-### Community 91 - "BackButton"
-Cohesion: 0.11
-Nodes (34): petPlaceholders, BackButton(), useFetch(), AREAS, AuditLogs(), formatTimestamp(), summarize(), AdoptablePets() (+26 more)
+### Community 91 - "AdoptionApplication.jsx"
+Cohesion: 0.21
+Nodes (13): ImageDropzone(), AdoptionApplication(), AgreeCheckbox(), EMPLOYMENT_OPTIONS, HOME_PHOTO_CHECKLIST, PROMPT_OPTIONS, PRONOUN_OPTIONS, RadioGroup() (+5 more)
 
-### Community 92 - "AddAnimal.jsx"
-Cohesion: 0.16
-Nodes (21): ADOPTION_NEEDS_CLEARED_MESSAGE, allowedStatuses(), ANIMAL_STATUSES, canBeAdoptable(), CLEARED, DEFAULT_HEALTH_STATUS, DEFAULT_STATUS, HEALTH_STATUSES (+13 more)
+### Community 92 - "lucide-react"
+Cohesion: 0.09
+Nodes (41): ADOPTABLE_STATUS, ADOPTION_NEEDS_CLEARED_MESSAGE, allowedStatuses(), ANIMAL_STATUSES, canBeAdoptable(), CLEARED, DEFAULT_HEALTH_STATUS, DEFAULT_STATUS (+33 more)
 
-### Community 93 - "Illuminate\Http\Resources\Json\JsonResource"
-Cohesion: 0.11
-Nodes (6): {closure#1}(), PublicAnimalController, {closure#1}(), MyApplicationResource, PublicAnimalResource, VaccinationResource
+### Community 93 - "Illuminate\Http\Request"
+Cohesion: 0.09
+Nodes (9): {closure#1}(), {closure#1}(), {closure#3}(), UserManagementController, MyApplicationResource, PublicAnimalResource, UserResource, VaccinationResource (+1 more)
 
 ### Community 94 - "Illuminate\Database\Seeder"
 Cohesion: 0.15
 Nodes (6): AdoptionApplicationSeeder, AnimalSeeder, DatabaseSeeder, MissingPetSeeder, ShiftSeeder, UserSeeder
 
-### Community 95 - "formatApiError"
-Cohesion: 0.31
-Nodes (14): FieldError(), PasswordHelp(), PasswordInput(), Card(), ChangePassword(), ForgotPassword(), ResetPassword(), Signup() (+6 more)
-
-### Community 96 - "MissingPetReportController.php"
-Cohesion: 0.13
-Nodes (3): {closure#1}(), {closure#3}(), Audit
+### Community 96 - "devDependencies"
+Cohesion: 0.29
+Nodes (7): devDependencies, axios, concurrently, laravel-vite-plugin, tailwindcss, @tailwindcss/vite, vite
 
 ### Community 97 - "User Page Hero Banner Pattern (warm pet photography header)"
 Cohesion: 0.33
 Nodes (7): Hero Layers Illustration (isometric stacked purple/white tiles, Vite template asset), Adoptable Pets Hero Photo (woman interacting with four dogs in a training/shelter room), Cat and Dog Companionship Imagery, Home Hero Photo (person holding two cream Labrador puppies outdoors), User Page Hero Banner Pattern (warm pet photography header), My Applications Hero Photo (two kittens and a puppy peeking over a white ledge), Missing Pets Hero Photo (orange kitten sleeping on a golden puppy)
 
 ### Community 99 - "AuthController.php"
-Cohesion: 0.21
-Nodes (3): AuthController, UserResource, LoginGuard
+Cohesion: 0.19
+Nodes (3): AuthController, {closure#2}(), LoginGuard
 
-### Community 104 - "AppRoutes"
-Cohesion: 0.17
-Nodes (13): Known issues (not fixed yet), App(), EditAnimal(), LegalPage(), DEFAULT_PROFILE, FIELD_ORDER, loadProfile(), Profile() (+5 more)
+### Community 104 - "BackButton"
+Cohesion: 0.12
+Nodes (25): Known issues (not fixed yet), BackButton(), BREEDS, EditAnimal(), MyApplications(), STATUS_FILTERS, MyMissingPetReports(), DEFAULT_PROFILE (+17 more)
 
-### Community 105 - "VetTechDashboard.jsx"
-Cohesion: 0.24
-Nodes (16): ATTENTION_PRIORITY, ATTENTION_STATUSES, DashboardCard(), EmptyState(), formatTimestamp(), getActivityDate(), getDueLabel(), getInitials() (+8 more)
+### Community 105 - "scripts"
+Cohesion: 0.40
+Nodes (5): scripts, build, dev, lint, preview
 
-### Community 106 - "PoundStaffDashboard.jsx"
-Cohesion: 0.24
-Nodes (14): Dashboard(), DashboardCard(), EmptyState(), formatTimestamp(), getAnimalDate(), getAnimalImage(), getAnimalLocation(), getAnimalNotes() (+6 more)
-
-### Community 107 - "AdoptionCounselorDashboard.jsx"
-Cohesion: 0.26
-Nodes (12): EMPTY, useAdminLists(), AdoptionCounselorDashboard(), DashboardCard(), EmptyState(), formatTimestamp(), getApplicationDate(), getInitials() (+4 more)
+### Community 106 - "scripts"
+Cohesion: 0.67
+Nodes (3): scripts, build, dev
 
 ### Community 108 - "ChangePasswordRequest"
-Cohesion: 0.17
-Nodes (3): ChangePasswordRequest, {closure#1}(), PasswordRules
+Cohesion: 0.09
+Nodes (5): ChangePasswordRequest, RegisterRequest, ResetPasswordRequest, {closure#1}(), PasswordRules
 
-### Community 110 - "Home.jsx"
-Cohesion: 0.27
-Nodes (7): getCurrentIndex(), isKeyboardFocus(), ScrollStrip(), useScrollReveal(), articles, Home(), getLatestAdoptablePets()
+### Community 115 - "Illuminate\Foundation\Http\FormRequest"
+Cohesion: 0.09
+Nodes (10): {closure#1}(), StoreApplicationRequest, {closure#1}(), StoreAnimalRequest, {closure#3}(), LoginRequest, {closure#1}(), {closure#1}() (+2 more)
 
-### Community 112 - "UserFooter.jsx"
-Cohesion: 0.24
-Nodes (5): exploreLinks, sectionLinks, siteInfo, checkHealth(), TOKEN_KEY
-
-### Community 115 - "Illuminate\Contracts\Validation\Validator"
-Cohesion: 0.29
-Nodes (5): {closure#1}(), {closure#1}(), {closure#1}(), {closure#1}(), {closure#1}()
-
-### Community 116 - "useSiteInfo"
-Cohesion: 0.33
-Nodes (7): LEGAL_UPDATED, legalOrder, legalPages, cached, loadSiteInfo(), useSiteInfo(), getSiteInfo()
-
-### Community 117 - "SiteContentForm.jsx"
-Cohesion: 0.42
-Nodes (8): ALLOWED_TYPES, ImageSlot(), lines(), SiteContentForm(), deleteSiteImage(), getSiteContent(), saveSiteContent(), uploadSiteImage()
-
-### Community 119 - "previewService.js"
-Cohesion: 0.33
-Nodes (7): ADOPTABLE_STATUS, articles, listMissingPets(), getAllArticles(), getLatestArticles(), getLatestMissingReports(), newestFirst()
-
-### Community 120 - "ReportMissingPet.jsx"
-Cohesion: 0.39
-Nodes (7): BREEDS, ImageUpload(), ReportMissingPet(), Required(), STATUS_OPTIONS, todayISO(), submitMissingPetReport()
-
-### Community 122 - "UserNavbar.jsx"
-Cohesion: 0.36
-Nodes (6): getLinks(), myApplicationsLink, myMissingReportsLink, sectionIds, UserNavbar(), useActiveSection()
-
-### Community 125 - "liveSearch.js"
+### Community 116 - "LegalPage.jsx"
 Cohesion: 0.70
-Nodes (4): containsQuery(), matchesArticleSearch(), matchesPetSearch(), toText()
+Nodes (3): LEGAL_UPDATED, legalOrder, legalPages
+
+### Community 125 - "MissingPets.jsx"
+Cohesion: 0.13
+Nodes (21): statuses, StatusHelp(), DetailRow(), formatTimestamp(), MissingPetDetails(), ALPHABET, formatTimestamp(), getReportedDate() (+13 more)
 
 ## Ambiguous Edges - Review These
 - `My Applications (Adoption Applications) Screen` → `View Details Button`  [AMBIGUOUS]
@@ -532,20 +487,20 @@ Nodes (4): containsQuery(), matchesArticleSearch(), matchesPetSearch(), toText()
 
 ## Knowledge Gaps
 - **98 isolated node(s):** `axios`, `concurrently`, `tailwindcss`, `vite`, `axios` (+93 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 482 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **48 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 484 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **43 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `User` connect `User` to `ShiftsApiTest`, `StoreMissingPetRequest`, `ShiftsApiTest`, `RoleMiddlewareTest`, `Animal`, `Illuminate\Http\Request`, `Illuminate\Database\Eloquent\Model`, `TestCase`, `AuthSecurityTest`, `MissingPetReport`, `AdoptionApplicationApiTest`, `MissingPetApiTest`, `AnimalApiTest`, `Illuminate\Database\Seeder`, `MissingPetReportController.php`, `AuthController.php`, `RbacMatrixTest`, `AuthTest`, `SiteContentApiTest`, `UserManagementApiTest`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+- **Why does `User` connect `User` to `ShiftService`, `Shift`, `ShiftsApiTest`, `RoleMiddlewareTest`, `TestCase`, `VaccinationApiTest`, `StaffShift`, `AuthSecurityTest`, `MissingPetReport`, `AdoptionApplicationApiTest`, `MissingPetApiTest`, `AnimalApiTest`, `Illuminate\Http\Request`, `Illuminate\Database\Seeder`, `AuthController.php`, `RbacMatrixTest`, `AuthTest`, `SiteContentApiTest`, `UserManagementApiTest`?**
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
 - **What connects `axios`, `concurrently`, `tailwindcss` to the rest of the system?**
   _98 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `index.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.14619883040935672 - nodes in this community are weakly interconnected._
-- **Why does `Animal` connect `Animal` to `AdoptionApplication`, `TestCase`, `RbacMatrixTest`, `SiteContentApiTest`, `Illuminate\Contracts\Validation\Validator`, `Illuminate\Http\Resources\Json\JsonResource`, `MissingPetReport`, `AdoptionApplicationApiTest`, `MissingPetApiTest`, `UpdateAnimalRequest.php`, `AnimalApiTest`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Seeder`, `AppServiceProvider.php`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+  _Cohesion score 0.12121212121212122 - nodes in this community are weakly interconnected._
+- **Why does `Animal` connect `Animal` to `AdoptionApplication`, `TestCase`, `AppServiceProvider.php`, `RbacMatrixTest`, `VaccinationApiTest`, `SiteContentApiTest`, `Illuminate\Foundation\Http\FormRequest`, `MissingPetReport`, `AdoptionApplicationApiTest`, `MissingPetApiTest`, `User`, `AnimalApiTest`, `Illuminate\Http\JsonResponse`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Seeder`, `Animal.php`?**
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Should `PoundCare Proposal Concepts` be split into smaller, more focused modules?**
   _Cohesion score 0.05697278911564626 - nodes in this community are weakly interconnected._
 

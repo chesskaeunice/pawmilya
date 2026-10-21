@@ -26,7 +26,7 @@
   background-color: var(--color-white);
   color: var(--color-brown);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   font-weight: 700;
 
   transition:

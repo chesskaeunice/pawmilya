@@ -22,8 +22,6 @@ import {
   ROLES,
 } from "../../../config/rolePermissions.js";
 
-import SiteContentForm from "./SiteContentForm.jsx";
-
 import "./Settings.css";
 import BackButton from "../../../components/common/BackButton.jsx";
 
@@ -247,6 +245,43 @@ function Settings() {
           <section className="settings__grid">
             <div className="staff-detail-card">
               <h2 className="staff-detail-card__title">
+                Organization Information
+              </h2>
+
+              <div className="settings__fields">
+                <label>
+                  Organization Name
+                  <input
+                    defaultValue="Pawmilya"
+                  />
+                </label>
+
+                <label>
+                  Contact Number
+                  <input
+                    placeholder="Contact number"
+                  />
+                </label>
+
+                <label>
+                  Email Address
+                  <input
+                    type="email"
+                    placeholder="Email address"
+                  />
+                </label>
+
+                <label>
+                  Office Address
+                  <input
+                    placeholder="Office address"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="staff-detail-card">
+              <h2 className="staff-detail-card__title">
                 Adoption Guidelines
               </h2>
 
@@ -257,9 +292,6 @@ function Settings() {
               />
             </div>
           </section>
-
-
-          <SiteContentForm />
 
 
           <section className="staff-detail-card settings__section">

@@ -25,7 +25,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 
   cursor: pointer;
 }
@@ -71,13 +71,13 @@
 }
 
 .reports__stat strong {
-  font-size: var(--font-h2);
+  font-size: 27px;
 }
 
 .reports__stat span:nth-child(2) {
   margin-top: 5px;
 
-  font-size: var(--font-xs);
+  font-size: 9px;
 }
 
 .reports__stat span:last-child {
@@ -132,7 +132,7 @@
 .reports__recent h2 {
   margin: 0 0 14px;
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 .reports__donut {
@@ -187,11 +187,11 @@
 }
 
 .reports__donut-circle strong {
-  font-size: var(--font-h3);
+  font-size: 20px;
 }
 
 .reports__donut-circle span {
-  font-size: var(--font-xs);
+  font-size: 8px;
 }
 
 .reports__legend-row {
@@ -200,7 +200,7 @@
 
   padding: 5px 0;
 
-  font-size: var(--font-xs);
+  font-size: 9px;
 }
 
 .reports__legend-row > span {
@@ -235,7 +235,7 @@
 
   margin-bottom: 12px;
 
-  font-size: var(--font-xs);
+  font-size: 9px;
 }
 
 .reports__type-row > span {
@@ -302,7 +302,7 @@
 .reports__month small {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 8px;
 }
 
 .reports__chart-legend {
@@ -315,7 +315,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 9px;
 }
 
 .reports__chart-legend span {
@@ -340,7 +340,7 @@
 
   color: var(--color-orange);
 
-  font-size: var(--font-xs);
+  font-size: 9px;
 
   cursor: pointer;
 }
@@ -364,7 +364,7 @@
 
   border-bottom: 1px solid #f0e8dc;
 
-  font-size: var(--font-xs);
+  font-size: 9px;
 }
 
 /* vaccinations tab: toolbar + needs-attention rows */
@@ -387,7 +387,7 @@
 
   background: white;
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 }
 
 .reports__export {
@@ -408,7 +408,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 
   cursor: pointer;
 }
@@ -442,7 +442,7 @@
 
   border-bottom: 1px solid #f0e8dc;
 
-  font-size: var(--font-xs);
+  font-size: 9px;
 }
 
 .reports__attention-row--two {
@@ -468,7 +468,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 11px;
 }
 
 .reports__tab:focus-visible,
@@ -518,7 +518,7 @@
   color: inherit;
 
   font: inherit;
-  font-size: var(--font-xs);
+  font-size: 9px;
   text-align: left;
 
   cursor: pointer;
@@ -538,7 +538,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 }
 
 .reports__attention-row--actions {
@@ -571,7 +571,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 9px;
   text-decoration: none;
   white-space: nowrap;
 
@@ -635,7 +635,7 @@
 .reports__modal h2 {
   margin: 0;
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 .reports__modal-head {
@@ -663,7 +663,7 @@
 
   color: #5c534a;
 
-  font-size: var(--font-xs);
+  font-size: 11px;
   line-height: 1.5;
 }
 
@@ -675,7 +675,7 @@
 
   color: #5c534a;
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 }
 
 .reports__modal input {
@@ -686,7 +686,7 @@
   border: 1px solid var(--color-border);
   border-radius: 7px;
 
-  font-size: var(--font-xs);
+  font-size: 11px;
 }
 
 .reports__modal-error {
@@ -694,7 +694,7 @@
 
   color: #b3392c;
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 }
 
 .reports__modal-actions {
@@ -722,7 +722,7 @@
 
   color: white;
 
-  font-size: var(--font-xs);
+  font-size: 11px;
 }
 
 @media (max-width: 900px) {
@@ -749,7 +749,7 @@
   color: inherit;
 
   font: inherit;
-  font-size: var(--font-xs);
+  font-size: 9px;
   text-align: left;
 
   cursor: pointer;
@@ -774,7 +774,7 @@
   color: inherit;
 
   font: inherit;
-  font-size: var(--font-xs);
+  font-size: 9px;
   text-align: left;
 
   cursor: pointer;

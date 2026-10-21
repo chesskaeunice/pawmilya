@@ -32,7 +32,7 @@
 
   color: var(--color-orange);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -55,7 +55,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-lg);
+  font-size: 17px;
   line-height: 1.7;
 }
 
@@ -80,7 +80,7 @@
 
   border-radius: 999px;
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   font-weight: 600;
 
   transition:
@@ -169,14 +169,14 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-h1);
+  font-size: 32px;
   letter-spacing: -1px;
 }
 
 .home__view-all {
   color: var(--color-orange);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -229,7 +229,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -242,7 +242,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-h3);
+  font-size: 20px;
 }
 
 .home__pet-details {
@@ -250,7 +250,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -267,7 +267,7 @@
   background-color: rgba(249, 230, 168, 0.45);
   color: var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -295,7 +295,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-h1);
+  font-size: 30px;
 }
 
 .home__process-grid {
@@ -322,7 +322,7 @@
 .home__process-number {
   color: var(--color-orange);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -331,7 +331,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-h3);
+  font-size: 20px;
 }
 
 .home__process-item p {
@@ -339,7 +339,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -378,7 +378,7 @@
   }
 
   .home__description {
-    font-size: var(--font-md);
+    font-size: 16px;
   }
 
   .home__hero-actions {
@@ -410,7 +410,7 @@
   }
 
   .home__section-header h2 {
-    font-size: var(--font-h2);
+    font-size: 27px;
   }
 
   .home__pet-grid {
@@ -424,7 +424,7 @@
   }
 
   .home__process h2 {
-    font-size: var(--font-h2);
+    font-size: 26px;
   }
 
   .home__process-grid {

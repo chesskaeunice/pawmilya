@@ -144,7 +144,7 @@
   background-color: var(--color-white);
   color: var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
   font-weight: 600;
 }
 

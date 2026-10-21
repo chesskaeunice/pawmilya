@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import homeHero from "../../../assets/images/users/home/home-hero.jpg";
+import { aboutPlaceholders } from "../../../assets/images/placeholders/index.js";
 
 import ScrollStrip from "../../../components/landing/ScrollStrip.jsx";
 import PetPreviewCard from "../../../components/landing/PetPreviewCard.jsx";
@@ -8,7 +9,6 @@ import ArticleCard from "../../../components/landing/ArticleCard.jsx";
 
 import useAuth from "../../../hooks/useAuth.js";
 import useFetch from "../../../hooks/useFetch.js";
-import useSiteInfo from "../../../hooks/useSiteInfo.js";
 import useScrollReveal from "../../../hooks/useScrollReveal.js";
 import { useGoToSection } from "../../../hooks/useSectionScroll.js";
 import {
@@ -22,6 +22,13 @@ import "./HomeSections.css";
 
 const articles = getLatestArticles(6);
 
+const aboutGoals = [
+  "Make it easy for families to find and adopt pets in need of a home.",
+  "Help lost pets and their owners find each other quickly.",
+  "Share clear, trustworthy guides on responsible pet care.",
+  "Support the local animal pound with simple, organized records.",
+];
+
 function Home() {
   const { isLoggedIn } = useAuth();
   const { data: adoptableData, loading: adoptableLoading, error: adoptableError } =
@@ -30,7 +37,6 @@ function Home() {
   const { data: missingData, loading: missingLoading, error: missingError } =
     useFetch(() => getLatestMissingReports(6), []);
   const missingReports = missingData ?? [];
-  const about = useSiteInfo()?.about;
   const goToSection = useGoToSection();
 
   useScrollReveal();
@@ -228,52 +234,47 @@ function Home() {
       </section>
 
 
-      {about && (
-        <section
-          className={`landing-section about reveal${about.images.length ? "" : " about--no-images"}`}
-          id="about"
-        >
+      <section className="landing-section about reveal" id="about">
 
-          {about.images.length > 0 && (
-            <div className="about__images">
-              {about.images.map((src) => (
-                <img key={src} src={src} alt="PAWmilya and the animals in its care" loading="lazy" />
-              ))}
-            </div>
-          )}
+        <div className="about__images">
+          <img
+            src={aboutPlaceholders[0]}
+            alt="PAWmilya team caring for rescued pets"
+            loading="lazy"
+          />
+          <img
+            src={aboutPlaceholders[1]}
+            alt="A family with their newly adopted pet"
+            loading="lazy"
+          />
+        </div>
 
-          <div className="about__text">
-            <p className="landing-section__eyebrow">About Us</p>
-            {about.headline && <h2>{about.headline}</h2>}
+        <div className="about__text">
+          <p className="landing-section__eyebrow">About Us</p>
+          <h2>Every pet deserves a safe place to call home.</h2>
 
-            {about.vision && (
-              <>
-                <h3>Our Vision</h3>
-                <p>{about.vision}</p>
-              </>
-            )}
+          <h3>Our Vision</h3>
+          <p>
+            A community where no pet is left without care, and every
+            animal can find a loving family.
+          </p>
 
-            {about.mission && (
-              <>
-                <h3>Our Mission</h3>
-                <p>{about.mission}</p>
-              </>
-            )}
+          <h3>Our Mission</h3>
+          <p>
+            To connect adopters, pet owners and the animal pound through one
+            simple platform for adoption, lost-and-found reports and pet
+            education.
+          </p>
 
-            {about.goals.length > 0 && (
-              <>
-                <h3>Our Goals</h3>
-                <ul className="about__goals">
-                  {about.goals.map((goal) => (
-                    <li key={goal}>{goal}</li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
+          <h3>Our Goals</h3>
+          <ul className="about__goals">
+            {aboutGoals.map((goal) => (
+              <li key={goal}>{goal}</li>
+            ))}
+          </ul>
+        </div>
 
-        </section>
-      )}
+      </section>
 
     </div>
   );

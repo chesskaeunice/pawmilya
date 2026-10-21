@@ -1,8 +1,20 @@
-// Fixed site info. Contact details, donation QR, About text and the in-kind wishlist
-// are edited by staff in Settings and come from /api/public/site-info (hooks/useSiteInfo.js).
+// PLACEHOLDER CONTACT DETAILS - replace with the real ones before release.
+// Everything marked PLACEHOLDER is NOT real information.
 export const siteInfo = {
   brandName: "PAWmilya",
   tagline: "Rescue, reunite and rehome pets across the community.",
+
+  contact: {
+    address: "PLACEHOLDER: City Animal Pound, Street Name, Quezon City",
+    phone: "PLACEHOLDER: (00) 0000-0000",
+    email: "PLACEHOLDER: hello@example.com",
+    hours: "PLACEHOLDER: Mon-Sat, 8:00 AM - 5:00 PM",
+  },
+
+  donation: {
+    caption: "Scan to support our rescued pets",
+    note: "PLACEHOLDER QR - swap the image file",
+  },
 
   // Legal pages (content in data/legalPages.js)
   legalLinks: [

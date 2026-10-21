@@ -127,14 +127,12 @@ Logic reference only: the old PHP project PharmAssist (sidebar, staff_dashboard,
 - `routes/UserRoutes.jsx` and `routes/AdminRoutes.jsx` are unused.
 - [CHANGE] items: all done except 9 and 12 which still need a check against the pages (status filter, filters on every list page). 8 stray QR code is done (Phase 3); 6 valid ID upload and the live adoption flow are done (Phase 4), 10 application detail shows pet pictures and location (Phase 4); 2, 3 and 4 (My Reports prompt, Missing Pets filters, Report form with breed dropdown, back button and guest reports) are done (Phase 5); 1 is done on Adoptable Pets (type, breed, sex, age; status does not apply because citizens only see Adoptable animals); 11 (vaccine dropdown and Add button) and 13 (staff shifts) are done (Phases 6-7); 9 and 12 (status filter, filters on list pages) exist on the Applications, Animals, Missing Pets, Vaccinations and audit pages. Check each against the pages before the phase that wires it.
 
-## Design system (frontend/src/styles)
-- Tokens in `styles/variables.css`: colors (+ badge fills), type scale, weights, spacing 4/8/12/16/24/32/48, radii, shadows, control heights, focus ring, z-index. Use variables, not hard-coded colors or sizes.
-- Type scale rule: **no text below 13px** (`--font-xs`). Scale: xs 13, sm 14, label 15, md 16 (body), lg 18, h3 20, h2 24-28, h1 32-40. One font family (`--font-family`), line-height 1.5.
-- Shared UI in `styles/ui.css`: use `.ui-btn` (+ `--secondary`, `--danger`, `--ghost`, `--danger-ghost`, `--icon`, `--sm`, `--lg`), `.ui-field`/`.ui-input`, `.ui-card`, `.ui-badge--success|warning|danger|info`, `.ui-state`. Existing button/field/badge classes are mapped to the same look there (`:is(button, a).class`); do not add one-off button or input styles.
-- Page header order on every page: `BackButton` (components/common) then title, subtitle, actions. Exceptions: Home and the staff Dashboard. No kebab (three-dot) menus: show visible action buttons.
-- Orange text uses `--color-orange` (AA on white); `--color-orange-bright` is for fills and icons only.
-- Guests see one Log In and one Sign Up in the navbar (top right); the staff header shows the user name and role as plain text, once (the sidebar only has the menu and Log out).
+## Design (frontend/src/styles)
+- The site keeps its original look (the merged design). The earlier site-wide restyle (shared `ui.css`, new type scale applied everywhere, new button/field/badge styles) was **reverted on request**: do not reintroduce it unless asked. `variables.css` still has extra tokens (type scale, badge colors, spacing) that only the newer components use (password fields, password pages).
+- Footer, Donate In-Kind pop-up, Home About section, Legal pages and collar tag use the static data in `data/siteInfo.js`, `data/inKindWishlist.js` and the about/donation placeholder images, as at first. The backend still has `GET /api/public/site-info` and the site-content endpoints, but no page uses them (the Settings editor was removed).
+- Kept UI changes: one Back button (components/common/BackButton) on all pages except Home and the staff Dashboard; staff header shows name and role once (sidebar has only the menu and a pinned Log out); no three-dot menus (Vaccinations has visible Booster/Edit/Delete buttons); guests see Log In and Sign Up in the navbar.
 - Permissions added: `animals.photo` (all staff: change the main photo), `qr.generate` (kennel manager and pound staff: stray QR / collar tag). Pound staff has no adoption application access.
+- The print margin for the collar tag sheet is in `index.html` (the CSS minifier rejects `@page`).
 
 ## Working rules
 - One phase at a time. Before each, state in 3-5 lines what will be built. After it, STOP, explain how to run/test, and wait for approval.

@@ -71,7 +71,7 @@
   background-color: transparent;
   color: var(--color-text);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   text-align: left;
 
   cursor: pointer;

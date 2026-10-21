@@ -48,4 +48,4 @@ export const getPet = (id) =>
 
 // Page opened from a QR code: pet info and owner info (when known)
 export const getStray = (token) =>
-  api.get(`/api/stray/${token}`).then((res) => ({ ...res.data.data, pound: res.data.pound }));
+  api.get(`/api/stray/${token}`).then((res) => res.data.data);

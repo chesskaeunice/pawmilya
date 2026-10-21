@@ -2,6 +2,8 @@
    BACK
 ========================================= */
 
+.missing-details__back {
+  min-height: 38px;
 
 
 
@@ -38,7 +40,7 @@
 
   color: white;
 
-  font-size: var(--font-xs);
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -84,7 +86,7 @@
     #e9c46a;
 
   color:
-    var(--color-brown);
+    #4d2a00;
 }
 
 
@@ -153,9 +155,9 @@
   margin: 0;
 
   color:
-    var(--color-brown);
+    #4d2a00;
 
-  font-size: var(--font-lg);
+  font-size: 17px;
 }
 
 
@@ -165,7 +167,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 
   line-height: 1.5;
 }
@@ -247,7 +249,7 @@
   color:
     var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 
@@ -255,7 +257,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 11px;
 }
 
 
@@ -293,7 +295,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 
   cursor: pointer;
 }
@@ -393,7 +395,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 }
 
 
@@ -401,7 +403,7 @@
   color:
     var(--color-text);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -466,7 +468,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 
   text-transform: uppercase;
 }
@@ -476,7 +478,7 @@
   color:
     var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
 
   line-height: 1.5;
 }
@@ -536,7 +538,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -544,7 +546,7 @@
   color:
     var(--color-text);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 
@@ -564,7 +566,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 10px;
   font-weight: 700;
 }
 
@@ -586,7 +588,7 @@
     var(--color-text);
 
   font-family: inherit;
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -610,7 +612,7 @@
 
   color: white;
 
-  font-size: var(--font-xs);
+  font-size: 11px;
   font-weight: 700;
 
   cursor: pointer;
@@ -634,7 +636,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 
   line-height: 1.75;
 }
@@ -663,7 +665,7 @@
   color:
     var(--color-brown);
 
-  font-size: var(--font-h3);
+  font-size: 22px;
 }
 
 
@@ -671,7 +673,7 @@
   color:
     var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 

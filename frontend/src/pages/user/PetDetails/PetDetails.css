@@ -22,7 +22,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 .pet-details__breadcrumb a:hover {
@@ -92,7 +92,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -103,7 +103,7 @@
 
   color: var(--color-orange);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
   font-weight: 700;
 
   letter-spacing: 1.5px;
@@ -125,7 +125,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-label);
+  font-size: 15px;
 }
 
 .pet-details__description {
@@ -158,13 +158,13 @@
 .pet-details__data span {
   color: var(--color-muted);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 .pet-details__data strong {
   color: var(--color-text);
 
-  font-size: var(--font-xs);
+  font-size: 13px;
 }
 
 
@@ -196,7 +196,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-xs);
+  font-size: 12px;
 }
 
 
@@ -221,7 +221,7 @@
 
   color: var(--color-brown);
 
-  font-size: var(--font-h2);
+  font-size: 26px;
 }
 
 .pet-details__adoption > p:not(.pet-details__eyebrow) {
@@ -229,7 +229,7 @@
 
   color: var(--color-muted);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -248,7 +248,7 @@
 
   color: var(--color-white);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   font-weight: 700;
 }
 

@@ -2,7 +2,7 @@
   margin: 0 0 18px;
 
   color: var(--color-muted);
-  font-size: var(--font-label);
+  font-size: 15px;
 }
 
 /* two wishlists side by side, stacked on phones */
@@ -31,7 +31,7 @@
   margin: 0 0 12px;
 
   color: var(--color-brown);
-  font-size: var(--font-lg);
+  font-size: 17px;
 }
 
 .inkind__card-icon {
@@ -66,7 +66,7 @@
   gap: 8px;
 
   color: var(--color-text);
-  font-size: var(--font-sm);
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -90,7 +90,7 @@
   background-color: rgba(249, 230, 168, 0.45);
   color: var(--color-brown);
 
-  font-size: var(--font-sm);
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -103,7 +103,7 @@
   margin: 14px 0 0;
 
   color: var(--color-text);
-  font-size: var(--font-sm);
+  font-size: 14px;
   line-height: 1.6;
 
   overflow-wrap: anywhere;
