@@ -30,6 +30,8 @@ class MissingPetResource extends JsonResource
             'petImages' => $petPhotos,
             'lastSeenImages' => $areaPhotos,
             'details' => $this->details,
+            // end of the 7-day claim period of a Rescued pet (null before it is Rescued)
+            'claimDeadlineAt' => $this->claim_deadline_at?->toIso8601String(),
         ];
     }
 }

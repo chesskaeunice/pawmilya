@@ -288,13 +288,13 @@ function Animals() {
                       View
                     </Link>
 
-                    {can("qr.generate") && (
+                    {can("qr.view") && (
                       <Link
                         to={`/admin/animals/${pet.id}/collar-tag`}
                         className="animals__view"
                       >
                         <QrCode size={14} />
-                        Generate QR
+                        View QR
                       </Link>
                     )}
 

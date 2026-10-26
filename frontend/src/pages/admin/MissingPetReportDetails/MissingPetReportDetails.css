@@ -7,8 +7,6 @@
 }
 
 
-
-
 /* =========================================
    HEADER
 ========================================= */
@@ -52,18 +50,16 @@
 }
 
 
-.missing-details__status--sighted {
+.missing-details__status--rescued {
   background:
-    #f4a261;
-
-  color:
-    var(--color-brown);
+    #2a9d8f;
 }
 
 
-.missing-details__status--found {
-  background:
-    #2a9d8f;
+.missing-details__status--for-adoption {
+  background-color: #2f855a;
+
+  color: #ffffff;
 }
 
 

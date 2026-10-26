@@ -20,6 +20,12 @@ import SearchBar from "../../../components/common/SearchBar.jsx";
 import { displayPetName } from "../../../utils/petName.js";
 import { matchesPetSearch } from "../../../utils/liveSearch.js";
 import StatusHelp from "../../../components/common/StatusHelp/StatusHelp.jsx";
+import { claimPeriodText } from "../../../utils/claimPeriod.js";
+import useAuth from "../../../hooks/useAuth.js";
+import useModals from "../../../hooks/useModals.js";
+import useMyClaims from "../../../hooks/useMyClaims.js";
+import ClaimPetButton from "../../../components/report/ClaimPetButton.jsx";
+import ClaimPetModal from "../../../components/report/ClaimPetModal.jsx";
 
 import missingPetsHero from "../../../assets/images/users/missing-pets/missing-pets-hero.jpg";
 
@@ -41,11 +47,11 @@ const statusDescriptions = {
   Lost:
     "This pet is currently missing and the owner is actively searching.",
 
-  Sighted:
-    "This pet has recently been seen in a reported location, but has not yet been safely found.",
+  Rescued:
+    "This pet was brought to the pound and is being kept safe. The owner has 7 days to claim it.",
 
-  Found:
-    "This pet has been found and is currently being kept safe.",
+  "For Adoption":
+    "The claim period has ended. This pet can now be adopted once it is cleared by the vet.",
 
   Reunited:
     "This pet has successfully been returned to its family.",
@@ -65,6 +71,21 @@ function MissingPets() {
   // All reports are loaded once; the search and filters below run on this list
   const { data: reports } = useFetch(() => listMissingPets(), []);
   const missingPets = reports ?? NO_REPORTS;
+
+  // "Claim Pet": guests get the sign-in pop-up first, citizens get the claim form
+  const { isLoggedIn } = useAuth();
+  const { openSignIn } = useModals();
+  const { pendingReportIds, reload: reloadClaims } = useMyClaims();
+  const [claiming, setClaiming] = useState(null);
+
+  const startClaim = (report) => {
+    if (!isLoggedIn) {
+      openSignIn("/missing-pets", "You need an account to claim a pet.");
+      return;
+    }
+
+    setClaiming(report);
+  };
 
   // live search: the grid filters on every keystroke
   const [search, setSearch] =
@@ -558,12 +579,12 @@ function MissingPets() {
                   Lost
                 </option>
 
-                <option value="Sighted">
-                  Sighted
+                <option value="Rescued">
+                  Rescued
                 </option>
 
-                <option value="Found">
-                  Found
+                <option value="For Adoption">
+                  For Adoption
                 </option>
 
                 <option value="Reunited">
@@ -846,6 +867,12 @@ function MissingPets() {
 
                   </p>
 
+                  {["Rescued", "For Adoption"].includes(pet.status) && pet.claimDeadlineAt && (
+                    <p className="missing-pets__claim">
+                      {claimPeriodText(pet.claimDeadlineAt)}
+                    </p>
+                  )}
+
 
                   {/* PET INFORMATION */}
 
@@ -903,6 +930,12 @@ function MissingPets() {
 
                     </div>
 
+
+                    <ClaimPetButton
+                      report={pet}
+                      pendingReportIds={pendingReportIds}
+                      onClaim={startClaim}
+                    />
 
                     <div className="missing-pets__view-details">
 
@@ -1095,6 +1128,13 @@ function MissingPets() {
       {/* STATUS HELP */}
 
       <StatusHelp />
+
+      {/* outside the clickable cards, so clicks in the form never open a details page */}
+      <ClaimPetModal
+        report={claiming}
+        onClose={() => setClaiming(null)}
+        onSubmitted={reloadClaims}
+      />
 
     </div>
   );

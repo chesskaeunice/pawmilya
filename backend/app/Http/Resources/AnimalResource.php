@@ -35,8 +35,14 @@ class AnimalResource extends JsonResource
             'dateAdded' => $this->rescued_at?->toDateString(),
             'owner_name' => $this->owner_name,
             'owner_contact' => $this->owner_contact,
+            // set while the pet can still be claimed (animals registered from a Rescued report)
+            'claimDeadlineAt' => $this->missingPetReport?->inClaimPeriod() ? $this->missingPetReport->claim_deadline_at->toIso8601String() : null,
+            // set once the claim period ended and the report is For Adoption (waiting for the vet's clearance)
+            'claimEndedAt' => $this->missingPetReport?->status === 'For Adoption' ? $this->missingPetReport->claim_deadline_at?->toIso8601String() : null,
             'image' => $photos->first(),
             'images' => $photos,
+            // with ids, so staff can remove one
+            'photos' => $this->photos->map(fn ($photo) => ['id' => $photo->id, 'url' => $photo->url()])->values(),
         ];
     }
 }

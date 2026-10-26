@@ -94,18 +94,19 @@ function StrayInfo() {
               {pet.owner.contact && <p>{pet.owner.contact}</p>}
             </>
           ) : (
-            <p>
-              The owner is not known. If this is your pet, please contact the
-              Pawmilya animal pound.
-            </p>
+            // no owner yet: the pet is in the pound's care, so show the pound
+            <>
+              <p>
+                This pet is currently in the care of {pound.name}. If this is your pet,
+                please contact us.
+              </p>
+
+              <p><strong>{pound.name}</strong></p>
+              {pound.address && <p>{pound.address}</p>}
+              {pound.phone && <p>{pound.phone}</p>}
+              {pound.hours && <p>{pound.hours}</p>}
+            </>
           )}
-        </section>
-
-        <section className="stray__owner">
-          <h2>{pound.name}</h2>
-
-          {pound.address && <p>{pound.address}</p>}
-          {pound.phone && <p>{pound.phone}</p>}
         </section>
 
       </div>

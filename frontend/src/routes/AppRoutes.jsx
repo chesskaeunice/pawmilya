@@ -240,7 +240,7 @@ function AppRoutes() {
 
         <Route
           path="/admin/animals/:animalId/collar-tag"
-          element={<RequirePermission permission="qr.generate"><CollarTag /></RequirePermission>}
+          element={<RequirePermission permission="qr.view"><CollarTag /></RequirePermission>}
         />
 
         <Route

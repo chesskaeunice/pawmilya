@@ -11,6 +11,19 @@ use Illuminate\Http\Request;
 // $actor is for requests that are not authenticated yet (login, reset)
 class Audit
 {
+    // An automatic change (scheduler, or the first missing pet list call after a deadline passed)
+    public static function system(string $action, ?Model $entity = null, array $details = []): AuditLog
+    {
+        return AuditLog::create([
+            'user_id' => null,
+            'action' => $action,
+            'entity_type' => $entity ? class_basename($entity) : null,
+            'entity_id' => $entity?->getKey(),
+            'details' => $details + ['by' => 'system'],
+            'ip_address' => null,
+        ]);
+    }
+
     public static function record(Request $request, string $action, ?Model $entity = null, array $details = [], ?User $actor = null): AuditLog
     {
         return AuditLog::create([

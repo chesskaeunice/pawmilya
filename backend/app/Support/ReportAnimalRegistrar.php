@@ -9,14 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
-// A Found missing pet report means the pet is at the pound: this makes it an animal (status Rescued)
-// and links the two. Used by the "Register in pound" button and when staff set a report to Found.
+// A Rescued missing pet report means the pet is at the pound: this makes it an animal (status Rescued)
+// and links the two. Used when a report is submitted, by the "Register in pound" button and when staff
+// set a report to Rescued.
 class ReportAnimalRegistrar
 {
     // Creates the animal from the report (photos copied, first = main) and links it.
     // Run it inside a DB transaction with the report row locked; the caller has already checked
     // that the report has no animal yet. If anything fails, the copied files are removed again.
-    public function register(MissingPetReport $report, User $user): Animal
+    public function register(MissingPetReport $report, ?User $user): Animal
     {
         $animal = null;
 
@@ -35,11 +36,9 @@ class ReportAnimalRegistrar
                 'health_status' => 'Under Observation',
                 'rescued_at' => now()->toDateString(),
                 'description' => $report->details,
-                // so the QR page shows who to contact
-                'owner_name' => $report->contact_name,
-                'owner_contact' => $report->contact_number,
+                // the reporter's contact details stay on the report only; the QR page shows the pound's
             ]);
-            $animal->created_by = $user->id;
+            $animal->created_by = $user?->id; // null for a guest report
             $animal->save();
 
             // the report's pet photos become the animal's photos (first = main)
@@ -70,12 +69,14 @@ class ReportAnimalRegistrar
     }
 
     // Call after the transaction has committed
-    public function audit(Request $request, Animal $animal, MissingPetReport $report): void
+    public function audit(Request $request, Animal $animal, MissingPetReport $report, bool $automatic = false): void
     {
         Audit::record($request, 'animal.created', $animal, [
             'animal_code' => $animal->animal_code,
             'source' => 'missing_pet_report',
             'report_id' => $report->id,
+            // true when the animal was registered automatically on submit
+            'automatic' => $automatic,
         ]);
     }
 }

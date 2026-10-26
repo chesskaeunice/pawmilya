@@ -12,8 +12,8 @@ export const animalTypeOptions = ["Dog", "Cat", "Others"];
 
 export const statusOptions = [
   "Lost",
-  "Sighted",
-  "Found",
+  "Rescued",
+  "For Adoption",
   "Reunited",
   "Adopted",
   "Transfer",

@@ -29,8 +29,8 @@ import SafeImage from "../../../components/common/SafeImage.jsx";
 
 const ACTIVE_MISSING_STATUSES = [
   "Lost",
-  "Sighted",
-  "Found",
+  "Rescued",
+  "For Adoption",
 ];
 
 const ATTENTION_STATUSES = [
@@ -576,7 +576,7 @@ function KennelManagerDashboard() {
 
           <DashboardCard
             title="Open Cases"
-            subtitle="Latest lost, sighted, and found pet reports."
+            subtitle="Latest lost, rescued, and for adoption pet reports."
             actionText="View All Reports"
             actionTo="/admin/missing-pets"
           >

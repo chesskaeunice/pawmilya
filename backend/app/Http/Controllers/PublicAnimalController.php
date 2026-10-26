@@ -72,6 +72,6 @@ class PublicAnimalController extends Controller
             ]),
             // Pound details for "contact the pound" on the scan page
             'pound' => array_intersect_key(SiteContent::publicPayload()['pound'], array_flip(['name', 'phone', 'address'])),
-        ]);
+        ])->header('Cache-Control', 'no-store, private'); // read fresh on every scan
     }
 }

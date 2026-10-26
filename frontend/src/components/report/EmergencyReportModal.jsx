@@ -32,7 +32,6 @@ const emptyForm = {
   breed: "",
   description: "",
   // Step 2: last seen + contact
-  reportType: "Lost",
   reporterType: "",
   street: "",
   barangay: "",
@@ -207,7 +206,6 @@ function EmergencyReportFlow({ onClose }) {
     body.append("other_species", values.species === "Others" ? values.otherSpecies.trim() : "");
     body.append("breed", values.breed.trim());
     body.append("details", values.description.trim());
-    body.append("status", values.reportType);
     body.append("location", location);
     body.append("last_seen_at", values.dateTime);
     body.append("reporter_type", values.reporterType);
@@ -491,35 +489,14 @@ function EmergencyReportFlow({ onClose }) {
           </div>
         </div>
 
-        <fieldset className="emergency__type">
-          <legend className="mform__label">What are you reporting?</legend>
-
-          <label className={values.reportType === "Lost" ? "emergency__choice emergency__choice--on" : "emergency__choice"}>
-            <input
-              type="radio"
-              name="reportType"
-              value="Lost"
-              checked={values.reportType === "Lost"}
-              onChange={setField("reportType")}
-            />
-            My pet is lost
-          </label>
-
-          <label className={values.reportType === "Sighted" ? "emergency__choice emergency__choice--on" : "emergency__choice"}>
-            <input
-              type="radio"
-              name="reportType"
-              value="Sighted"
-              checked={values.reportType === "Sighted"}
-              onChange={setField("reportType")}
-            />
-            I spotted a pet
-          </label>
-        </fieldset>
+        <p className="emergency__note">
+          <strong>The pet is brought to the pound.</strong> When you submit, the pet is registered at
+          the pound as Rescued, and its owner has 7 days to claim it.
+        </p>
 
         <div className={fieldClass("dateTime")}>
           <label className="mform__label" htmlFor="er-datetime">
-            Date &amp; Time {values.reportType === "Lost" ? "Lost" : "Spotted"}
+            Date &amp; Time Rescued
           </label>
           <input
             id="er-datetime"

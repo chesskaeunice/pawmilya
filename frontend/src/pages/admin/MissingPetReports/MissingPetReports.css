@@ -298,18 +298,16 @@
 }
 
 
-.missing-admin__status--sighted {
+.missing-admin__status--rescued {
   background:
-    #f4a261;
-
-  color:
-    #4d2a00;
+    #2a9d8f;
 }
 
 
-.missing-admin__status--found {
-  background:
-    #2a9d8f;
+.missing-admin__status--for-adoption {
+  background-color: #2f855a;
+
+  color: #ffffff;
 }
 
 

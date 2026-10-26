@@ -1,0 +1,210 @@
+/* Shared photo gallery (citizen Pet Details and staff Animal Details).
+   A page can change the corners with --gallery-radius on a parent or on .photo-gallery. */
+
+.photo-gallery {
+  --gallery-radius: var(--radius-medium);
+  --gallery-gap: 8px;
+
+  width: 100%;
+}
+
+.photo-gallery:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 4px;
+  border-radius: var(--gallery-radius);
+}
+
+
+/* BIG PHOTO: a fixed ratio, so the page does not jump when the photo changes */
+
+.photo-gallery__stage {
+  position: relative;
+
+  aspect-ratio: 4 / 3;
+
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--gallery-radius);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(249, 230, 168, 0.8),
+      rgba(242, 169, 0, 0.12)
+    );
+}
+
+.photo-gallery__stage--empty {
+  display: grid;
+  place-items: center;
+
+  color: var(--color-muted);
+}
+
+.photo-gallery__photo {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  opacity: 0;
+
+  transition: opacity 0.4s ease;
+}
+
+.photo-gallery__photo.is-active {
+  opacity: 1;
+}
+
+.photo-gallery__stage--empty .photo-gallery__photo {
+  position: static;
+}
+
+
+/* ROUND BUTTONS (arrows and pause) */
+
+.photo-gallery__round {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background-color: rgba(77, 42, 0, 0.55);
+  color: var(--color-white);
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+}
+
+.photo-gallery__round:hover {
+  background-color: rgba(77, 42, 0, 0.8);
+}
+
+.photo-gallery__round:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.photo-gallery__pause {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+
+/* THUMBNAIL ROW: equal squares, four in view, the row scrolls when there are more */
+
+.photo-gallery__strip {
+  position: relative;
+
+  margin-top: var(--gallery-gap);
+}
+
+.photo-gallery__thumbs {
+  position: relative;
+
+  display: flex;
+  gap: var(--gallery-gap);
+
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.photo-gallery__thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.photo-gallery__thumb {
+  flex: 0 0 calc((100% - 3 * var(--gallery-gap)) / 4);
+
+  aspect-ratio: 1 / 1;
+
+  padding: 0;
+
+  overflow: hidden;
+
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+
+  background-color: var(--color-cream);
+
+  cursor: pointer;
+
+  transition: border-color 0.2s ease;
+}
+
+.photo-gallery__thumb img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.photo-gallery__thumb:hover {
+  border-color: var(--color-gold);
+}
+
+.photo-gallery__thumb:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* the active photo: thicker accent border */
+.photo-gallery__thumb--active,
+.photo-gallery__thumb--active:hover {
+  border-width: 4px;
+  border-color: var(--color-orange);
+}
+
+
+/* arrows sit on the left and right edge of the thumbnail row */
+
+.photo-gallery__arrow {
+  position: absolute;
+  top: 50%;
+
+  transform: translateY(-50%);
+}
+
+.photo-gallery__arrow--prev {
+  left: 6px;
+}
+
+.photo-gallery__arrow--next {
+  right: 6px;
+}
+
+
+@media (max-width: 600px) {
+
+  .photo-gallery__round {
+    width: 34px;
+    height: 34px;
+  }
+
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  .photo-gallery__photo,
+  .photo-gallery__thumb,
+  .photo-gallery__round {
+    transition: none;
+  }
+
+}

@@ -113,6 +113,25 @@ class UpdateAnimalRequest extends FormRequest
                 $status = $this->input('status', $animal->status);
                 $health = $this->input('health_status', $animal->health_status);
 
+                // a pet from a report stays Rescued while its owner can still claim it
+                $report = $animal->missingPetReport;
+                $inClaimPeriod = $report?->inClaimPeriod() ?? false;
+
+                if ($inClaimPeriod) {
+                    $until = $report->claim_deadline_at->format('M j, Y');
+
+                    // health clearance opens after the claim period (other health changes stay allowed)
+                    if ($this->input('health_status') === Animal::CLEARED && $animal->health_status !== Animal::CLEARED) {
+                        $validator->errors()->add('health_status', "This pet is still in its claim period until {$until}. Health clearance opens after that.");
+                    }
+
+                    if ($this->input('status') === Animal::ADOPTABLE && $animal->status !== Animal::ADOPTABLE) {
+                        $validator->errors()->add('status', "This pet is still in its claim period until {$until}. It can only become available for adoption after that, once the vet has cleared it.");
+                    }
+
+                    return;
+                }
+
                 if ($status === Animal::ADOPTABLE && $health !== Animal::CLEARED) {
                     $validator->errors()->add('status', StoreAnimalRequest::CLEARED_MESSAGE);
                 }

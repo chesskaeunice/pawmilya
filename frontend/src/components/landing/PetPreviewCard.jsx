@@ -11,8 +11,8 @@ import "./PreviewCards.css";
 import SafeImage from "../common/SafeImage.jsx";
 
 // One card for both previews:
-//   kind="adoptable" -> item from pets.js, opens /adoptable-pets/:id
-//   kind="missing"   -> item from missingPets.js, opens /missing-pets/:id
+//   kind="adoptable" -> item from the adoptable pets API, opens /adoptable-pets/:id
+//   kind="missing"   -> item from the missing reports API, opens /missing-pets/:id
 function PetPreviewCard({ kind, item }) {
   const isMissing = kind === "missing";
   const name = displayPetName(item.name);

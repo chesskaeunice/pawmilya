@@ -154,11 +154,11 @@ class RbacMatrixTest extends TestCase
         $this->as('pound_staff')->postJson($url, ['image' => UploadedFile::fake()->create('x.pdf', 5, 'application/pdf')])->assertUnprocessable();
     }
 
-    public function test_qr_generation_is_for_pound_staff_only(): void
+    public function test_the_qr_can_be_viewed_by_pound_staff_and_kennel_manager_only(): void
     {
         $animal = $this->animal();
 
-        foreach (['pound_staff' => 200, 'kennel_manager' => 403, 'vet_tech' => 403, 'adoption_counselor' => 403, 'citizen' => 403] as $role => $code) {
+        foreach (['pound_staff' => 200, 'kennel_manager' => 200, 'vet_tech' => 403, 'adoption_counselor' => 403, 'citizen' => 403] as $role => $code) {
             $this->as($role)->getJson("/api/animals/{$animal->id}/qr")->assertStatus($code);
         }
 
@@ -218,6 +218,7 @@ class RbacMatrixTest extends TestCase
             'birth_date' => '1999-01-01', 'employment_status' => 'Student', 'civil_status' => 'Single', 'residence' => 'House',
             'household_members' => 2, 'valid_id_path' => 'x', 'home_photo_paths' => ['a', 'b'],
             'why_adopt' => 'x', 'how_care' => 'x', 'terms_accepted' => true,
+            'id_verification_status' => 'Verified', // approving needs a verified valid ID
         ])->save();
 
         return $application;
@@ -234,8 +235,8 @@ class RbacMatrixTest extends TestCase
         $this->patchJson("/api/animals/{$id}", ['name' => 'Rex', 'location' => 'Kennel D'])->assertOk();
         $this->assertSame('Rex', Animal::find($id)->name);
 
-        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertOk();
-        $this->assertSame('Found', $report->fresh()->status);
+        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Rescued'])->assertOk();
+        $this->assertSame('Rescued', $report->fresh()->status);
 
         $this->deleteJson("/api/animals/{$id}")->assertOk();
         $this->assertNull(Animal::find($id));
@@ -265,7 +266,7 @@ class RbacMatrixTest extends TestCase
         $this->post('/api/animals', $this->createPayload(), ['Accept' => 'application/json'])->assertForbidden();
         $this->patchJson("/api/animals/{$animal->id}", ['name' => 'X'])->assertForbidden();
         $this->deleteJson("/api/animals/{$animal->id}")->assertForbidden();
-        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertForbidden();
+        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Rescued'])->assertForbidden();
         $this->postJson("/api/adoption-applications/{$application->id}/approve")->assertForbidden();
         $this->postJson("/api/adoption-applications/{$application->id}/reject")->assertForbidden();
         $this->postJson("/api/missing-pets/{$report->id}/register-animal")->assertForbidden();
@@ -290,7 +291,7 @@ class RbacMatrixTest extends TestCase
         $this->assertSame('Rejected', $toReject->fresh()->status);
 
         $this->getJson("/api/missing-pet-reports/{$report->id}")->assertOk();
-        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertForbidden();
+        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Rescued'])->assertForbidden();
         $this->assertSame('Lost', $report->fresh()->status);
     }
 
@@ -310,7 +311,7 @@ class RbacMatrixTest extends TestCase
             $this->as($role);
             $this->post('/api/animals', $this->createPayload(), ['Accept' => 'application/json'])->assertForbidden();
             $this->deleteJson("/api/animals/{$animal->id}")->assertForbidden();
-            $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertForbidden();
+            $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Rescued'])->assertForbidden();
             $this->postJson("/api/adoption-applications/{$application->id}/approve")->assertForbidden();
             $this->postJson("/api/adoption-applications/{$application->id}/reject")->assertForbidden();
         }
@@ -329,7 +330,7 @@ class RbacMatrixTest extends TestCase
         $this->noAuth()->post('/api/animals', $this->createPayload(), ['Accept' => 'application/json'])->assertUnauthorized();
         $this->patchJson("/api/animals/{$animal->id}", ['name' => 'X'])->assertUnauthorized();
         $this->deleteJson("/api/animals/{$animal->id}")->assertUnauthorized();
-        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertUnauthorized();
+        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Rescued'])->assertUnauthorized();
         $this->postJson("/api/adoption-applications/{$application->id}/approve")->assertUnauthorized();
         $this->postJson("/api/adoption-applications/{$application->id}/reject")->assertUnauthorized();
         $this->postJson("/api/missing-pets/{$report->id}/register-animal")->assertUnauthorized();

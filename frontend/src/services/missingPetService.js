@@ -39,7 +39,7 @@ export const updateReportStatus = (id, status) =>
     .patch(`/api/missing-pet-reports/${id}/status`, { status })
     .then((res) => res.data.data);
 
-// A Found report: register the pet as an animal in the pound (returns the new animal)
+// A Rescued report: register the pet as an animal in the pound (returns the new animal)
 export const registerAnimalFromReport = (id) =>
   api.post(`/api/missing-pets/${id}/register-animal`).then((res) => res.data.data);
 

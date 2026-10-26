@@ -1,51 +1,16 @@
-.emergency__type {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-
+/* the pet is brought to the pound: short note instead of a report type choice */
+.emergency__note {
   margin: 0;
-  padding: 0;
+  padding: 12px 16px;
 
-  border: 0;
-}
-
-.emergency__type legend {
-  width: 100%;
-  margin-bottom: 8px;
-  padding: 0;
-}
-
-.emergency__choice {
-  flex: 1;
-  min-width: 180px;
-
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  padding: 13px 16px;
-
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
 
+  background-color: #fffaf2;
   color: var(--color-text);
-  font-size: 15px;
-  font-weight: 600;
 
-  cursor: pointer;
-
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
-}
-
-.emergency__choice--on {
-  border-color: #c62828;
-  background-color: rgba(198, 40, 40, 0.06);
-}
-
-.emergency__choice input {
-  accent-color: #c62828;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 /* "I am the": plain radio options, no box around the selected one */

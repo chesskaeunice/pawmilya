@@ -76,15 +76,15 @@
 }
 
 
-.missing-detail__status--sighted {
-  background-color: #f4a261;
-
-  color: var(--color-brown);
+.missing-detail__status--rescued {
+  background-color: #2a9d8f;
 }
 
 
-.missing-detail__status--found {
-  background-color: #2a9d8f;
+.missing-detail__status--for-adoption {
+  background-color: #2f855a;
+
+  color: #ffffff;
 }
 
 
@@ -109,6 +109,23 @@
 
 .missing-detail__status--adoptable {
   background-color: #52b788;
+}
+
+
+/* Rescued: how long the owner can still claim the pet */
+
+.missing-detail__claim {
+  margin: 10px 0 0;
+
+  color: var(--color-brown);
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+.missing-detail__claim-action {
+  margin-top: 12px;
 }
 
 

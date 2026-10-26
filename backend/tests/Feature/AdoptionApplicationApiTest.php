@@ -72,8 +72,9 @@ class AdoptionApplicationApiTest extends TestCase
         return $this->post('/api/adoption-applications', $this->payload($animal, $override), ['Accept' => 'application/json']);
     }
 
-    // A stored application without going through the API (for review tests)
-    private function pendingApplication(User $citizen, Animal $animal): AdoptionApplication
+    // A stored application without going through the API (for review tests). Its valid ID is Verified
+    // by default (approving needs that); pass 'Pending Verification' to test the ID check itself.
+    private function pendingApplication(User $citizen, Animal $animal, string $idStatus = 'Verified'): AdoptionApplication
     {
         $application = new AdoptionApplication(['user_id' => $citizen->id, 'animal_id' => $animal->id]);
         $application->forceFill([
@@ -82,6 +83,7 @@ class AdoptionApplicationApiTest extends TestCase
             'household_members' => 2, 'valid_id_path' => 'adoption-applications/x/id.png',
             'home_photo_paths' => ['adoption-applications/x/h1.png', 'adoption-applications/x/h2.png'],
             'why_adopt' => 'x', 'how_care' => 'x', 'terms_accepted' => true,
+            'id_verification_status' => $idStatus,
         ])->save();
 
         return $application;
@@ -238,7 +240,7 @@ class AdoptionApplicationApiTest extends TestCase
 
         $this->actingAs_($mine);
         $response = $this->getJson('/api/my/adoption-applications')->assertOk()->assertJsonCount(1, 'data');
-        $this->assertArrayNotHasKey('phone', $response->json('data.0'));
+        $this->assertArrayNotHasKey('email', $response->json('data.0'));
         $this->assertArrayNotHasKey('validId', $response->json('data.0'));
 
         // staff and guests cannot use the citizen endpoint
@@ -321,6 +323,58 @@ class AdoptionApplicationApiTest extends TestCase
         // the adopted animal is gone from the public list
         $this->app['auth']->forgetGuards();
         $this->withHeaders(['Authorization' => ''])->getJson('/api/pets')->assertJsonCount(0, 'data');
+    }
+
+    public function test_my_applications_show_the_approval_date_and_the_own_phone_and_nothing_private(): void
+    {
+        $animal = $this->animal();
+        $maria = $this->makeUser('citizen', 'maria@test.com');
+        $juan = $this->makeUser('citizen', 'juan@test.com');
+        $mine = $this->pendingApplication($maria, $animal);
+        $theirs = $this->pendingApplication($juan, $this->animal());
+        $theirs->forceFill(['phone' => '0999 111 2222'])->save();
+
+        // Pending: the phone is there, the approval date is not
+        $this->actingAs_($maria);
+        $this->getJson('/api/my/adoption-applications')->assertOk()
+            ->assertJsonPath('data.0.phone', '0917 000 0000')
+            ->assertJsonPath('data.0.approvedAt', null);
+
+        // Approved: the date is the day of the approval
+        $this->actingAs_($this->makeUser('adoption_counselor'));
+        $this->postJson("/api/adoption-applications/{$mine->id}/approve")->assertOk();
+
+        $this->actingAs_($maria);
+        $response = $this->getJson('/api/my/adoption-applications')->assertOk();
+        $response->assertJsonPath('data.0.status', 'Approved')
+            ->assertJsonPath('data.0.approvedAt', now()->format('M j, Y'))
+            ->assertJsonPath('data.0.phone', '0917 000 0000');
+
+        // nothing private: no reviewer, files, other personal data, or anybody else's number
+        $row = $response->json('data.0');
+        foreach (['reviewedBy', 'reviewedAt', 'validId', 'valid_id_path', 'homePhotos', 'email', 'address', 'birthDate', 'whyAdopt', 'howCare', 'petAge'] as $private) {
+            $this->assertArrayNotHasKey($private, $row);
+        }
+        $this->assertStringNotContainsString('0999 111 2222', $response->getContent());
+        $this->assertStringNotContainsString('adoption-applications/x', $response->getContent());
+
+        // the other citizen sees only their own, with their own number
+        $this->actingAs_($juan);
+        $this->getJson('/api/my/adoption-applications')->assertOk()
+            ->assertJsonCount(1, 'data')->assertJsonPath('data.0.phone', '0999 111 2222')->assertJsonPath('data.0.approvedAt', null);
+    }
+
+    public function test_a_rejected_application_has_no_approval_date(): void
+    {
+        $maria = $this->makeUser('citizen', 'maria@test.com');
+        $application = $this->pendingApplication($maria, $this->animal());
+
+        $this->actingAs_($this->makeUser('adoption_counselor'));
+        $this->postJson("/api/adoption-applications/{$application->id}/reject", ['reason' => 'Not suitable.'])->assertOk();
+
+        $this->actingAs_($maria);
+        $this->getJson('/api/my/adoption-applications')->assertOk()
+            ->assertJsonPath('data.0.status', 'Rejected')->assertJsonPath('data.0.approvedAt', null);
     }
 
     public function test_second_approval_for_the_same_animal_is_refused(): void

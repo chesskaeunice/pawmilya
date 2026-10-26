@@ -47,7 +47,7 @@ class MissingPetApiTest extends TestCase
     {
         return array_merge([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
-            'location' => 'Katipunan, Quezon City', 'last_seen_at' => '2026-10-18 01:15:00', 'status' => 'Lost',
+            'location' => 'Katipunan, Quezon City', 'last_seen_at' => '2026-10-18 01:15:00',
             'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'reporter_type' => 'Citizen',
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
@@ -79,7 +79,7 @@ class MissingPetApiTest extends TestCase
         Storage::fake('public');
 
         $response = $this->report()->assertCreated()
-            ->assertJsonPath('data.status', 'Lost')
+            ->assertJsonPath('data.status', 'Rescued')
             ->assertJsonPath('data.type', 'Cat')
             ->assertJsonCount(2, 'data.petImages')
             ->assertJsonCount(1, 'data.lastSeenImages');
@@ -166,6 +166,8 @@ class MissingPetApiTest extends TestCase
         $this->report(['pet_images' => [$this->png()]])->assertUnprocessable()->assertJsonValidationErrors(['pet_images']);
         $this->report(['last_seen_images' => []])->assertUnprocessable()->assertJsonValidationErrors(['last_seen_images']);
         $this->report(['status' => 'Reunited'])->assertUnprocessable()->assertJsonValidationErrors(['status']);
+        $this->report(['status' => 'Sighted'])->assertUnprocessable()->assertJsonValidationErrors(['status']);
+        $this->report(['status' => 'Found'])->assertUnprocessable()->assertJsonValidationErrors(['status']);
         $this->report(['last_seen_at' => now()->addDay()->toDateTimeString()])->assertUnprocessable()->assertJsonValidationErrors(['last_seen_at']);
         $this->report(['species' => 'Other'])->assertUnprocessable()->assertJsonValidationErrors(['other_species']);
         $this->assertDatabaseCount('missing_pet_reports', 0);
@@ -290,14 +292,14 @@ class MissingPetApiTest extends TestCase
         // only pound staff change a report's status; everyone else can still read it
         foreach (['adoption_counselor', 'kennel_manager', 'vet_tech'] as $role) {
             $this->actingAs_($this->makeUser($role));
-            $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertForbidden();
+            $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Rescued'])->assertForbidden();
             $this->getJson("/api/missing-pet-reports/{$report->id}")->assertOk();
         }
         $this->assertSame('Lost', $report->fresh()->status);
 
         $this->actingAs_($this->makeUser('pound_staff'));
         $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Nope'])->assertUnprocessable();
-        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertOk()->assertJsonPath('data.status', 'Found');
+        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Rescued'])->assertOk()->assertJsonPath('data.status', 'Rescued');
         $this->assertDatabaseHas('audit_logs', ['action' => 'missing_pet.status_changed', 'entity_id' => $report->id]);
     }
 

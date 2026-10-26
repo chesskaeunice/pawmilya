@@ -1468,7 +1468,7 @@ function MissingReport() {
       countBy(missingPets, (p) => p.status).map((row) => ({
         ...row,
         color:
-          { Lost: "#c4533f", Sighted: "#e7b04f", Found: "#d69a3a", Reunited: "#8aa96b" }[row.label] || "#9d6328",
+          { Lost: "#c4533f", Rescued: "#d69a3a", "For Adoption": "#5a9e6f", Reunited: "#8aa96b" }[row.label] || "#9d6328",
       })),
     [missingPets]
   );

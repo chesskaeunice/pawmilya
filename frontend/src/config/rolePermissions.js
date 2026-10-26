@@ -41,11 +41,13 @@ export const rolePermissions = {
     "dashboard.view",
 
     "animals.view",
+    "qr.view",
 
     "adoptionApplications.view",
     "adoptionApplications.export",
 
     "missingPets.view",
+    "claims.view",
 
     "vaccinations.view",
 
@@ -74,6 +76,7 @@ export const rolePermissions = {
     "adoptionApplications.review",
     "adoptionApplications.approve",
     "adoptionApplications.reject",
+    "adoptionApplications.verifyId",
 
     "missingPets.view",
 
@@ -133,10 +136,12 @@ export const rolePermissions = {
     "animals.husbandryUpdate",
     "animals.photo",
     "animals.registerFromReport",
-    "qr.generate",
+    "qr.view",
 
     "missingPets.view",
     "missingPets.updateStatus",
+    "claims.view",
+    "claims.decide",
 
     "vaccinations.view",
 

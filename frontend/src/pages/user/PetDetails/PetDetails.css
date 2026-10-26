@@ -12,24 +12,6 @@
 
 /* BREADCRUMB */
 
-.pet-details__breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 9px;
-
-  margin-bottom: 28px;
-
-  color: var(--color-muted);
-
-  font-size: 13px;
-}
-
-.pet-details__breadcrumb a:hover {
-  color: var(--color-orange);
-}
-
-
 /* LAYOUT */
 
 .pet-details__layout {
@@ -47,53 +29,6 @@
 
 
 /* GALLERY */
-
-.pet-details__main-image {
-  min-height: 430px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 20px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(249, 230, 168, 0.8),
-      rgba(242, 169, 0, 0.12)
-    );
-
-  color: var(--color-brown);
-
-  font-weight: 600;
-}
-
-.pet-details__thumbnail-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-
-  gap: 10px;
-
-  margin-top: 10px;
-}
-
-.pet-details__thumbnail-grid div {
-  min-height: 95px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background-color: var(--color-cream);
-
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-
-  color: var(--color-muted);
-
-  font-size: 12px;
-}
 
 
 /* INFORMATION */
@@ -288,10 +223,6 @@
     grid-template-columns: 1fr;
   }
 
-  .pet-details__main-image {
-    min-height: 320px;
-  }
-
   .pet-details__info h1 {
     font-size: 42px;
   }
@@ -299,4 +230,8 @@
   .pet-details__adoption {
     grid-column: auto;
   }
+}
+/* the shared gallery keeps this page's card corners */
+.pet-details__gallery .photo-gallery {
+  --gallery-radius: 20px;
 }

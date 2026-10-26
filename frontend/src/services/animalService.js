@@ -24,6 +24,17 @@ export function updateAnimalPhoto(id, file) {
   return api.post(`/api/animals/${id}/photo`, form).then((res) => res.data.data);
 }
 
+// Adds one photo / removes one photo (pound staff). An animal keeps 3 to 4 photos.
+export function addAnimalPhoto(id, file) {
+  const form = new FormData();
+  form.append("image", file);
+
+  return api.post(`/api/animals/${id}/photos`, form).then((res) => res.data.data);
+}
+
+export const removeAnimalPhoto = (id, photoId) =>
+  api.delete(`/api/animals/${id}/photos/${photoId}`).then((res) => res.data.data);
+
 export const deleteAnimal = (id) => api.delete(`/api/animals/${id}`);
 
 // Changes, vaccinations and adoption decisions recorded for one animal

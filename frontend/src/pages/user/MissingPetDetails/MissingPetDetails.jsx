@@ -17,6 +17,12 @@ import { getMissingPet } from "../../../services/missingPetService.js";
 import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { displayPetName } from "../../../utils/petName.js";
 import StatusHelp from "../../../components/common/StatusHelp/StatusHelp.jsx";
+import { claimPeriodText } from "../../../utils/claimPeriod.js";
+import useAuth from "../../../hooks/useAuth.js";
+import useModals from "../../../hooks/useModals.js";
+import useMyClaims from "../../../hooks/useMyClaims.js";
+import ClaimPetButton from "../../../components/report/ClaimPetButton.jsx";
+import ClaimPetModal from "../../../components/report/ClaimPetModal.jsx";
 
 import "./MissingPetDetails.css";
 import BackButton from "../../../components/common/BackButton.jsx";
@@ -31,6 +37,12 @@ function MissingPetDetails() {
   // index of the last seen photo shown larger (null: none)
   const [viewing, setViewing] =
     useState(null);
+
+  // "Claim Pet": guests get the sign-in pop-up first, citizens get the claim form
+  const { isLoggedIn } = useAuth();
+  const { openSignIn } = useModals();
+  const { pendingReportIds, reload: reloadClaims } = useMyClaims();
+  const [claiming, setClaiming] = useState(null);
 
 
   const { data: pet, loading } =
@@ -117,6 +129,28 @@ function MissingPetDetails() {
             View the complete information
             provided for this missing pet report.
           </p>
+
+
+          {["Rescued", "For Adoption"].includes(pet.status) && pet.claimDeadlineAt && (
+            <p className="missing-detail__claim">
+              {claimPeriodText(pet.claimDeadlineAt)}
+            </p>
+          )}
+
+          <div className="missing-detail__claim-action">
+            <ClaimPetButton
+              report={pet}
+              pendingReportIds={pendingReportIds}
+              onClaim={(report) => {
+                if (!isLoggedIn) {
+                  openSignIn(`/missing-pets/${report.id}`, "You need an account to claim a pet.");
+                  return;
+                }
+
+                setClaiming(report);
+              }}
+            />
+          </div>
 
         </div>
 
@@ -356,6 +390,12 @@ function MissingPetDetails() {
 
 
       <StatusHelp />
+
+      <ClaimPetModal
+        report={claiming}
+        onClose={() => setClaiming(null)}
+        onSubmitted={reloadClaims}
+      />
 
     </div>
   );

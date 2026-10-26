@@ -22,6 +22,12 @@ export const getApplication = (id) =>
 export const approveApplication = (id) =>
   api.post(`/api/adoption-applications/${id}/approve`).then((res) => res.data.data);
 
+// status: "Verified" | "Rejected" | "Pending Verification". "Rejected" also rejects the application.
+export const verifyApplicationId = (id, status, reason) =>
+  api
+    .patch(`/api/adoption-applications/${id}/id-verification`, { status, reason })
+    .then((res) => res.data.data);
+
 export const rejectApplication = (id, reason) =>
   api
     .post(`/api/adoption-applications/${id}/reject`, { reason })

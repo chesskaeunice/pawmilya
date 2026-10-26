@@ -37,7 +37,8 @@ class StoreMissingPetRequest extends FormRequest
             'markings' => ['nullable', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
             'last_seen_at' => ['required', 'date', 'before_or_equal:now'],
-            'status' => ['required', Rule::in(MissingPetReport::FILING_STATUSES)],
+            // optional: every filed report is Rescued; any other value is rejected
+            'status' => ['nullable', Rule::in(MissingPetReport::FILING_STATUSES)],
             'details' => ['nullable', 'string', 'max:2000'],
 
             // "I am the": the pet's owner or a concerned citizen

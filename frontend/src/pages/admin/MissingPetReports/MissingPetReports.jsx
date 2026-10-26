@@ -30,8 +30,8 @@ const NO_REPORTS = [];
 const STATUS_OPTIONS = [
   "All",
   "Lost",
-  "Sighted",
-  "Found",
+  "Rescued",
+  "For Adoption",
   "Reunited",
 ];
 

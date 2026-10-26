@@ -102,8 +102,8 @@ function AdoptionCounselorDashboard() {
         .filter((pet) =>
           [
             "Lost",
-            "Sighted",
-            "Found",
+            "Rescued",
+            "For Adoption",
           ].includes(pet.status)
         )
         .sort(
@@ -206,7 +206,7 @@ function AdoptionCounselorDashboard() {
           value={
             activeMissingReports.length
           }
-          description="Lost, sighted, or found"
+          description="Lost, rescued, or for adoption"
           variant="missing"
           to="/admin/missing-pets"
         />
@@ -599,8 +599,8 @@ function AdoptionCounselorDashboard() {
               </strong>
 
               <span>
-                Review missing, sighted,
-                and found pet reports.
+                Review lost, rescued, and for
+                adoption pet reports.
               </span>
 
             </div>

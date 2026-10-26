@@ -5,13 +5,12 @@ import { getPet } from "../../../services/animalService.js";
 
 import BackButton from "../../../components/common/BackButton.jsx";
 import PreviewStatus from "../../../components/landing/PreviewStatus.jsx";
-import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { getAdoptableStatus, isAdoptable } from "../../../services/previewService.js";
 import useAuth from "../../../hooks/useAuth.js";
 import useModals from "../../../hooks/useModals.js";
 
 import "./PetDetails.css";
-import SafeImage from "../../../components/common/SafeImage.jsx";
+import PhotoGallery from "../../../components/common/PhotoGallery/PhotoGallery.jsx";
 
 function PetDetails() {
   const { petId } = useParams();
@@ -50,43 +49,15 @@ function PetDetails() {
 
         <BackButton fallback="/adoptable-pets" />
 
-        <div className="pet-details__breadcrumb">
-
-          <Link to="/">
-            Home
-          </Link>
-
-          <span>›</span>
-
-          <Link to="/adoptable-pets">
-            Adoptable Pets
-          </Link>
-
-          <span>›</span>
-
-          <strong>{pet.name}</strong>
-
-        </div>
-
-
         <div className="pet-details__layout">
 
           <section className="pet-details__gallery">
-
-            <div className="pet-details__main-image">
-              <SafeImage type={pet.type}
-                src={pet.image || petPlaceholders[pet.type] || petPlaceholders.Other}
-                alt={`Photo of ${pet.name}`}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            </div>
-
-            <div className="pet-details__thumbnail-grid">
-              <div>Image</div>
-              <div>Image</div>
-              <div>Image</div>
-            </div>
-
+            <PhotoGallery
+              key={pet.id}
+              photos={pet.images?.length ? pet.images : [pet.image].filter(Boolean)}
+              alt={pet.name}
+              type={pet.type}
+            />
           </section>
 
 

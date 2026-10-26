@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 use Tests\TestCase;
 
-// Pound staff setting a report to Found registers the pet as an animal (same logic as the register button)
+// Pound staff setting a report to Rescued registers the pet as an animal (same logic as the register button)
 class AutoRegisterOnFoundTest extends TestCase
 {
     use RefreshDatabase;
@@ -75,12 +75,12 @@ class AutoRegisterOnFoundTest extends TestCase
         return new UploadedFile($path, $name, 'image/png', null, true);
     }
 
-    public function test_setting_a_report_to_found_creates_and_links_one_animal(): void
+    public function test_setting_a_report_to_rescued_creates_and_links_one_animal(): void
     {
         $user = $this->as('pound_staff');
         $report = $this->report('Lost');
 
-        $response = $this->setStatus($report, 'Found')->assertOk()->assertJsonPath('data.status', 'Found');
+        $response = $this->setStatus($report, 'Rescued')->assertOk()->assertJsonPath('data.status', 'Rescued');
 
         $animal = Animal::firstOrFail();
         $this->assertSame(1, Animal::count());
@@ -91,21 +91,27 @@ class AutoRegisterOnFoundTest extends TestCase
         $this->assertSame($user->id, $animal->created_by);
         $this->assertCount(1, $animal->photos);
 
+        // the 7-day claim period starts the first time the report is Rescued
+        $this->assertNotNull($report->fresh()->claim_deadline_at);
         $this->assertDatabaseHas('audit_logs', ['action' => 'missing_pet.status_changed', 'entity_id' => $report->id]);
         $log = AuditLog::where('action', 'animal.created')->where('entity_id', $animal->id)->firstOrFail();
         $this->assertSame('missing_pet_report', $log->details['source']);
         $this->assertSame($report->id, $log->details['report_id']);
     }
 
-    public function test_found_again_or_found_after_another_status_creates_no_second_animal(): void
+    public function test_rescued_again_or_rescued_after_another_status_creates_no_second_animal(): void
     {
         $this->as('pound_staff');
-        $report = $this->report('Sighted');
+        $report = $this->report('Lost');
 
-        $this->setStatus($report, 'Found')->assertOk();
-        $this->setStatus($report, 'Found')->assertOk();   // same status again
+        $this->setStatus($report, 'Rescued')->assertOk();
+        $deadline = $report->fresh()->claim_deadline_at;
+        $this->setStatus($report, 'Rescued')->assertOk();   // same status again
         $this->setStatus($report, 'Lost')->assertOk();
-        $this->setStatus($report, 'Found')->assertOk();   // back to Found: already linked
+        $this->setStatus($report, 'Rescued')->assertOk();   // back to Rescued: already linked
+
+        // the claim deadline is set once and never moved
+        $this->assertTrue($deadline->equalTo($report->fresh()->claim_deadline_at));
 
         $this->assertSame(1, Animal::count());
         $this->assertSame(1, AuditLog::where('action', 'animal.created')->count());
@@ -117,26 +123,26 @@ class AutoRegisterOnFoundTest extends TestCase
         $this->as('pound_staff');
         $report = $this->report('Lost');
 
-        $this->setStatus($report, 'Sighted')->assertOk();
+        $this->setStatus($report, 'Sighted')->assertUnprocessable()->assertJsonValidationErrors('status');
         $this->setStatus($report, 'Reunited')->assertOk();
 
         $this->assertSame(0, Animal::count());
         $this->assertNull($report->fresh()->animal_id);
     }
 
-    public function test_a_public_report_filed_as_found_creates_no_animal(): void
+    public function test_a_public_report_filed_with_the_old_sighted_status_is_rejected(): void
     {
         $this->as(null);
 
         $this->post('/api/missing-pets', [
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
-            'location' => 'Quiapo, Manila', 'last_seen_at' => '2026-10-18 01:15:00', 'status' => 'Found',
+            'location' => 'Quiapo, Manila', 'last_seen_at' => '2026-10-18 01:15:00', 'status' => 'Sighted',
             'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'reporter_type' => 'Citizen',
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
-        ], ['Accept' => 'application/json'])->assertCreated();
+        ], ['Accept' => 'application/json'])->assertUnprocessable()->assertJsonValidationErrors('status');
 
-        $this->assertSame(1, MissingPetReport::where('status', 'Found')->count());
+        $this->assertSame(0, MissingPetReport::count());
         $this->assertSame(0, Animal::count());
     }
 
@@ -147,7 +153,7 @@ class AutoRegisterOnFoundTest extends TestCase
 
         $this->mock(ReportAnimalRegistrar::class, fn ($mock) => $mock->shouldReceive('register')->andThrow(new RuntimeException('boom')));
 
-        $this->setStatus($report, 'Found')->assertUnprocessable()->assertJsonValidationErrors('status');
+        $this->setStatus($report, 'Rescued')->assertUnprocessable()->assertJsonValidationErrors('status');
 
         $this->assertSame('Lost', $report->fresh()->status);
         $this->assertNull($report->fresh()->animal_id);
@@ -161,7 +167,7 @@ class AutoRegisterOnFoundTest extends TestCase
 
         foreach (['kennel_manager', 'adoption_counselor'] as $role) {
             $this->as($role);
-            $this->setStatus($report, 'Found')->assertForbidden();
+            $this->setStatus($report, 'Rescued')->assertForbidden();
         }
 
         $this->assertSame('Lost', $report->fresh()->status);

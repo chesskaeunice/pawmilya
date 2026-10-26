@@ -270,8 +270,7 @@
 }
 
 /* =========================================
-   STATUS: two columns (Sighted | Found)
-   Each column: radio + bold label, small note underneath
+   RADIO OPTIONS: radio + bold label, small note underneath
    (selectors are prefixed with .report-pet__form so they win over
    the general "label" / "input" styles of the form)
 ========================================= */
@@ -334,4 +333,18 @@
   .report-pet__radio-options {
     grid-template-columns: 1fr;
   }
+}
+/* the pet is brought to the pound: short note instead of a status choice */
+.report-pet__note {
+  margin: 0;
+  padding: 12px 16px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  background-color: #fffaf2;
+  color: var(--color-text);
+
+  font-size: 14px;
+  line-height: 1.6;
 }

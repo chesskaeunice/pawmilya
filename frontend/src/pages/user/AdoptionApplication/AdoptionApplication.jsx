@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import useFetch from "../../../hooks/useFetch.js";
@@ -12,6 +12,7 @@ import "./AdoptionApplication.css";
 // error text style used by ImageDropzone (.mform__error)
 import "../../../components/common/ModalForm.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 const STATUS_OPTIONS = ["Single", "Married", "Other"];
 const PRONOUN_OPTIONS = ["She/her", "He/him", "They/them"];
@@ -109,6 +110,14 @@ function AdoptionApplication() {
   const [photos, setPhotos] = useState([]);
   const [photosError, setPhotosError] = useState("");
   const photosRef = useRef(null);
+  const errorsRef = useRef(null);
+
+  // a failed submit shows its messages in the sidebar: bring them into view
+  useEffect(() => {
+    if (submitErrors.length > 0) {
+      errorsRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [submitErrors]);
 
   const { data: pet, loading: petLoading } = useFetch(() => getPet(petId), [petId]);
 
@@ -194,7 +203,8 @@ function AdoptionApplication() {
 
     try {
       await submitApplication(body);
-      navigate("/my-applications");
+      // My Applications shows the confirmation
+      navigate("/my-applications", { state: { submittedPet: pet.name } });
     } catch (err) {
       const { message, fields } = formatApiError(err);
       const messages = Object.values(fields);
@@ -624,7 +634,15 @@ function AdoptionApplication() {
           <aside className="adoption-form__pet-card">
             <p className="adoption-form__eyebrow">Selected Pet</p>
 
-            <div className="adoption-form__pet-image">Pet Image</div>
+            <div className="adoption-form__pet-image">
+              {/* the animal's main photo; the pet placeholder shows when it has none or the file is missing */}
+              <SafeImage
+                type={pet.type}
+                src={pet.image}
+                alt={`Photo of ${pet.name}`}
+                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
+              />
+            </div>
 
             <h2>{pet.name}</h2>
 
@@ -652,7 +670,7 @@ function AdoptionApplication() {
             </div>
 
             {submitErrors.length > 0 && (
-              <ul className="adoption-form__error" role="alert">
+              <ul className="adoption-form__error" role="alert" ref={errorsRef}>
                 {submitErrors.map((message) => (
                   <li key={message}>{message}</li>
                 ))}

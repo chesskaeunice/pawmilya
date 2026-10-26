@@ -18,21 +18,6 @@ const REPORTER_TYPES = [
   { value: "Citizen", label: "Concerned citizen" },
 ];
 
-const STATUS_OPTIONS = [
-  {
-    value: "Sighted",
-    summary: "Found somewhere",
-    description:
-      "The pet has recently been seen in a reported location, but has not yet been safely found.",
-  },
-  {
-    value: "Found",
-    summary: "Returned to pound",
-    description:
-      "The pet has been found and is currently being kept safe while its owner is being located.",
-  },
-];
-
 const MIN_IMAGES = 2;
 const MAX_IMAGES = 3;
 
@@ -225,7 +210,6 @@ function ReportMissingPet() {
     body.append("color", form.color.value);
     body.append("last_seen_at", `${form.lastSeenDate.value} 00:00:00`);
     body.append("location", form.location.value);
-    body.append("status", form.status.value);
     body.append("details", form.details.value);
     body.append("reporter_type", form.reporterType.value);
     body.append("contact_name", `${form.firstName.value} ${form.lastName.value}`.trim());
@@ -352,31 +336,10 @@ function ReportMissingPet() {
             </label>
           </div>
 
-          <fieldset className="report-pet__radio-group">
-            <legend>
-              Status
-              <Required />
-            </legend>
-
-            <div className="report-pet__radio-options">
-              {STATUS_OPTIONS.map((option) => (
-                <label key={option.value} className="report-pet__radio">
-                  <input
-                    type="radio"
-                    name="status"
-                    value={option.value}
-                    required
-                  />
-
-                  <span>{option.value}</span>
-
-                  <small className="report-pet__radio-note">
-                    {option.summary} – {option.description}
-                  </small>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <p className="report-pet__note">
+            <strong>The pet is brought to the pound.</strong> When you submit this report, the pet is
+            registered at the pound as Rescued, and its owner has 7 days to claim it.
+          </p>
 
           <ImageUpload id="lastSeenImages" label="Upload Images" />
 

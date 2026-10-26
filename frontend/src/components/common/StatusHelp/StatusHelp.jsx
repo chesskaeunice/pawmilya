@@ -17,17 +17,17 @@ const statuses = [
   },
 
   {
-    name: "Sighted",
-    color: "#F4A261",
+    name: "Rescued",
+    color: "#2A9D8F",
     description:
-      "The pet has recently been seen in a reported location, but has not yet been safely found.",
+      "The pet was brought to the pound and is being kept safe. The owner has 7 days to claim it.",
   },
 
   {
-    name: "Found",
-    color: "#2A9D8F",
+    name: "For Adoption",
+    color: "#2F855A",
     description:
-      "The pet has been found and is currently being kept safe while its owner is being located.",
+      "The 7-day claim period ended without a claim. The pet can now be adopted once it is cleared by the vet.",
   },
 
   {

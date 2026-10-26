@@ -23,54 +23,10 @@
 
 
 .animal-details__gallery {
-  display: grid;
+  min-width: 0;
 
-  grid-template-columns:
-    minmax(0, 1fr)
-    74px;
-
-  gap: 10px;
-}
-
-
-.animal-details__main-photo {
-  min-height: 340px;
-
-  display: grid;
-  place-items: center;
-
-  border: 1px solid var(--color-border);
-  border-radius: 9px;
-
-  background-color: #faf7f1;
-
-  color: #b0a79d;
-
-  font-size: 11px;
-}
-
-
-.animal-details__thumbnails {
-  display: flex;
-  flex-direction: column;
-
-  gap: 8px;
-}
-
-
-.animal-details__thumbnails button {
-  flex: 1;
-
-  min-height: 80px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 7px;
-
-  background-color: #faf7f1;
-
-  color: #b0a79d;
-
-  font-size: 9px;
+  /* the shared gallery keeps this page's card corners */
+  --gallery-radius: 9px;
 }
 
 

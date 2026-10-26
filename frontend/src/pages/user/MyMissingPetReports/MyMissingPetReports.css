@@ -130,3 +130,46 @@
     grid-column: 2;
   }
 }
+/* My Claims */
+.my-claims__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 16px 20px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+
+  background-color: #fff;
+}
+
+.my-claims__item p {
+  margin: 4px 0 0;
+
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.my-claims__status {
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  background-color: #fff0bd;
+  color: #7a4f00;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.my-claims__status--approved {
+  background-color: #e2f3df;
+  color: #1f5a37;
+}
+
+.my-claims__status--rejected {
+  background-color: #ffe0db;
+  color: #9a2f2f;
+}

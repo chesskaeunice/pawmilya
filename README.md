@@ -59,13 +59,13 @@ The frontend (citizen side + staff/admin side) is merged and runs on **mock data
 
 ### Data rules
 - Animal `status`: Rescued, Available for Adoption, Pending Adoption, Adopted, Reunited with Owner. Staff-only `health_status`: Under Observation, Under Treatment, Cleared. Citizen pages only show "Available for Adoption"; staff can set it only when `health_status` is "Cleared".
-- Missing pets: no `age`; statuses Lost, Sighted, Found, Reunited.
+- Missing pets: no `age`; statuses Lost, Rescued, Reunited.
 - Adoption applications: Pending, Approved, Rejected; no income fields; `employmentStatus`, `work`, `selfEmployedField`, `selfEmployedFieldOther`, `civilStatus`; valid ID upload; home photos min 2, max 3.
 
 ### Differences from Proposal Documentation.pdf
 - Role names: `vet_tech` instead of `veterinary_staff`; `kennel_manager` is the admin; extra `adoption_counselor`.
 - New `health_status` column on animals; no `age` on missing pets; no `monthly_income`.
-- New employment fields on applications; missing-pet statuses in the UI are Lost, Sighted, Found, Reunited.
+- New employment fields on applications; missing-pet statuses in the UI are Lost, Rescued, Reunited.
 
 ### Known issues (not fixed yet)
 - Reports links like `/admin/animals?status=...` are not read by `Animals.jsx`.
@@ -99,7 +99,7 @@ graphify-out/       knowledge graph
 
 ## Manual test checklist
 
-Start MySQL, then in `backend`: `php artisan migrate:fresh --seed`, `php artisan storage:link`, `php artisan serve`; in `frontend`: `npm run dev`. Automated tests: `php artisan test` (backend). Seeded logins (password `password`): manager@pawmilya.com, staff@pawmilya.com, staff2@pawmilya.com, vet@pawmilya.com, vet2@pawmilya.com, counselor@pawmilya.com (all @pawmilya.com), and citizens juan@email.com, maria@email.com, john@email.com.
+Without a system scheduler (XAMPP), run `php artisan schedule:work` in `backend` to let the hourly `reports:release-unclaimed` job move unclaimed Rescued reports to For Adoption (the missing pet lists also do it when they are opened). Start MySQL, then in `backend`: `php artisan migrate:fresh --seed` (this seeds only the test accounts, the default shifts and a sample schedule; the vaccine list comes from its migration; there are no sample pets, add them with the Add Animal form), `php artisan storage:link`, `php artisan serve`; in `frontend`: `npm run dev`. Automated tests: `php artisan test` (backend). Seeded logins (password `password`): manager@pawmilya.com, staff@pawmilya.com, staff2@pawmilya.com, vet@pawmilya.com, vet2@pawmilya.com, counselor@pawmilya.com (all @pawmilya.com), and citizens juan@email.com, maria@email.com, john@email.com.
 
 **Accounts and roles**
 - [ ] Sign Up creates a citizen and logs in; a wrong password shows an error; Log out works on both the citizen navbar and the staff sidebar.

@@ -145,8 +145,8 @@ function PoundStaffDashboard() {
         .filter((pet) =>
           [
             "Lost",
-            "Sighted",
-            "Found",
+            "Rescued",
+            "For Adoption",
           ].includes(pet.status)
         )
         .sort(
@@ -243,7 +243,7 @@ function PoundStaffDashboard() {
           value={
             activeMissingReports.length
           }
-          description="Lost, sighted, or found"
+          description="Lost, rescued, or for adoption"
           variant="missing"
           to="/admin/missing-pets"
         />
@@ -658,8 +658,8 @@ function PoundStaffDashboard() {
               </strong>
 
               <span>
-                View missing, sighted, and found
-                pet reports.
+                View lost, rescued, and for
+                adoption pet reports.
               </span>
 
             </div>

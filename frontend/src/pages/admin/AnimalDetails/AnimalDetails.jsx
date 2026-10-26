@@ -23,7 +23,8 @@ import { healthStatusClass, statusClass } from "../../../config/animalStatus.js"
 
 import "./AnimalDetails.css";
 import BackButton from "../../../components/common/BackButton.jsx";
-import SafeImage from "../../../components/common/SafeImage.jsx";
+import ClaimPeriodNote from "../../../components/admin/ClaimPeriodNote.jsx";
+import PhotoGallery from "../../../components/common/PhotoGallery/PhotoGallery.jsx";
 
 const TABS = [
   { id: "about", label: "About", icon: PawPrint },
@@ -96,7 +97,7 @@ function AnimalDetails() {
 
   const { data: pet, loading } = useFetch(() => getAnimal(animalId), [animalId]);
   const { data: qrSvg } = useFetch(
-    () => (can("qr.generate") ? getAnimalQr(animalId) : Promise.resolve("")),
+    () => (can("qr.view") ? getAnimalQr(animalId) : Promise.resolve("")),
     [animalId]
   );
 
@@ -110,9 +111,6 @@ function AnimalDetails() {
 
   const vaccinations = vaccinationData ?? [];
   const history = historyData ?? [];
-
-  // index of the photo shown large
-  const [photoIndex, setPhotoIndex] = useState(0);
 
   if (loading) {
     return (
@@ -133,7 +131,6 @@ function AnimalDetails() {
   }
 
   const name = pet.name || "Unnamed";
-  const mainPhoto = pet.images[photoIndex] ?? pet.image;
   const canEdit =
     can("animals.edit") ||
     can("animals.adoptionUpdate") ||
@@ -183,41 +180,19 @@ function AnimalDetails() {
       </div>
 
 
+      <ClaimPeriodNote animal={pet} />
+
       <section className="animal-details__top">
 
         <div className="animal-details__gallery">
 
-          <div className="animal-details__main-photo">
-            {mainPhoto ? (
-              <SafeImage type={pet.type}
-                src={mainPhoto}
-                alt={`Photo of ${name}`}
-                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
-              />
-            ) : (
-              "Animal Photo"
-            )}
-          </div>
-
-
-          <div className="animal-details__thumbnails">
-
-            {pet.images.slice(0, 4).map((url, index) => (
-              <button
-                type="button"
-                key={url}
-                onClick={() => setPhotoIndex(index)}
-                aria-label={`Show photo ${index + 1}`}
-              >
-                <SafeImage type={pet.type}
-                  src={url}
-                  alt=""
-                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
-                />
-              </button>
-            ))}
-
-          </div>
+          <PhotoGallery
+            key={pet.id}
+            photos={pet.images?.length ? pet.images : [pet.image].filter(Boolean)}
+            alt={name}
+            type={pet.type}
+            emptyContent="Animal Photo"
+          />
 
         </div>
 
@@ -475,7 +450,7 @@ function AnimalDetails() {
       </section>
 
 
-      {can("qr.generate") && (
+      {can("qr.view") && (
       <section className="staff-detail-card animal-details__about">
 
         <div>
@@ -499,7 +474,7 @@ function AnimalDetails() {
             className="staff-button"
           >
             <QrCode size={13} />
-            Generate QR / Collar Tag
+            View QR / Collar Tag
           </Link>
 
         </div>

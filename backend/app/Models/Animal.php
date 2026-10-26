@@ -61,7 +61,7 @@ class Animal extends Model
         });
     }
 
-    // The Found missing pet report this animal was registered from, if any
+    // The Rescued missing pet report this animal was registered from, if any
     public function missingPetReport(): HasOne
     {
         return $this->hasOne(MissingPetReport::class);

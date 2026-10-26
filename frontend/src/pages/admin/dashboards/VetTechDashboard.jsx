@@ -23,6 +23,7 @@ import useAdminLists from "../../../hooks/useAdminLists.js";
 import MyShifts from "../../../components/admin/MyShifts.jsx";
 
 import "./VetTechDashboard.css";
+import ClaimPeriodNote from "../../../components/admin/ClaimPeriodNote.jsx";
 import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
@@ -139,6 +140,28 @@ function VetTechDashboard() {
             ATTENTION_PRIORITY[
               b.health_status
             ]
+        );
+    }, [animals]);
+
+
+  /* =========================================
+     AWAITING HEALTH CLEARANCE
+     Pets whose claim period ended (report For Adoption) and are not Cleared yet:
+     Cleared makes them adoptable automatically.
+  ========================================= */
+
+  const awaitingClearance =
+    useMemo(() => {
+      return animals
+        .filter((animal) =>
+          animal.claimEndedAt &&
+          animal.status === "Rescued" &&
+          animal.health_status !== "Cleared"
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.claimEndedAt) -
+            new Date(b.claimEndedAt)
         );
     }, [animals]);
 
@@ -471,6 +494,99 @@ function VetTechDashboard() {
         <div className="vettech-dashboard__column">
 
           <DashboardCard
+            title="Awaiting Health Clearance"
+            subtitle="The claim period ended. Set these pets to Cleared to make them adoptable."
+            actionText="View All Animals"
+            actionTo="/admin/animals"
+          >
+
+            {awaitingClearance.length > 0 ? (
+
+              <div className="vettech-dashboard__attention-list">
+
+                {awaitingClearance.slice(0, 4).map(
+                  (animal) => {
+
+                    const image =
+                      animal.images?.[0] ||
+                      animal.image;
+
+
+                    return (
+                      <Link
+                        to={`/admin/animals/${animal.id}`}
+                        className="vettech-dashboard__attention"
+                        key={animal.id}
+                      >
+
+                        <div className="vettech-dashboard__attention-photo">
+
+                          {image ? (
+
+                            <SafeImage
+                              src={image}
+                              alt={animal.name}
+                            />
+
+                          ) : (
+
+                            <PawPrint size={21} />
+
+                          )}
+
+                        </div>
+
+
+                        <div className="vettech-dashboard__attention-info">
+
+                          <div className="vettech-dashboard__attention-title">
+
+                            <strong>
+                              {animal.name || "Unnamed"}
+                            </strong>
+
+                            <HealthStatus
+                              status={
+                                animal.health_status
+                              }
+                            />
+
+                          </div>
+
+
+                          <span>
+                            {animal.animal_code}
+                            {" · "}
+                            {animal.type}
+                          </span>
+
+
+                          <small>
+                            {getDaysSince(animal.claimEndedAt)}
+                          </small>
+
+                        </div>
+
+                      </Link>
+                    );
+                  }
+                )}
+
+              </div>
+
+            ) : (
+
+              <EmptyState
+                title="No pets awaiting clearance"
+                description="Pets appear here after their 7-day claim period ends."
+              />
+
+            )}
+
+          </DashboardCard>
+
+
+          <DashboardCard
             title="Animals Needing Health Attention"
             subtitle="Animals flagged for checkup, treatment, or critical care."
             actionText="View All Animals"
@@ -555,6 +671,8 @@ function VetTechDashboard() {
                               animal.updatedAt
                             )}
                           </small>
+
+                          <ClaimPeriodNote animal={animal} compact />
 
                         </div>
 
@@ -998,6 +1116,16 @@ function getDueLabel(value) {
   return `${late} day${
     late === 1 ? "" : "s"
   } overdue`;
+}
+
+
+// "Released today" / "Released 3 days ago" (days since the claim period ended)
+function getDaysSince(value) {
+  const days = Math.floor((Date.now() - new Date(value).getTime()) / (24 * 60 * 60 * 1000));
+
+  if (days <= 0) return "Released today";
+
+  return `Released ${days} ${days === 1 ? "day" : "days"} ago`;
 }
 
 

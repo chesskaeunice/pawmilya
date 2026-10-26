@@ -6,6 +6,7 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MyShiftController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PetClaimController;
 use App\Http\Controllers\PetCareArticleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -46,10 +47,12 @@ Route::middleware(['auth:sanctum', 'password.changed'])->group(function () {
     Route::get('/animals', [AnimalController::class, 'index'])->middleware('permission:animals.view');
     Route::get('/animals/{animal}', [AnimalController::class, 'show'])->middleware('permission:animals.view');
     Route::get('/animals/{animal}/history', [AnimalController::class, 'history'])->middleware('permission:animals.view');
-    Route::get('/animals/{animal}/qr', [AnimalController::class, 'qr'])->middleware('permission:qr.generate');
+    Route::get('/animals/{animal}/qr', [AnimalController::class, 'qr'])->middleware('permission:qr.view');
     Route::post('/animals', [AnimalController::class, 'store'])->middleware('permission:animals.create');
     Route::patch('/animals/{animal}', [AnimalController::class, 'update'])->middleware('permission:animals.view');
     Route::post('/animals/{animal}/photo', [AnimalController::class, 'updatePhoto'])->middleware(['permission:animals.photo', 'throttle:30,1']);
+    Route::post('/animals/{animal}/photos', [AnimalController::class, 'addPhoto'])->middleware(['permission:animals.edit', 'throttle:30,1']);
+    Route::delete('/animals/{animal}/photos/{photo}', [AnimalController::class, 'removePhoto'])->middleware('permission:animals.edit');
     Route::delete('/animals/{animal}',[AnimalController::class, 'destroy'])->middleware('permission:animals.delete');
 
     // Adoption applications: citizens submit and see their own (duplicates are blocked in the request and the database)
@@ -110,15 +113,23 @@ Route::middleware(['auth:sanctum', 'password.changed'])->group(function () {
     Route::middleware('role:citizen')->group(function () {
         Route::get('/my/missing-pets', [MissingPetReportController::class, 'mine']);
         Route::post('/my/missing-pets/{report}/reunited', [MissingPetReportController::class, 'markReunited']);
+
+        // Claim a Rescued pet during its claim period, and my own claims
+        Route::post('/missing-pets/{report}/claims', [PetClaimController::class, 'store'])->middleware('throttle:10,1');
+        Route::get('/my/claims', [PetClaimController::class, 'mine']);
     });
 
     // Staff: missing pet reports (with reporter contact), status, and matches against pound animals
     Route::get('/missing-pet-reports', [MissingPetReportController::class, 'staffIndex'])->middleware('permission:missingPets.view');
     Route::get('/missing-pet-reports/{report}', [MissingPetReportController::class, 'staffShow'])->middleware('permission:missingPets.view');
     Route::get('/missing-pet-reports/{report}/matches', [MissingPetReportController::class, 'matches'])->middleware('permission:missingPets.view');
+    // Claims on a report: pound staff and the kennel manager see them, only pound staff decide
+    Route::get('/missing-pet-reports/{report}/claims', [PetClaimController::class, 'index'])->middleware('permission:claims.view');
+    Route::post('/missing-pet-reports/{report}/claims/{claim}/approve', [PetClaimController::class, 'approve'])->middleware('permission:claims.decide');
+    Route::post('/missing-pet-reports/{report}/claims/{claim}/reject', [PetClaimController::class, 'reject'])->middleware('permission:claims.decide');
     Route::patch('/missing-pet-reports/{report}/status', [MissingPetReportController::class, 'updateStatus'])->middleware('permission:missingPets.updateStatus');
 
-    // A Found report: register the pet as an animal in the pound (pound staff)
+    // A Rescued report: register the pet as an animal in the pound (pound staff)
     Route::post('/missing-pets/{report}/register-animal', [MissingPetReportController::class, 'registerAnimal'])->middleware(['permission:animals.registerFromReport', 'throttle:10,1']);
 
     // Staff review
@@ -126,6 +137,7 @@ Route::middleware(['auth:sanctum', 'password.changed'])->group(function () {
     Route::get('/adoption-applications/{application}', [AdoptionApplicationController::class, 'show'])->middleware('permission:adoptionApplications.view');
     Route::post('/adoption-applications/{application}/approve', [AdoptionApplicationController::class, 'approve'])->middleware('permission:adoptionApplications.approve');
     Route::post('/adoption-applications/{application}/reject', [AdoptionApplicationController::class, 'reject'])->middleware('permission:adoptionApplications.reject');
+    Route::patch('/adoption-applications/{application}/id-verification', [AdoptionApplicationController::class, 'verifyId'])->middleware('permission:adoptionApplications.verifyId');
 });
 
 // Missing pets: public list and details; guests may file a report (a token, when sent, links it to the citizen)
@@ -152,3 +164,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/adoption-applications/{application}/files/{type}/{index}', [AdoptionApplicationController::class, 'file'])
     ->whereIn('type', ['id', 'home'])->whereNumber('index')
     ->middleware('signed')->name('application.file');
+
+// Proof of ownership images: only reachable through the signed, expiring links in the staff API
+Route::get('/pet-claims/{claim}/files/{index}', [PetClaimController::class, 'file'])
+    ->whereNumber('index')->middleware('signed')->name('claim.file');

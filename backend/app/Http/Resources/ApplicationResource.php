@@ -69,6 +69,7 @@ class ApplicationResource extends JsonResource
             'status' => $this->status,
             'rejectionReason' => $this->rejection_reason ?? '',
             'reviewedBy' => $this->reviewer?->name,
+            'reviewedAt' => $this->reviewed_at?->toIso8601String(),
         ];
     }
 

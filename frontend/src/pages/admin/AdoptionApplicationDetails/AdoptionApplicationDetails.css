@@ -29,8 +29,6 @@
     space-between;
 
   gap: 24px;
-  background:
-    white;
 
   margin-bottom:
     20px;
@@ -1755,4 +1753,497 @@
 
   font-size: 10px;
   line-height: 1.65;
+}
+
+/* =========================================
+   POLISH (screen)
+========================================= */
+
+.application-details__page-header {
+  align-items: flex-start;
+
+  margin-bottom: 18px;
+}
+
+/* overview cards: readable text, same height, long values wrap instead of being cut */
+.application-details__review-overview {
+  gap: 14px;
+
+  margin-bottom: 16px;
+}
+
+.application-details__review-item {
+  min-height: 78px;
+}
+
+.application-details__review-item small {
+  font-size: 12px;
+}
+
+.application-details__review-item strong {
+  font-size: 15px;
+
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* two columns: same gaps everywhere, columns start at the same line */
+.application-details__grid {
+  gap: 16px;
+
+  align-items: start;
+}
+
+.application-details__left,
+.application-details__right {
+  gap: 16px;
+}
+
+/* decision: sits right under the overview, before the details */
+.application-details__decision {
+  margin: 0 0 16px;
+}
+
+.application-details__decision--decided {
+  border-left: 5px solid var(--color-gold);
+}
+
+.application-details__decision--approved {
+  border-left-color: #43814e;
+}
+
+.application-details__decision--rejected {
+  border-left-color: #c85c50;
+}
+
+.application-details__decision--decided h2 {
+  margin: 4px 0 0;
+
+  font-size: 18px;
+}
+
+.application-details__decision--decided p {
+  margin-top: 6px;
+
+  font-size: 14px;
+}
+
+/* selected animal: photo and thumbnails share the first column */
+.application-details__animal {
+  align-items: start;
+}
+
+.application-details__animal-media {
+  width: 115px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.application-details__animal-thumbs {
+  display: flex;
+
+  gap: 6px;
+}
+
+.application-details__animal-thumbs img {
+  flex: 1 1 0;
+
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+
+  object-fit: cover;
+
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+@media (max-width: 700px) {
+
+  .application-details__review-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .application-details__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .application-details__page-header {
+    flex-wrap: wrap;
+  }
+
+}
+
+
+/* =========================================
+   PRINT (Export Application)
+   Scoped to this page with :has(). CollarTag.css has a global print rule that hides every
+   element of every page ("body *"), so this page shows itself again and hides the admin shell.
+========================================= */
+
+@media print {
+
+  body:has(.application-details) {
+    overflow: visible !important; /* the admin shell sets it inline while the menu drawer is open */
+
+    background: #fff;
+
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body:has(.application-details) * {
+    visibility: visible;
+  }
+
+  /* not part of the document */
+  body:has(.application-details) .staff-sidebar,
+  body:has(.application-details) .staff-header,
+  body:has(.application-details) .staff-backdrop,
+  body:has(.application-details) .back-button,
+  body:has(.application-details) .application-details__export,
+  body:has(.application-details) .application-details__actions {
+    display: none;
+  }
+
+  /* the shell must not clip or size the content to one screen */
+  body:has(.application-details) .staff-layout {
+    display: block;
+
+    min-height: 0;
+
+    background: #fff;
+  }
+
+  body:has(.application-details) .staff-layout__main,
+  body:has(.application-details) .staff-layout__content {
+    display: block;
+
+    min-width: 0;
+    height: auto;
+    overflow: visible;
+
+    padding: 0;
+  }
+
+  .application-details {
+    width: 100%;
+  }
+
+  /* one column, in reading order: applicant answers first, then animal, documents and review */
+  .application-details__grid {
+    display: block;
+  }
+
+  .application-details__left,
+  .application-details__right {
+    display: block;
+  }
+
+  .application-details__left > *,
+  .application-details__right > * {
+    margin-bottom: 12px;
+  }
+
+  /* a card is never cut in the middle */
+  .application-details__card,
+  .application-details__review-item,
+  .application-details__decision,
+  .application-details__question {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .application-details__card,
+  .application-details__review-item,
+  .application-details__decision {
+    box-shadow: none;
+  }
+
+  /* big pictures stay inside the page and do not use up whole pages */
+  .application-details img {
+    max-width: 100%;
+  }
+
+  .application-details__id-preview img,
+  .application-details__home-photo {
+    max-height: 80mm;
+
+    object-fit: contain;
+  }
+
+}
+
+
+/* =========================================
+   VALID ID CHECK
+========================================= */
+
+/* one color per status: Verified green, Pending Verification amber, Rejected red */
+.application-details__document-status--verified {
+  color: #43814e;
+}
+
+.application-details__document-status--pending {
+  color: #936711;
+}
+
+.application-details__document-status--rejected {
+  color: #b94b3c;
+}
+
+.application-details__id-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.application-details__id-actions button {
+  min-height: 36px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  padding: 0 12px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.application-details__id-verify {
+  border: 1px solid #43814e;
+
+  background: #43814e;
+  color: #fff;
+}
+
+.application-details__id-reject {
+  border: 1px solid #c85c50;
+
+  background: #fff;
+  color: #b34b3d;
+}
+
+.application-details__id-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.application-details__id-notice {
+  margin: 10px 0 0;
+  padding: 8px 12px;
+
+  border-radius: 8px;
+
+  background: #e8f4ea;
+  color: #1f5a37;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* shown next to the disabled Approve button */
+.application-details__hint {
+  flex-basis: 100%;
+
+  color: var(--color-muted);
+
+  font-size: 12px;
+  text-align: right;
+}
+
+.application-details__actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media print {
+
+  body:has(.application-details) .application-details__id-actions,
+  body:has(.application-details) .application-details__id-notice,
+  body:has(.application-details) .application-details__hint {
+    display: none;
+  }
+
+}
+
+
+/* =========================================
+   PHOTO VIEWER (click an image to see it full size)
+========================================= */
+
+/* the clickable images: pointer, and a visible focus ring for the keyboard */
+.application-details [data-zoomable="true"] {
+  cursor: zoom-in;
+}
+
+.application-details [data-zoomable="true"]:hover {
+  box-shadow: 0 0 0 2px var(--color-gold);
+}
+
+.application-details [data-zoomable="true"]:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.application-details [data-zoomable="true"]:hover {
+  box-shadow: 0 0 0 2px var(--color-gold);
+}
+
+.application-details__lightbox {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.application-details__lightbox-content {
+  margin: 0;
+
+  max-width: 100%;
+  max-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 12px;
+}
+
+/* never cropped or stretched */
+.application-details__lightbox-content img {
+  max-width: 100%;
+  max-height: calc(100vh - 110px);
+
+  object-fit: contain;
+
+  border-radius: 10px;
+
+  background: #fff;
+}
+
+.application-details__lightbox-missing {
+  width: min(420px, 80vw);
+  height: min(300px, 50vh);
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 10px;
+
+  background: var(--color-cream);
+  color: var(--color-brown);
+
+  font-weight: 600;
+}
+
+.application-details__lightbox-counter {
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.application-details__lightbox-close,
+.application-details__lightbox-nav {
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: #fff;
+  color: var(--color-brown);
+
+  cursor: pointer;
+}
+
+.application-details__lightbox-close {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  width: 44px;
+  height: 44px;
+}
+
+.application-details__lightbox-nav {
+  position: absolute;
+
+  top: 50%;
+
+  width: 46px;
+  height: 46px;
+
+  transform: translateY(-50%);
+}
+
+.application-details__lightbox-nav--prev {
+  left: 14px;
+}
+
+.application-details__lightbox-nav--next {
+  right: 14px;
+}
+
+.application-details__lightbox-close:hover,
+.application-details__lightbox-nav:hover {
+  background: var(--color-cream);
+}
+
+.application-details__lightbox-close:focus-visible,
+.application-details__lightbox-nav:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+
+  .application-details__lightbox {
+    padding: 12px;
+  }
+
+  .application-details__lightbox-nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .application-details__lightbox-nav--prev {
+    left: 6px;
+  }
+
+  .application-details__lightbox-nav--next {
+    right: 6px;
+  }
+
+}
+
+/* the viewer is never printed */
+@media print {
+
+  .application-details__lightbox {
+    display: none;
+  }
+
 }

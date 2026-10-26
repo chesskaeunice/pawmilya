@@ -33,12 +33,25 @@ import {
   approveApplication,
   getApplication,
   rejectApplication,
+  verifyApplicationId,
 } from "../../../services/adoptionService.js";
 import { formatApiError } from "../../../services/authService.js";
 
 import "./AdoptionApplicationDetails.css";
 import BackButton from "../../../components/common/BackButton.jsx";
 import SafeImage from "../../../components/common/SafeImage.jsx";
+import PhotoViewer from "./PhotoViewer.jsx";
+import { formatDate } from "../../../utils/formatDateTime.js";
+
+// Name of the animal for the page: "Unnamed Dog (Aspin)" when it has no name
+function animalLabel(application) {
+  const name = typeof application.petName === "string" ? application.petName.trim() : "";
+  if (name) return name;
+
+  const type = (application.petType || "pet").toLowerCase();
+
+  return application.petBreed ? `Unnamed ${type} (${application.petBreed})` : `Unnamed ${type}`;
+}
 
 
 function AdoptionApplicationDetails() {
@@ -50,9 +63,10 @@ function AdoptionApplicationDetails() {
   // only roles with these permissions (the adoption counselor) review and decide
   const canApprove = can("adoptionApplications.approve");
   const canReject = can("adoptionApplications.reject");
+  const canVerifyId = can("adoptionApplications.verifyId");
 
 
-  const { data: application, loading, reload } =
+  const { data: fetched, loading, reload } =
     useFetch(
       () => getApplication(applicationId),
       [applicationId]
@@ -61,6 +75,26 @@ function AdoptionApplicationDetails() {
   // blocks a second click while a decision is being saved
   const [busy, setBusy] =
     useState(false);
+
+  // the application as the ID check returned it: the badges update without reloading the page
+  const [updated, setUpdated] =
+    useState(null);
+
+  const [idNotice, setIdNotice] =
+    useState("");
+
+  // full-size viewer: { images, start, label } or null
+  const [viewer, setViewer] =
+    useState(null);
+
+  // images that failed to load (the placeholder shows instead): they do not open the viewer
+  const [brokenImages, setBrokenImages] =
+    useState([]);
+
+  const application =
+    updated && updated.id === fetched?.id
+      ? updated
+      : fetched;
 
   const currentStatus =
     application?.status ||
@@ -113,6 +147,8 @@ function AdoptionApplicationDetails() {
   // The API decides (and refuses a second decision); the page shows its message
   const decide = async (action) => {
     setBusy(true);
+    setUpdated(null);
+    setIdNotice("");
 
     try {
       await action();
@@ -130,7 +166,7 @@ function AdoptionApplicationDetails() {
   const handleApprove = () => {
     const confirmed =
       window.confirm(
-        `Approve ${application.applicantName}'s application for ${application.petName}? The animal will be marked as Adopted and other pending applications for it will be rejected.`
+        `Approve ${application.applicantName}'s application for ${animalLabel(application)}? The animal will be marked as Adopted and other pending applications for it will be rejected.`
       );
 
 
@@ -147,7 +183,7 @@ function AdoptionApplicationDetails() {
   const handleReject = () => {
     const reason =
       window.prompt(
-        `Reject ${application.applicantName}'s application for ${application.petName}?
+        `Reject ${application.applicantName}'s application for ${animalLabel(application)}?
 
 Reason (shown to the applicant, optional):`
       );
@@ -163,6 +199,104 @@ Reason (shown to the applicant, optional):`
       );
     }
   };
+
+
+  // Valid ID check (adoption counselor): Verified, or Rejected, which also rejects the application
+  const checkId = async (status, reason) => {
+    setBusy(true);
+    setIdNotice("");
+
+    try {
+      const next = await verifyApplicationId(application.id, status, reason);
+
+      setUpdated(next);
+      setIdNotice(
+        status === "Verified"
+          ? "Valid ID marked as verified. You can approve the application now."
+          : "Valid ID rejected. The application was rejected too."
+      );
+    } catch (error) {
+      window.alert(
+        formatApiError(error).message
+      );
+    }
+
+    setBusy(false);
+  };
+
+
+  // Props that make an image (or the box around it) open the viewer: a button for mouse and keyboard.
+  // No URL, or an image that failed to load, is not clickable.
+  const zoomProps = (images, start, label) => {
+    const url = images[start];
+
+    if (!url || brokenImages.includes(url)) {
+      return {};
+    }
+
+    const open = (event) => {
+      setViewer({
+        images: images.filter((item) => item && !brokenImages.includes(item)),
+        start: images
+          .filter((item) => item && !brokenImages.includes(item))
+          .indexOf(url),
+        label,
+      });
+      event.stopPropagation();
+    };
+
+    return {
+      role: "button",
+      tabIndex: 0,
+      "aria-label": `View full photo: ${label}`,
+      "data-zoomable": "true",
+      onClick: open,
+      onKeyDown: (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          open(event);
+        }
+      },
+    };
+  };
+
+  const markBroken = (url) => {
+    setBrokenImages((current) =>
+      current.includes(url) ? current : [...current, url]
+    );
+  };
+
+  const homePhotoUrls = (application.homePhotos || []).map((photo) => photo.url);
+  const animalPhotoUrls = application.petImages?.length
+    ? application.petImages
+    : [application.petImage];
+
+
+  const handleVerifyId = () => {
+    checkId("Verified");
+  };
+
+
+  const handleRejectId = () => {
+    const reason =
+      window.prompt(
+        `Reject ${application.applicantName}'s valid ID?
+
+This will also reject the whole application.
+
+Reason (shown to the applicant, optional):`
+      );
+
+
+    // Cancel leaves it as it is
+    if (reason !== null) {
+      checkId("Rejected", reason.trim() || null);
+    }
+  };
+
+
+  const idVerified =
+    application.idVerificationStatus === "Verified";
 
 
   return (
@@ -269,7 +403,7 @@ Reason (shown to the applicant, optional):`
           }
           label="Applying For"
           value={
-            application.petName
+            animalLabel(application)
           }
         />
 
@@ -296,6 +430,123 @@ Reason (shown to the applicant, optional):`
         />
 
       </section>
+
+
+      {/* =====================================
+          COUNSELOR DECISION
+          Pending: the buttons. Decided: a read-only summary.
+      ====================================== */}
+
+      {currentStatus !== "Pending" ? (
+      <section
+        className={`application-details__decision application-details__decision--decided application-details__decision--${currentStatus.toLowerCase()}`}
+        aria-label="Counselor decision"
+      >
+
+        <div>
+
+          <span className="application-details__decision-eyebrow">
+            Counselor Decision
+          </span>
+
+          <h2>
+            {currentStatus}
+            {application.reviewedAt && ` on ${formatDate(application.reviewedAt)}`}
+            {application.reviewedBy && ` by ${application.reviewedBy}`}
+          </h2>
+
+          {currentStatus === "Rejected" && (
+            <p>
+              Reason:{" "}
+              {application.rejectionReason ||
+                "No reason was given."}
+            </p>
+          )}
+
+        </div>
+
+      </section>
+      ) : null}
+
+      {/* =====================================
+          COUNSELOR ACTIONS
+      ====================================== */}
+
+      {currentStatus === "Pending" && (canApprove || canReject) && (
+      <section className="application-details__decision">
+
+        <div>
+
+          <span className="application-details__decision-eyebrow">
+            Counselor Decision
+          </span>
+
+
+          <h2>
+            Application Action
+          </h2>
+
+
+          <p>
+            Review the applicant's information,
+            home photos, valid ID, selected
+            animal, and answers before making
+            a decision.
+          </p>
+
+        </div>
+
+
+        <div className="application-details__actions">
+
+          {canReject && (
+          <button
+            type="button"
+            className="application-details__reject"
+            disabled={
+              busy ||
+              currentStatus !== "Pending"
+            }
+            onClick={
+              handleReject
+            }
+          >
+            <X size={14} />
+
+            Reject
+          </button>
+          )}
+
+
+          {canApprove && (
+          <button
+            type="button"
+            className="application-details__approve"
+            disabled={
+              busy ||
+              currentStatus !== "Pending" ||
+              !idVerified
+            }
+            onClick={
+              handleApprove
+            }
+          >
+            <Check size={14} />
+
+            Approve Application
+          </button>
+          )}
+
+          {canApprove && !idVerified && (
+            <span className="application-details__hint">
+              Verify the valid ID first
+            </span>
+          )}
+
+        </div>
+
+      </section>
+      )}
 
 
       {/* =====================================
@@ -560,6 +811,7 @@ Reason (shown to the applicant, optional):`
                     <div
                       className="application-details__home-photo"
                       key={`${photo.name}-${index}`}
+                      {...zoomProps(homePhotoUrls, index, `Home photo ${index + 1}`)}
                     >
 
                       {photo.url ? (
@@ -568,6 +820,7 @@ Reason (shown to the applicant, optional):`
                             photo.url
                           }
                           alt={`Applicant home ${index + 1}`}
+                          onError={() => markBroken(photo.url)}
                         />
                       ) : (
                         <div className="application-details__photo-placeholder">
@@ -722,7 +975,12 @@ Reason (shown to the applicant, optional):`
 
             <div className="application-details__animal">
 
-              <div className="application-details__animal-photo">
+              <div className="application-details__animal-media">
+
+              <div
+                className="application-details__animal-photo"
+                {...zoomProps(animalPhotoUrls, 0, "Animal photo")}
+              >
 
                 {application.petImage ? (
                   <SafeImage
@@ -730,8 +988,9 @@ Reason (shown to the applicant, optional):`
                       application.petImage
                     }
                     alt={
-                      application.petName
+                      animalLabel(application)
                     }
+                    onError={() => markBroken(application.petImage)}
                   />
                 ) : (
                   <span>
@@ -743,23 +1002,26 @@ Reason (shown to the applicant, optional):`
 
 
               {application.petImages?.length > 1 && (
-                <div style={{ display: "flex", gap: 6 }}>
-                  {application.petImages.slice(1).map((url) => (
+                <div className="application-details__animal-thumbs">
+                  {application.petImages.slice(1).map((url, position) => (
                     <SafeImage
                       key={url}
                       src={url}
-                      alt={`${application.petName} photo`}
-                      style={{ width: 52, height: 52, objectFit: "cover", borderRadius: 6 }}
+                      alt={`${animalLabel(application)} photo`}
+                      onError={() => markBroken(url)}
+                      {...zoomProps(animalPhotoUrls, position + 1, `Animal photo ${position + 2}`)}
                     />
                   ))}
                 </div>
               )}
 
+              </div>
+
               <div className="application-details__animal-info">
 
                 <h3>
                   {
-                    application.petName
+                    animalLabel(application)
                   }
                 </h3>
 
@@ -856,15 +1118,54 @@ Reason (shown to the applicant, optional):`
             />
 
 
+            {canVerifyId && currentStatus === "Pending" && (
+              <div className="application-details__id-actions">
+
+                <button
+                  type="button"
+                  className="application-details__id-verify"
+                  disabled={busy || idVerified}
+                  onClick={handleVerifyId}
+                >
+                  <Check size={14} />
+
+                  Mark as Verified
+                </button>
+
+                <button
+                  type="button"
+                  className="application-details__id-reject"
+                  disabled={busy}
+                  onClick={handleRejectId}
+                >
+                  <X size={14} />
+
+                  Reject ID
+                </button>
+
+              </div>
+            )}
+
+            {idNotice && (
+              <p className="application-details__id-notice" role="status">
+                {idNotice}
+              </p>
+            )}
+
+
             {application.validId?.url ? (
 
-              <div className="application-details__id-preview">
+              <div
+                className="application-details__id-preview"
+                {...zoomProps([application.validId.url], 0, "Valid ID")}
+              >
 
                 <SafeImage
                   src={
                     application.validId.url
                   }
                   alt="Applicant valid ID"
+                  onError={() => markBroken(application.validId.url)}
                 />
 
               </div>
@@ -910,7 +1211,7 @@ Reason (shown to the applicant, optional):`
 
                 <Question
                   number="01"
-                  question={`Why would you like to adopt ${application.petName}?`}
+                  question={`Why would you like to adopt ${animalLabel(application)}?`}
                   answer={application.whyAdopt}
                 />
 
@@ -984,103 +1285,19 @@ Reason (shown to the applicant, optional):`
           </section>
 
 
-          {/* REJECTION */}
-
-          {currentStatus ===
-            "Rejected" && (
-
-            <section className="application-details__card application-details__rejection">
-
-              <h2>
-                Rejection Reason
-              </h2>
-
-
-              <p>
-                {application.rejectionReason ||
-                  "No rejection reason has been provided yet."}
-              </p>
-
-            </section>
-
-          )}
-
         </div>
 
       </section>
 
 
-      {/* =====================================
-          COUNSELOR ACTIONS
-      ====================================== */}
 
-      {(canApprove || canReject) && (
-      <section className="application-details__decision">
-
-        <div>
-
-          <span className="application-details__decision-eyebrow">
-            Counselor Decision
-          </span>
-
-
-          <h2>
-            Application Action
-          </h2>
-
-
-          <p>
-            Review the applicant's information,
-            home photos, valid ID, selected
-            animal, and answers before making
-            a decision.
-          </p>
-
-        </div>
-
-
-        <div className="application-details__actions">
-
-          {canReject && (
-          <button
-            type="button"
-            className="application-details__reject"
-            disabled={
-              busy ||
-              currentStatus !== "Pending"
-            }
-            onClick={
-              handleReject
-            }
-          >
-            <X size={14} />
-
-            Reject
-          </button>
-          )}
-
-
-          {canApprove && (
-          <button
-            type="button"
-            className="application-details__approve"
-            disabled={
-              busy ||
-              currentStatus !== "Pending"
-            }
-            onClick={
-              handleApprove
-            }
-          >
-            <Check size={14} />
-
-            Approve Application
-          </button>
-          )}
-
-        </div>
-
-      </section>
+      {viewer && (
+        <PhotoViewer
+          images={viewer.images}
+          start={viewer.start}
+          label={viewer.label}
+          onClose={() => setViewer(null)}
+        />
       )}
 
     </div>
@@ -1268,7 +1485,15 @@ function DocumentRow({
       </div>
 
 
-      <div className="application-details__document-status">
+      <div
+        className={`application-details__document-status application-details__document-status--${
+          status === "Verified"
+            ? "verified"
+            : status === "Rejected"
+            ? "rejected"
+            : "pending"
+        }`}
+      >
 
         <BadgeCheck
           size={14}

@@ -13,11 +13,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdoptionApplicationController extends Controller
 {
+    private const ID_VERIFIED = 'Verified';
+    private const ID_REJECTED_REASON = 'Your valid ID could not be verified. Please re-apply with a clear photo of a valid government ID.';
+
     /* ---------- citizen ---------- */
 
     public function store(StoreApplicationRequest $request): JsonResponse
@@ -102,6 +106,11 @@ class AdoptionApplicationController extends Controller
 
             $this->ensurePending($current);
 
+            // the counselor must have checked the valid ID first (see verifyId)
+            if ($current->id_verification_status !== self::ID_VERIFIED) {
+                throw ValidationException::withMessages(['status' => ["Verify the applicant's valid ID before approving."]]);
+            }
+
             if (! in_array($animal->status, [Animal::ADOPTABLE, 'Pending Adoption'], true)) {
                 throw ValidationException::withMessages(['status' => ['This animal can no longer be adopted.']]);
             }
@@ -130,6 +139,38 @@ class AdoptionApplicationController extends Controller
                 'animal_id' => $animal->id,
                 'auto_rejected' => $rejectedIds,
             ]);
+        });
+
+        return new ApplicationResource($application->refresh()->load(['animal.photos', 'reviewer']));
+    }
+
+    // The counselor checks the valid ID of a Pending application: Verified, Pending Verification (undo),
+    // or Rejected, which also rejects the application (the animal's status does not change).
+    public function verifyId(Request $request, AdoptionApplication $application): ApplicationResource
+    {
+        $data = $request->validate([
+            'status' => ['required', Rule::in(['Verified', 'Rejected', 'Pending Verification'])],
+            'reason' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        DB::transaction(function () use ($request, $application, $data) {
+            $current = AdoptionApplication::whereKey($application->id)->lockForUpdate()->firstOrFail();
+
+            $this->ensurePending($current);
+
+            $from = $current->id_verification_status;
+            $current->forceFill(['id_verification_status' => $data['status']])->save();
+
+            if ($data['status'] === 'Rejected') {
+                $reason = trim((string) ($data['reason'] ?? '')) ?: self::ID_REJECTED_REASON;
+                $this->decide($current, AdoptionApplication::REJECTED, $request, $reason);
+
+                Audit::record($request, 'application.id_rejected', $current, ['animal_id' => $current->animal_id, 'reason' => $reason]);
+
+                return;
+            }
+
+            Audit::record($request, $data['status'] === 'Verified' ? 'application.id_verified' : 'application.id_reset', $current, ['from' => $from]);
         });
 
         return new ApplicationResource($application->refresh()->load(['animal.photos', 'reviewer']));

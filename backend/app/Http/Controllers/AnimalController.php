@@ -6,8 +6,10 @@ use App\Http\Requests\Animal\StoreAnimalRequest;
 use App\Http\Requests\Animal\UpdateAnimalRequest;
 use App\Http\Resources\AnimalResource;
 use App\Models\Animal;
+use App\Models\AnimalPhoto;
 use App\Models\AuditLog;
 use App\Support\Audit;
+use App\Support\ReleaseUnclaimedReports;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -17,13 +19,18 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 // Staff side. Permissions are checked by route middleware or the Form Request.
 class AnimalController extends Controller
 {
+    // Photos per animal (the same 3 to 4 as when it is created)
+    private const MIN_PHOTOS = 3;
+    private const MAX_PHOTOS = 4;
+
     public function index(Request $request)
     {
-        $query = Animal::with('photos');
+        $query = Animal::with(['photos', 'missingPetReport']);
 
         if ($search = trim((string) $request->query('q'))) {
             $query->where(function ($q) use ($search) {
@@ -50,7 +57,7 @@ class AnimalController extends Controller
 
     public function show(Animal $animal): AnimalResource
     {
-        return new AnimalResource($animal->load('photos'));
+        return new AnimalResource($animal->load(['photos', 'missingPetReport']));
     }
 
     public function store(StoreAnimalRequest $request): JsonResponse
@@ -78,18 +85,24 @@ class AnimalController extends Controller
         return (new AnimalResource($animal->load('photos')))->response()->setStatusCode(201);
     }
 
-    public function update(UpdateAnimalRequest $request, Animal $animal): AnimalResource
+    public function update(UpdateAnimalRequest $request, Animal $animal, ReleaseUnclaimedReports $release): AnimalResource
     {
-        $animal->fill($request->validated());
-        $changes = $animal->getDirty();
-        $original = collect($changes)->mapWithKeys(fn ($v, $k) => [$k => $animal->getOriginal($k)])->all();
-        $animal->save();
+        // one transaction: the update and, when the vet clears a pet whose claim period is over,
+        // its automatic change to Available for Adoption
+        DB::transaction(function () use ($request, $animal, $release) {
+            $animal->fill($request->validated());
+            $changes = $animal->getDirty();
+            $original = collect($changes)->mapWithKeys(fn ($v, $k) => [$k => $animal->getOriginal($k)])->all();
+            $animal->save();
 
-        if ($changes) {
-            Audit::record($request, 'animal.updated', $animal, ['from' => $original, 'to' => $changes]);
-        }
+            if ($changes) {
+                Audit::record($request, 'animal.updated', $animal, ['from' => $original, 'to' => $changes]);
+            }
 
-        return new AnimalResource($animal->load('photos'));
+            $release->promoteAnimal($animal);
+        });
+
+        return new AnimalResource($animal->refresh()->load(['photos', 'missingPetReport']));
     }
 
     // Replaces the main photo (first position). Adoption counselor, vet tech and pound staff (animals.photo).
@@ -110,6 +123,43 @@ class AnimalController extends Controller
         Audit::record($request, 'animal.photo_changed', $animal);
 
         return new AnimalResource($animal->load('photos'));
+    }
+
+    // Adds a photo (pound staff, animals.edit). An animal keeps 3 to 4 photos.
+    public function addPhoto(Request $request, Animal $animal): AnimalResource
+    {
+        $request->validate(['image' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
+
+        if ($animal->photos()->count() >= self::MAX_PHOTOS) {
+            throw ValidationException::withMessages(['image' => 'An animal can have at most '.self::MAX_PHOTOS.' photos. Remove one first.']);
+        }
+
+        $position = ((int) $animal->photos()->max('position')) + 1;
+        $animal->photos()->create([
+            'path' => $request->file('image')->store("animals/{$animal->id}", 'public'),
+            'position' => $position,
+        ]);
+
+        Audit::record($request, 'animal.photo_added', $animal);
+
+        return new AnimalResource($animal->load(['photos', 'missingPetReport']));
+    }
+
+    // Removes one photo (pound staff, animals.edit). The next photo becomes the main one when needed.
+    public function removePhoto(Request $request, Animal $animal, AnimalPhoto $photo): AnimalResource
+    {
+        abort_unless($photo->animal_id === $animal->id, 404);
+
+        if ($animal->photos()->count() <= self::MIN_PHOTOS) {
+            throw ValidationException::withMessages(['photo' => 'An animal needs at least '.self::MIN_PHOTOS.' photos. Add another one before removing this one.']);
+        }
+
+        Storage::disk('public')->delete($photo->path);
+        $photo->delete();
+
+        Audit::record($request, 'animal.photo_removed', $animal);
+
+        return new AnimalResource($animal->load(['photos', 'missingPetReport']));
     }
 
     public function destroy(Request $request, Animal $animal): JsonResponse

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-// A Found missing pet report can be registered as an animal in the pound (status Rescued)
+// A Rescued missing pet report can be registered as an animal in the pound (status Rescued)
 class RegisterAnimalFromReportTest extends TestCase
 {
     use RefreshDatabase;
@@ -42,7 +42,7 @@ class RegisterAnimalFromReportTest extends TestCase
     }
 
     // A stored report with 2 pet photos and 1 last seen photo (real files on the fake disk)
-    private function report(string $status = 'Found', array $override = []): MissingPetReport
+    private function report(string $status = 'Rescued', array $override = []): MissingPetReport
     {
         $report = new MissingPetReport(array_merge([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Orange', 'sex' => 'Female',
@@ -71,7 +71,7 @@ class RegisterAnimalFromReportTest extends TestCase
     {
         foreach (['pound_staff'] as $role) {
             $user = $this->as($role);
-            $report = $this->report('Found');
+            $report = $this->report('Rescued');
 
             $response = $this->register($report)->assertCreated();
             $animal = Animal::findOrFail($response->json('data.id'));
@@ -92,9 +92,9 @@ class RegisterAnimalFromReportTest extends TestCase
             $this->assertSame(now()->toDateString(), $animal->rescued_at->toDateString());
             $this->assertSame($user->id, $animal->created_by);
 
-            // the QR page shows who to contact; code and token made like for any animal
-            $this->assertSame('Maria Santos', $animal->owner_name);
-            $this->assertSame('0917 123 4567', $animal->owner_contact);
+            // the reporter's contact details stay on the report; code and token made like for any animal
+            $this->assertNull($animal->owner_name);
+            $this->assertNull($animal->owner_contact);
             $this->assertMatchesRegularExpression('/^PAW-\d{4}$/', $animal->animal_code);
             $this->assertNotEmpty($animal->qr_token);
 
@@ -127,7 +127,7 @@ class RegisterAnimalFromReportTest extends TestCase
     public function test_a_report_of_species_other_keeps_what_the_animal_is(): void
     {
         $this->as('pound_staff');
-        $report = $this->report('Found', ['species' => 'Other', 'other_species' => 'Rabbit', 'breed' => null]);
+        $report = $this->report('Rescued', ['species' => 'Other', 'other_species' => 'Rabbit', 'breed' => null]);
 
         $response = $this->register($report)->assertCreated()
             ->assertJsonPath('data.type', 'Other')
@@ -136,7 +136,7 @@ class RegisterAnimalFromReportTest extends TestCase
         $this->assertSame('Rabbit', Animal::findOrFail($response->json('data.id'))->other_species);
 
         // a dog report carries nothing
-        $dog = $this->report('Found', ['name' => 'Rex', 'species' => 'Dog', 'other_species' => 'ignored']);
+        $dog = $this->report('Rescued', ['name' => 'Rex', 'species' => 'Dog', 'other_species' => 'ignored']);
         $this->assertNull(Animal::findOrFail($this->register($dog)->json('data.id'))->other_species);
     }
 
@@ -144,11 +144,11 @@ class RegisterAnimalFromReportTest extends TestCase
     {
         $this->as('pound_staff');
 
-        foreach (['Lost', 'Sighted', 'Reunited'] as $status) {
+        foreach (['Lost', 'Reunited'] as $status) {
             $report = $this->report($status);
 
             $this->register($report)->assertUnprocessable()
-                ->assertJsonPath('message', 'Only a Found report can be registered in the pound.');
+                ->assertJsonPath('message', 'Only a Rescued report can be registered in the pound.');
 
             $this->assertNull($report->fresh()->animal_id);
         }
@@ -159,7 +159,7 @@ class RegisterAnimalFromReportTest extends TestCase
     public function test_registering_twice_is_refused_and_creates_no_second_animal(): void
     {
         $this->as('pound_staff');
-        $report = $this->report('Found');
+        $report = $this->report('Rescued');
 
         $first = $this->register($report)->assertCreated()->json('data.id');
 
@@ -176,7 +176,7 @@ class RegisterAnimalFromReportTest extends TestCase
 
     public function test_other_roles_and_guests_are_refused(): void
     {
-        $report = $this->report('Found');
+        $report = $this->report('Rescued');
 
         foreach (['vet_tech' => 403, 'adoption_counselor' => 403, 'kennel_manager' => 403, 'citizen' => 403] as $role => $code) {
             $this->as($role);
@@ -193,7 +193,7 @@ class RegisterAnimalFromReportTest extends TestCase
     public function test_the_registered_animal_is_not_adoptable(): void
     {
         $this->as('pound_staff');
-        $report = $this->report('Found');
+        $report = $this->report('Rescued');
         $id = $this->register($report)->assertCreated()->json('data.id');
 
         $this->assertSame('Rescued', Animal::find($id)->status);
@@ -207,7 +207,7 @@ class RegisterAnimalFromReportTest extends TestCase
     public function test_the_staff_report_shows_the_animal_it_was_registered_as(): void
     {
         $this->as('pound_staff');
-        $report = $this->report('Found');
+        $report = $this->report('Rescued');
 
         $this->getJson("/api/missing-pet-reports/{$report->id}")->assertOk()->assertJsonPath('data.animal_id', null);
 
@@ -219,7 +219,7 @@ class RegisterAnimalFromReportTest extends TestCase
     public function test_a_report_without_a_name_or_a_photo_file_still_registers(): void
     {
         $this->as('pound_staff');
-        $report = $this->report('Found', ['name' => null, 'breed' => null, 'details' => null]);
+        $report = $this->report('Rescued', ['name' => null, 'breed' => null, 'details' => null]);
         Storage::disk('public')->delete("missing-pets/{$report->id}/pet-b.jpg");
 
         $animal = Animal::findOrFail($this->register($report)->assertCreated()->json('data.id'));

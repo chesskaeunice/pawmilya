@@ -4,6 +4,8 @@ import useFetch from "../../../hooks/useFetch.js";
 import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { displayPetName } from "../../../utils/petName.js";
 import { listMyMissingReports } from "../../../services/missingPetService.js";
+import useMyClaims from "../../../hooks/useMyClaims.js";
+import { formatDate } from "../../../utils/formatDateTime.js";
 
 import "./MyMissingPetReports.css";
 // status badge: same style as the Missing Pets page (missing-pets__status)
@@ -16,6 +18,7 @@ import SafeImage from "../../../components/common/SafeImage.jsx";
 function MyMissingPetReports() {
   const { data, loading } = useFetch(() => listMyMissingReports(), []);
   const reports = data ?? [];
+  const { claims } = useMyClaims();
 
   return (
     <div className="my-reports">
@@ -104,6 +107,45 @@ function MyMissingPetReports() {
             >
               View details
             </Link>
+
+          </article>
+
+        ))}
+
+      </section>
+
+
+      {/* MY CLAIMS: pets I asked to take back (Pending, Approved or Rejected with the reason) */}
+
+      <section className="my-reports__container my-claims">
+
+        <h2>My Claims</h2>
+
+        {claims.length === 0 && (
+          <p>You have not claimed a pet yet.</p>
+        )}
+
+        {claims.map((claim) => (
+
+          <article className="my-claims__item" key={claim.id}>
+
+            <div>
+
+              <strong>{displayPetName(claim.petName)}</strong>
+
+              <p>
+                {claim.petType} · Pickup date: {formatDate(claim.pickupDate)}
+              </p>
+
+              {claim.status === "Rejected" && claim.rejectReason && (
+                <p>Reason: {claim.rejectReason}</p>
+              )}
+
+            </div>
+
+            <span className={`my-claims__status my-claims__status--${claim.status.toLowerCase()}`}>
+              {claim.status}
+            </span>
 
           </article>
 

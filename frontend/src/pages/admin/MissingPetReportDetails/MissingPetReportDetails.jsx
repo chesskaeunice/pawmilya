@@ -35,12 +35,12 @@ import "./MissingPetReportDetails.css";
 import BackButton from "../../../components/common/BackButton.jsx";
 import SafeImage from "../../../components/common/SafeImage.jsx";
 import { FormError } from "../../../components/common/FieldError.jsx";
+import ReportClaims from "../../../components/admin/ReportClaims.jsx";
 
 
 const STATUS_OPTIONS = [
   "Lost",
-  "Sighted",
-  "Found",
+  "Rescued",
   "Reunited",
 ];
 
@@ -85,12 +85,12 @@ function MissingPetReportDetails() {
     useState(0);
 
 
-  // set when saving the status as Found added the pet to the Animals list
+  // set when saving the status as Rescued added the pet to the Animals list
   const [addedAnimalId, setAddedAnimalId] =
     useState(null);
 
 
-  // registering a Found pet as an animal in the pound
+  // registering a Rescued pet as an animal in the pound
   const [registering, setRegistering] =
     useState(false);
 
@@ -183,7 +183,7 @@ function MissingPetReportDetails() {
           chosenStatus
         );
 
-      // saving Found registered the pet as an animal (it had none before)
+      // saving Rescued registered the pet as an animal (it had none before)
       setAddedAnimalId(
         updated.animal_id && !pet.animal_id
           ? updated.animal_id
@@ -202,15 +202,15 @@ function MissingPetReportDetails() {
   };
 
 
-  // Found = the pet is at the pound: it can be registered as an animal, then its QR / collar tag made
+  // Rescued = the pet is at the pound: it can be registered as an animal, then its QR / collar tag made
   const canRegister =
-    currentStatus === "Found" &&
+    currentStatus === "Rescued" &&
     !pet.animal_id &&
     can("animals.registerFromReport");
 
   const canOpenTag =
     Boolean(pet.animal_id) &&
-    can("qr.generate");
+    can("qr.view");
 
 
   const handleRegister = async () => {
@@ -896,11 +896,22 @@ function MissingPetReportDetails() {
                 }
               >
 
+                {/* set by the system after the claim period: shown, not selectable */}
+                {currentStatus === "For Adoption" && (
+                  <option value="For Adoption" disabled>
+                    For Adoption
+                  </option>
+                )}
+
                 {STATUS_OPTIONS.map(
                   (option) => (
                     <option
                       key={option}
                       value={option}
+                      disabled={
+                        currentStatus === "For Adoption" &&
+                        option === "Rescued"
+                      }
                     >
                       {option}
                     </option>
@@ -956,7 +967,7 @@ function MissingPetReportDetails() {
             )}
 
 
-            {/* Found report: register the pet in the pound, or open its QR / collar tag */}
+            {/* Rescued report: register the pet in the pound, or open its QR / collar tag */}
             {(canRegister || canOpenTag) && (
               <div style={{ display: "grid", gap: 10, marginTop: 16 }}>
 
@@ -984,7 +995,7 @@ function MissingPetReportDetails() {
                   >
                     <QrCode size={13} />
 
-                    Generate QR / Collar Tag
+                    View QR / Collar Tag
                   </Link>
                 )}
 
@@ -992,6 +1003,12 @@ function MissingPetReportDetails() {
             )}
 
           </section>
+
+          {/* CLAIMS (pound staff and the kennel manager) */}
+
+          {can("claims.view") && (
+            <ReportClaims reportId={reportId} onDecided={reload} />
+          )}
 
         </div>
 

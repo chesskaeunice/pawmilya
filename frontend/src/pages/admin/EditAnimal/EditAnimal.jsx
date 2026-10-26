@@ -10,15 +10,25 @@ import { Lock } from "lucide-react";
 
 import useAuth from "../../../hooks/useAuth.js";
 import useFetch from "../../../hooks/useFetch.js";
-import { getAnimal, updateAnimal, updateAnimalPhoto } from "../../../services/animalService.js";
+import {
+  addAnimalPhoto,
+  getAnimal,
+  removeAnimalPhoto,
+  updateAnimal,
+  updateAnimalPhoto,
+} from "../../../services/animalService.js";
 import { formatApiError } from "../../../services/authService.js";
 
 import {
+  ADOPTABLE_STATUS,
   ADOPTION_NEEDS_CLEARED_MESSAGE,
   allowedStatuses,
   canBeAdoptable,
   HEALTH_STATUSES,
 } from "../../../config/animalStatus.js";
+
+import ClaimPeriodNote from "../../../components/admin/ClaimPeriodNote.jsx";
+import { formatClaimDate } from "../../../utils/claimPeriod.js";
 
 import "./EditAnimal.css";
 import BackButton from "../../../components/common/BackButton.jsx";
@@ -63,39 +73,75 @@ function EditAnimalForm({ pet }) {
   const [healthStatus, setHealthStatus] = useState(pet.health_status);
   const [errors, setErrors] = useState([]);
   const [saving, setSaving] = useState(false);
-  const [photo, setPhoto] = useState(pet.image);
+  const [photos, setPhotos] = useState(pet.photos ?? []);
   const [photoMessage, setPhotoMessage] = useState("");
 
-  // Every staff role may replace the main photo; it saves right away
-  const changePhoto = async (event) => {
+  const photo = photos[0]?.url;
+
+  // An animal keeps 3 to 4 photos (the API enforces it too)
+  const MIN_PHOTOS = 3;
+  const MAX_PHOTOS = 4;
+
+  // Runs one photo change; every change saves right away and is written to the audit log
+  const runPhotoChange = async (change, doneMessage) => {
+    try {
+      const updated = await change();
+      setPhotos(updated.photos ?? []);
+      setPhotoMessage(doneMessage);
+    } catch (err) {
+      setPhotoMessage(formatApiError(err).message);
+    }
+  };
+
+  // The chosen file must be a JPG, PNG or WebP of 5 MB or less
+  const pickImage = (event) => {
     const file = event.target.files[0];
     event.target.value = "";
-    if (!file) return;
+    if (!file) return null;
 
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
       setPhotoMessage("Use a JPG, PNG or WebP image.");
-      return;
+      return null;
     }
     if (file.size > 5 * 1024 * 1024) {
       setPhotoMessage("The image must be 5 MB or smaller.");
-      return;
+      return null;
     }
 
-    try {
-      const updated = await updateAnimalPhoto(pet.id, file);
-      setPhoto(updated.image);
-      setPhotoMessage("Main photo updated.");
-    } catch (err) {
-      setPhotoMessage(formatApiError(err).message);
+    return file;
+  };
+
+  // Every staff role may replace the main photo
+  const changePhoto = (event) => {
+    const file = pickImage(event);
+    if (file) runPhotoChange(() => updateAnimalPhoto(pet.id, file), "Main photo updated.");
+  };
+
+  // Pound staff may also add and remove photos
+  const addPhoto = (event) => {
+    const file = pickImage(event);
+    if (file) runPhotoChange(() => addAnimalPhoto(pet.id, file), "Photo added.");
+  };
+
+  const removePhoto = (photoId) => {
+    if (window.confirm("Remove this photo?")) {
+      runPhotoChange(() => removeAnimalPhoto(pet.id, photoId), "Photo removed.");
     }
   };
 
   const petName = pet.name || "Unnamed";
 
   // Shown inline under the form
-  const statusMessage = canBeAdoptable(status, healthStatus)
+  // a pet from a report becomes adoptable by itself once the claim period has ended
+  const inClaimPeriod = Boolean(pet.claimDeadlineAt);
+  const claimMessage = !inClaimPeriod
     ? ""
-    : ADOPTION_NEEDS_CLEARED_MESSAGE;
+    : (status === ADOPTABLE_STATUS && pet.status !== ADOPTABLE_STATUS) ||
+        (healthStatus === "Cleared" && pet.health_status !== "Cleared")
+      ? `This pet is still in its claim period until ${formatClaimDate(pet.claimDeadlineAt)}. Health clearance opens after that.`
+      : "";
+
+  const statusMessage = claimMessage || (canBeAdoptable(status, healthStatus) ? "" : ADOPTION_NEEDS_CLEARED_MESSAGE);
 
 
   /* =========================================
@@ -105,6 +151,9 @@ function EditAnimalForm({ pet }) {
 
   // Name, type, breed, sex, owner info: Pound Staff only
   const canEditBasic = can("animals.edit");
+
+  // Add and remove photos: Pound Staff only
+  const canManagePhotos = can("animals.edit");
 
   // General status: Pound Staff (Rescued / Reunited with Owner only), Counselor and Vet Tech (limited)
   const canEditStatus =
@@ -175,18 +224,66 @@ function EditAnimalForm({ pet }) {
 
       <section className="staff-form__section">
         <div className="staff-form__section-header">
-          <h2>Main Photo</h2>
-          <p>Shown first on the animal's pages. Every staff role can change it.</p>
+          <h2>{canManagePhotos ? "Photos" : "Main Photo"}</h2>
+          <p>
+            {canManagePhotos
+              ? `The first photo is the main one. Keep ${MIN_PHOTOS} to ${MAX_PHOTOS} photos. Changes save right away.`
+              : "Shown first on the animal's pages. Every staff role can change it."}
+          </p>
         </div>
 
-        {photo && (
-          <SafeImage src={photo} alt={`Main photo of ${petName}`} style={{ maxWidth: 180, borderRadius: 12 }} />
+        {canManagePhotos ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            {photos.map((item, index) => (
+              <div key={item.id} style={{ width: 150 }}>
+                <SafeImage
+                  src={item.url}
+                  alt={`${index === 0 ? "Main photo" : `Photo ${index + 1}`} of ${petName}`}
+                  style={{ width: "100%", height: 110, objectFit: "cover", borderRadius: 12 }}
+                />
+
+                <p style={{ margin: "4px 0" }}>{index === 0 ? "Main photo" : `Photo ${index + 1}`}</p>
+
+                <button
+                  type="button"
+                  className="staff-button staff-button--outline"
+                  disabled={photos.length <= MIN_PHOTOS}
+                  title={photos.length <= MIN_PHOTOS ? `Keep at least ${MIN_PHOTOS} photos` : "Remove this photo"}
+                  onClick={() => removePhoto(item.id)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          photo && (
+            <SafeImage src={photo} alt={`Main photo of ${petName}`} style={{ maxWidth: 180, borderRadius: 12 }} />
+          )
         )}
 
-        <input type="file" accept="image/jpeg,image/png,image/webp" onChange={changePhoto} />
+        <label>
+          Replace main photo
+          <input type="file" accept="image/jpeg,image/png,image/webp" onChange={changePhoto} />
+        </label>
+
+        {canManagePhotos && (
+          <label>
+            Add a photo {photos.length >= MAX_PHOTOS && `(maximum of ${MAX_PHOTOS} reached)`}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={addPhoto}
+              disabled={photos.length >= MAX_PHOTOS}
+            />
+          </label>
+        )}
+
         {photoMessage && <p role="status">{photoMessage}</p>}
       </section>
 
+
+      <ClaimPeriodNote animal={pet} />
 
       <form
         className="staff-form"

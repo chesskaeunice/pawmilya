@@ -708,14 +708,15 @@
 }
 
 
-.counselor-dashboard__missing-status--sighted {
-  background: #f4a261;
-  color: #4d2a00;
+.counselor-dashboard__missing-status--rescued {
+  background: #2a9d8f;
 }
 
 
-.counselor-dashboard__missing-status--found {
-  background: #2a9d8f;
+.counselor-dashboard__missing-status--for-adoption {
+  background-color: #2f855a;
+
+  color: #ffffff;
 }
 
 

@@ -610,3 +610,154 @@
     align-items: flex-start;
   }
 }
+/* shown right after a successful submit */
+.my-applications__notice {
+  margin: 0 0 20px;
+  padding: 14px 18px;
+
+  border-radius: 12px;
+
+  background-color: #e8f4ea;
+  color: #1f5a37;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* "Valid ID: Under review / Verified" (only while the application is Pending) */
+.my-applications__id-status {
+  margin: 6px 0 0;
+
+  color: var(--color-muted);
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* "View Details" is a button on Approved cards: same pill as the "View Pet" link */
+button.my-applications__view {
+  font-family: inherit;
+
+  cursor: pointer;
+}
+
+button.my-applications__view:hover {
+  background-color: var(--color-orange);
+  color: var(--color-white);
+}
+
+/* ---------- Approved: details pop-up ---------- */
+
+.my-applications__approved {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.my-applications__approved p {
+  margin: 0;
+
+  color: var(--color-text);
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.my-applications__approved-pet {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+}
+
+.my-applications__approved-pet strong {
+  color: var(--color-brown);
+
+  font-size: 18px;
+}
+
+.my-applications__approved-pet p {
+  margin-top: 2px;
+
+  color: var(--color-muted);
+}
+
+.my-applications__approved-photo {
+  width: 84px;
+  height: 84px;
+
+  flex-shrink: 0;
+
+  overflow: hidden;
+
+  border-radius: 14px;
+
+  background: var(--color-cream);
+}
+
+.my-applications__approved-photo img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.my-applications__approved-title {
+  margin: 0;
+
+  color: var(--color-orange);
+
+  font-size: 24px;
+}
+
+.my-applications__approved-card {
+  padding: 14px 16px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  background: #fffaf2;
+}
+
+.my-applications__approved-card h4 {
+  margin: 0 0 8px;
+
+  color: var(--color-brown);
+
+  font-size: 15px;
+}
+
+.my-applications__approved-card ol,
+.my-applications__approved-card ul {
+  margin: 0;
+  padding-left: 20px;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.my-applications__approved-card ul {
+  list-style: none;
+
+  padding-left: 0;
+}
+
+.my-applications__approved-card li + li {
+  margin-top: 4px;
+}
+
+@media (max-width: 480px) {
+
+  .my-applications__approved-pet {
+    align-items: flex-start;
+  }
+
+  .my-applications__approved-photo {
+    width: 68px;
+    height: 68px;
+  }
+
+}

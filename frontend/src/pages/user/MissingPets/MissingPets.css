@@ -1199,18 +1199,16 @@
 }
 
 
-.missing-pets__status--sighted {
+.missing-pets__status--rescued {
   background-color:
-    #f4a261;
-
-  color:
-    #4d2a00;
+    #2a9d8f;
 }
 
 
-.missing-pets__status--found {
-  background-color:
-    #2a9d8f;
+.missing-pets__status--for-adoption {
+  background-color: #2f855a;
+
+  color: #ffffff;
 }
 
 
@@ -1871,4 +1869,13 @@
       wrap;
   }
 
+}
+/* Rescued card: how long the owner can still claim the pet */
+.missing-pets__claim {
+  margin: 0 0 12px;
+
+  color: var(--color-brown);
+
+  font-size: 13px;
+  font-weight: 700;
 }
