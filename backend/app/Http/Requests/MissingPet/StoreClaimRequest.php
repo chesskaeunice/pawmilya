@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreClaimRequest extends FormRequest
 {
     public const CLOSED_MESSAGE = 'This pet can no longer be claimed.';
+    public const LOST_MESSAGE = 'This pet is reported as lost and is not at the pound, so it cannot be claimed.';
     public const DUPLICATE_MESSAGE = 'You already have an active claim for this pet.';
 
     // Citizens only (staff accounts cannot claim); guests are stopped by the login check on the route
@@ -48,7 +49,7 @@ class StoreClaimRequest extends FormRequest
                 $report = $this->route('report');
 
                 if (! $report->inClaimPeriod()) {
-                    $validator->errors()->add('report', self::CLOSED_MESSAGE);
+                    $validator->errors()->add('report', $report->status === 'Lost' ? self::LOST_MESSAGE : self::CLOSED_MESSAGE);
 
                     return;
                 }

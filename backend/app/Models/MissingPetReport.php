@@ -12,8 +12,10 @@ class MissingPetReport extends Model
     public const STATUSES = ['Lost', 'Rescued', 'For Adoption', 'Reunited'];
     // What staff can set by hand: "For Adoption" is set by the system after the claim period
     public const MANUAL_STATUSES = ['Lost', 'Rescued', 'Reunited'];
-    // Every submitted report is a Rescued report: the pet is handed to the pound
-    public const FILING_STATUSES = ['Rescued'];
+    // The status a new report starts with is decided by who files it: a concerned citizen hands the
+    // pet to the pound (Rescued); an owner reports a missing pet (Lost)
+    public const FILING_STATUS_BY_REPORTER_TYPE = ['Owner' => 'Lost', 'Citizen' => 'Rescued'];
+    public const FILING_STATUSES = ['Lost', 'Rescued'];
 
     // Once its animal is on Adoptable Pets (or later), the report leaves the PUBLIC Missing Pets page
     public const HIDDEN_ANIMAL_STATUSES = ['Available for Adoption', 'Pending Adoption', 'Adopted'];
@@ -33,6 +35,11 @@ class MissingPetReport extends Model
     protected function casts(): array
     {
         return ['last_seen_at' => 'datetime', 'claim_deadline_at' => 'datetime'];
+    }
+
+    public static function filingStatusFor(string $reporterType): string
+    {
+        return self::FILING_STATUS_BY_REPORTER_TYPE[$reporterType];
     }
 
     // Identifies "the same report": reporter + pet + place + day. Used for the duplicate check.

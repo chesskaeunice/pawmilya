@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import homeHero from "../../../assets/images/users/home/home-hero.jpg";
 import { aboutPlaceholders } from "../../../assets/images/placeholders/index.js";
@@ -6,9 +7,12 @@ import { aboutPlaceholders } from "../../../assets/images/placeholders/index.js"
 import ScrollStrip from "../../../components/landing/ScrollStrip.jsx";
 import PetPreviewCard from "../../../components/landing/PetPreviewCard.jsx";
 import ArticleCard from "../../../components/landing/ArticleCard.jsx";
+import ClaimPetModal from "../../../components/report/ClaimPetModal.jsx";
 
 import useAuth from "../../../hooks/useAuth.js";
 import useFetch from "../../../hooks/useFetch.js";
+import useModals from "../../../hooks/useModals.js";
+import useMyClaims from "../../../hooks/useMyClaims.js";
 import usePetCareArticles from "../../../hooks/usePetCareArticles.js";
 import useScrollReveal from "../../../hooks/useScrollReveal.js";
 import { useGoToSection } from "../../../hooks/useSectionScroll.js";
@@ -31,6 +35,23 @@ const aboutGoals = [
 
 function Home() {
   const { isLoggedIn } = useAuth();
+
+  // "Claim Pet" on a missing pet card: guests get the sign-in pop-up first (and come back here),
+  // citizens get the claim form
+  const { pathname } = useLocation();
+  const { openSignIn } = useModals();
+  const { pendingReportIds, reload: reloadClaims } = useMyClaims();
+  const [claiming, setClaiming] = useState(null);
+
+  const startClaim = (report) => {
+    if (!isLoggedIn) {
+      openSignIn(pathname, "You need an account to claim a pet.");
+      return;
+    }
+
+    setClaiming(report);
+  };
+
   const poundInfo = usePoundInfo();
   const { data: adoptableData, loading: adoptableLoading, error: adoptableError } =
     useFetch(() => getLatestAdoptablePets(6), []);
@@ -195,7 +216,13 @@ function Home() {
         {missingReports.length > 0 ? (
           <ScrollStrip label="missing pet reports" autoScroll>
             {missingReports.map((report) => (
-              <PetPreviewCard key={report.id} kind="missing" item={report} />
+              <PetPreviewCard
+                key={report.id}
+                kind="missing"
+                item={report}
+                pendingReportIds={pendingReportIds}
+                onClaim={startClaim}
+              />
             ))}
           </ScrollStrip>
         ) : (
@@ -283,6 +310,13 @@ function Home() {
         </div>
 
       </section>
+
+      {/* outside the clickable cards, so clicks in the form never open a details page */}
+      <ClaimPetModal
+        report={claiming}
+        onClose={() => setClaiming(null)}
+        onSubmitted={reloadClaims}
+      />
 
     </div>
   );

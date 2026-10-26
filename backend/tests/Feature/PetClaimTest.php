@@ -170,7 +170,11 @@ class PetClaimTest extends TestCase
         Carbon::setTestNow($this->start);
         foreach (['Lost', 'For Adoption', 'Reunited'] as $status) {
             $report->forceFill(['status' => $status])->save();
-            $this->claim($report, $maria)->assertUnprocessable()->assertJsonPath('errors.report.0', 'This pet can no longer be claimed.');
+            // a Lost report has its own message (the pet is not at the pound)
+            $message = $status === 'Lost'
+                ? 'This pet is reported as lost and is not at the pound, so it cannot be claimed.'
+                : 'This pet can no longer be claimed.';
+            $this->claim($report, $maria)->assertUnprocessable()->assertJsonPath('errors.report.0', $message);
         }
 
         $this->assertSame(0, PetClaim::count());

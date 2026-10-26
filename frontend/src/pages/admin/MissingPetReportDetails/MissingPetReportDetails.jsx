@@ -36,6 +36,7 @@ import BackButton from "../../../components/common/BackButton.jsx";
 import SafeImage from "../../../components/common/SafeImage.jsx";
 import { FormError } from "../../../components/common/FieldError.jsx";
 import ReportClaims from "../../../components/admin/ReportClaims.jsx";
+import { reportStatusLabel } from "../../../utils/reportStatusLabel.js";
 
 
 const STATUS_OPTIONS = [
@@ -913,7 +914,7 @@ function MissingPetReportDetails() {
                         option === "Rescued"
                       }
                     >
-                      {option}
+                      {reportStatusLabel(option)}
                     </option>
                   )
                 )}
@@ -1006,7 +1007,7 @@ function MissingPetReportDetails() {
 
           {/* CLAIMS (pound staff and the kennel manager) */}
 
-          {can("claims.view") && (
+          {can("claims.view") && pet.status !== "Lost" && (
             <ReportClaims reportId={reportId} onDecided={reload} />
           )}
 
@@ -1141,7 +1142,7 @@ function StatusBadge({
     <span
       className={`missing-details__status missing-details__status--${className}`}
     >
-      {status}
+      {reportStatusLabel(status)}
     </span>
   );
 }

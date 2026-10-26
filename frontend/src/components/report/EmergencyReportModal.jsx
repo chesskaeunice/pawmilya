@@ -30,6 +30,7 @@ const emptyForm = {
   species: "",
   otherSpecies: "",
   breed: "",
+  color: "",
   description: "",
   // Step 2: last seen + contact
   reporterType: "",
@@ -42,7 +43,7 @@ const emptyForm = {
   contactEmail: "",
 };
 
-const STEP_1_FIELDS = ["species", "otherSpecies"];
+const STEP_1_FIELDS = ["species", "otherSpecies", "color"];
 const STEP_2_FIELDS = ["street", "barangay", "dateTime", "reporterType", "firstName", "lastName", "contactNumber", "contactEmail"];
 
 function isFutureDateTime(value) {
@@ -59,6 +60,9 @@ function validate(values) {
   }
   if (values.species === "Others" && !values.otherSpecies.trim()) {
     errors.otherSpecies = "Please tell us what animal it is.";
+  }
+  if (!values.color.trim()) {
+    errors.color = "Please enter the color or markings.";
   }
 
   // Step 2
@@ -135,6 +139,7 @@ function EmergencyReportFlow({ onClose }) {
   if (petPhotos < 2) step1Missing.push(petPhotos === 0 ? "2 pet photos" : "1 more pet photo");
   if (errors.species) step1Missing.push("the pet type");
   if (errors.otherSpecies) step1Missing.push("what animal it is");
+  if (errors.color) step1Missing.push("the color / markings");
 
   const step2Missing = [];
   if (areaPhotos < 1) step2Missing.push("at least 1 area photo");
@@ -205,6 +210,7 @@ function EmergencyReportFlow({ onClose }) {
     body.append("species", values.species === "Others" ? "Other" : values.species);
     body.append("other_species", values.species === "Others" ? values.otherSpecies.trim() : "");
     body.append("breed", values.breed.trim());
+    body.append("color", values.color.trim());
     body.append("details", values.description.trim());
     body.append("location", location);
     body.append("last_seen_at", values.dateTime);
@@ -226,8 +232,13 @@ function EmergencyReportFlow({ onClose }) {
         submittedAt: new Date().toISOString(),
       });
     } catch (error) {
-      const { message, fields } = formatApiError(error);
-      setSubmitError(Object.values(fields)[0] || message);
+      if (error.response?.status === 429 && error.response.data?.limit_reached) {
+        // posting limit reached: the server's message has the time left; photos and answers stay
+        setSubmitError(error.response.data.message);
+      } else {
+        const { message, fields } = formatApiError(error);
+        setSubmitError(Object.values(fields)[0] || message);
+      }
     }
 
     setSubmitting(false);
@@ -395,6 +406,22 @@ function EmergencyReportFlow({ onClose }) {
           />
         </div>
 
+        <div className={fieldClass("color")}>
+          <label className="mform__label" htmlFor="er-color">Color / Markings</label>
+          <input
+            id="er-color"
+            name="color"
+            className="mform__input"
+            type="text"
+            maxLength={100}
+            value={values.color}
+            onChange={setField("color")}
+            onBlur={markTouched("color")}
+            aria-invalid={Boolean(showError("color"))}
+          />
+          {fieldError("color", true)}
+        </div>
+
         <div className="mform__field">
           <label className="mform__label" htmlFor="er-description">
             Description <span className="mform__optional">(optional)</span>
@@ -402,7 +429,7 @@ function EmergencyReportFlow({ onClose }) {
           <textarea
             id="er-description"
             className="mform__textarea"
-            placeholder="Color, markings, collar, behavior, anything that helps identify the pet"
+            placeholder="Collar, behavior, scars, anything else that helps identify the pet"
             value={values.description}
             onChange={setField("description")}
           />
@@ -489,14 +516,23 @@ function EmergencyReportFlow({ onClose }) {
           </div>
         </div>
 
-        <p className="emergency__note">
-          <strong>The pet is brought to the pound.</strong> When you submit, the pet is registered at
-          the pound as Rescued, and its owner has 7 days to claim it.
-        </p>
+        {values.reporterType === "Citizen" && (
+          <p className="emergency__note">
+            <strong>The pet is brought to the pound.</strong> When you submit, the pet is registered at
+            the pound as Rescued, and its owner has 7 days to claim it.
+          </p>
+        )}
+
+        {values.reporterType === "Owner" && (
+          <p className="emergency__note">
+            <strong>Your pet will be listed as Lost</strong> so the community and the pound can help look
+            for it. If a pet matching yours is brought to the pound, the pound will contact you.
+          </p>
+        )}
 
         <div className={fieldClass("dateTime")}>
           <label className="mform__label" htmlFor="er-datetime">
-            Date &amp; Time Rescued
+            {values.reporterType === "Citizen" ? "Date & Time Rescued" : "Date & Time Last Seen"}
           </label>
           <input
             id="er-datetime"

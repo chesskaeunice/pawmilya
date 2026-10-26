@@ -46,8 +46,9 @@ class MissingPetReportController extends Controller
         return new MissingPetResource(MissingPetReport::with('photos')->visibleToPublic()->findOrFail($id));
     }
 
-    // Open to guests (reporter_id stays null) and citizens. The pet is handed to the pound, so the
-    // report is Rescued at once and the pet is registered as an animal in the same transaction.
+    // Open to guests (reporter_id stays null) and citizens. A concerned citizen hands the pet to the pound:
+    // the report is Rescued at once and the pet is registered as an animal in the same transaction.
+    // An owner reports a missing pet: the report is Lost, with no animal, no QR and no claim period.
     public function store(StoreMissingPetRequest $request, ReportAnimalRegistrar $registrar): JsonResponse
     {
         $user = $request->reporter();
@@ -55,8 +56,11 @@ class MissingPetReportController extends Controller
 
         $report = new MissingPetReport($data);
         $report->reporter_id = $user?->id;
-        $report->status = 'Rescued';
-        $report->startClaimPeriod();
+        $report->status = MissingPetReport::filingStatusFor($data['reporter_type']);
+        $atPound = $report->status === 'Rescued';
+        if ($atPound) {
+            $report->startClaimPeriod();
+        }
         $report->sex = $data['sex'] ?? 'Unknown';
         // Citizens may leave the contact fields empty: their account details are used
         $report->contact_name = $data['contact_name'] ?? $user?->name;
@@ -67,7 +71,7 @@ class MissingPetReportController extends Controller
         $animal = null;
 
         try {
-            DB::transaction(function () use ($request, $report, $registrar, $user, &$paths, &$animal) {
+            DB::transaction(function () use ($request, $report, $registrar, $user, $atPound, &$paths, &$animal) {
                 $report->save();
 
                 foreach (['pet' => 'pet_images', 'last_seen' => 'last_seen_images'] as $kind => $field) {
@@ -79,7 +83,9 @@ class MissingPetReportController extends Controller
                 }
 
                 // the pet is at the pound now: register it as an animal (copies the pet photos)
-                $animal = $registrar->register($report->load('photos'), $user);
+                if ($atPound) {
+                    $animal = $registrar->register($report->load('photos'), $user);
+                }
             });
         } catch (UniqueConstraintViolationException) {
             // Two identical submits at the same moment: the database keeps only one
@@ -94,7 +100,9 @@ class MissingPetReportController extends Controller
         }
 
         Audit::record($request, 'missing_pet.reported', $report, ['status' => $report->status, 'guest' => ! $user]);
-        $registrar->audit($request, $animal, $report, true);
+        if ($animal) {
+            $registrar->audit($request, $animal, $report, true);
+        }
 
         return (new MissingPetResource($report->refresh()->load('photos')))->response()->setStatusCode(201);
     }

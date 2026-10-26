@@ -21,6 +21,7 @@ import { displayPetName } from "../../../utils/petName.js";
 import { matchesPetSearch } from "../../../utils/liveSearch.js";
 import StatusHelp from "../../../components/common/StatusHelp/StatusHelp.jsx";
 import { claimPeriodText } from "../../../utils/claimPeriod.js";
+import { reportStatusLabel } from "../../../utils/reportStatusLabel.js";
 import useAuth from "../../../hooks/useAuth.js";
 import useModals from "../../../hooks/useModals.js";
 import useMyClaims from "../../../hooks/useMyClaims.js";
@@ -580,7 +581,7 @@ function MissingPets() {
                 </option>
 
                 <option value="Rescued">
-                  Rescued
+                  Rescued · In Pound
                 </option>
 
                 <option value="For Adoption">
@@ -850,7 +851,7 @@ function MissingPets() {
                           )}`
                       }
                     >
-                      {pet.status}
+                      {reportStatusLabel(pet.status)}
                     </span>
 
                   </div>

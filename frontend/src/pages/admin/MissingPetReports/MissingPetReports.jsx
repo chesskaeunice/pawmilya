@@ -20,6 +20,7 @@ import { listStaffReports } from "../../../services/missingPetService.js";
 import "./MissingPetReports.css";
 import BackButton from "../../../components/common/BackButton.jsx";
 import SafeImage from "../../../components/common/SafeImage.jsx";
+import { reportStatusLabel } from "../../../utils/reportStatusLabel.js";
 
 
 const REPORTS_PER_PAGE = 9;
@@ -339,7 +340,7 @@ function MissingPetReports() {
               >
                 {option === "All"
                   ? "All Statuses"
-                  : option}
+                  : reportStatusLabel(option)}
               </option>
             )
           )}
@@ -738,7 +739,7 @@ function StatusBadge({
     <span
       className={`missing-admin__status missing-admin__status--${className}`}
     >
-      {status}
+      {reportStatusLabel(status)}
     </span>
   );
 }

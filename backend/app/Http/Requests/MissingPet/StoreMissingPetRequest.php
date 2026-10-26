@@ -3,6 +3,7 @@
 namespace App\Http\Requests\MissingPet;
 
 use App\Models\MissingPetReport;
+use App\Support\ReportPostingLimit;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -23,6 +24,13 @@ class StoreMissingPetRequest extends FormRequest
         return $this->user('sanctum');
     }
 
+    // A logged-in citizen who is at the posting limit is stopped here (429), before validation,
+    // so nothing is stored. Guests and staff are not limited.
+    protected function prepareForValidation(): void
+    {
+        app(ReportPostingLimit::class)->ensureWithinLimit($this->reporter());
+    }
+
     public function rules(): array
     {
         $isGuest = ! $this->reporter();
@@ -37,8 +45,8 @@ class StoreMissingPetRequest extends FormRequest
             'markings' => ['nullable', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
             'last_seen_at' => ['required', 'date', 'before_or_equal:now'],
-            // optional: every filed report is Rescued; any other value is rejected
-            'status' => ['nullable', Rule::in(MissingPetReport::FILING_STATUSES)],
+            // optional: the status follows reporter_type (Owner = Lost, Citizen = Rescued); any other value is rejected
+            'status' => ['nullable', Rule::in(array_filter([MissingPetReport::FILING_STATUS_BY_REPORTER_TYPE[$this->input('reporter_type')] ?? null]) ?: MissingPetReport::FILING_STATUSES)],
             'details' => ['nullable', 'string', 'max:2000'],
 
             // "I am the": the pet's owner or a concerned citizen

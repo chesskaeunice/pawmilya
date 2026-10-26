@@ -185,6 +185,9 @@ function ReportMissingPet() {
   const isOther = petType === "Others";
   const [errors, setErrors] = useState([]);
   const [reporterTypeError, setReporterTypeError] = useState("");
+  // "I am the": picked by the user, never preselected. The wording of the last seen section follows it.
+  const [reporterType, setReporterType] = useState("");
+  const isOwner = reporterType === "Owner";
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (event) => {
@@ -225,6 +228,13 @@ function ReportMissingPet() {
       await submitMissingPetReport(body);
       navigate("/missing-pets");
     } catch (err) {
+      // posting limit reached: show the server's message (with the time left); the form keeps its values
+      if (err.response?.status === 429 && err.response.data?.limit_reached) {
+        setErrors([err.response.data.message]);
+        setSubmitting(false);
+        return;
+      }
+
       const { message, fields } = formatApiError(err);
       setReporterTypeError(fields.reporter_type ?? "");
       const messages = Object.values({ ...fields, reporter_type: undefined }).filter(Boolean);
@@ -329,17 +339,26 @@ function ReportMissingPet() {
 
             <label>
               <span>
-                Last Known Location
+                {isOwner ? "Last seen location" : "Last Known Location"}
                 <Required />
               </span>
               <input type="text" name="location" maxLength={255} required />
             </label>
           </div>
 
-          <p className="report-pet__note">
-            <strong>The pet is brought to the pound.</strong> When you submit this report, the pet is
-            registered at the pound as Rescued, and its owner has 7 days to claim it.
-          </p>
+          {reporterType === "Citizen" && (
+            <p className="report-pet__note">
+              <strong>The pet is brought to the pound.</strong> When you submit this report, the pet is
+              registered at the pound as Rescued, and its owner has 7 days to claim it.
+            </p>
+          )}
+
+          {isOwner && (
+            <p className="report-pet__note">
+              <strong>Your pet will be listed as Lost.</strong> The community and the pound can help look for
+              it. If a pet matching yours is brought to the pound, the pound will contact you.
+            </p>
+          )}
 
           <ImageUpload id="lastSeenImages" label="Upload Images" />
 
@@ -367,7 +386,11 @@ function ReportMissingPet() {
                       type="radio"
                       name="reporterType"
                       value={option.value}
-                      onChange={() => setReporterTypeError("")}
+                      checked={reporterType === option.value}
+                      onChange={() => {
+                        setReporterType(option.value);
+                        setReporterTypeError("");
+                      }}
                     />
 
                     <span>{option.label}</span>

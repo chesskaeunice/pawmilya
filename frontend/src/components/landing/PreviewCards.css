@@ -108,6 +108,29 @@
   transition: background-color 0.2s ease;
 }
 
+/* View Report + Claim Pet side by side (missing pet cards). Not positioned, so the link's
+   stretched layer still covers the card; the button sits above it. */
+.preview-card__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 18px;
+}
+
+.preview-card__actions .preview-card__link {
+  margin-top: 0;
+}
+
+.preview-card__actions .claim-button {
+  position: relative;
+  z-index: 2;
+
+  min-height: 0;
+  padding: 9px 18px;
+}
+
 .preview-card:hover .preview-card__link {
   background-color: var(--color-orange);
 }

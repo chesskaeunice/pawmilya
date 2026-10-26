@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 
+import { useState } from "react";
+
 import useFetch from "../../../hooks/useFetch.js";
 import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { displayPetName } from "../../../utils/petName.js";
-import { listMyMissingReports } from "../../../services/missingPetService.js";
+import { listMyMissingReports, markMyReportReunited } from "../../../services/missingPetService.js";
 import useMyClaims from "../../../hooks/useMyClaims.js";
 import { formatDate } from "../../../utils/formatDateTime.js";
+import { reportStatusLabel } from "../../../utils/reportStatusLabel.js";
+import { formatApiError } from "../../../services/authService.js";
 
 import "./MyMissingPetReports.css";
 // status badge: same style as the Missing Pets page (missing-pets__status)
@@ -16,9 +20,29 @@ import SafeImage from "../../../components/common/SafeImage.jsx";
 // Shown only to logged-in citizens: the route is wrapped in RequireSignIn,
 // which opens the sign-in / sign-up prompt for guests.
 function MyMissingPetReports() {
-  const { data, loading } = useFetch(() => listMyMissingReports(), []);
+  const { data, loading, reload } = useFetch(() => listMyMissingReports(), []);
   const reports = data ?? [];
   const { claims } = useMyClaims();
+
+  // "Mark as Found": the owner has the pet back (only for a report that is still Lost)
+  const [busyId, setBusyId] = useState(null);
+  const [foundError, setFoundError] = useState("");
+
+  const handleMarkFound = async (pet) => {
+    if (!window.confirm(`Mark ${displayPetName(pet.name)} as found? The report will be closed as Reunited.`)) return;
+
+    setBusyId(pet.id);
+    setFoundError("");
+
+    try {
+      await markMyReportReunited(pet.id);
+      reload();
+    } catch (err) {
+      setFoundError(formatApiError(err).message);
+    }
+
+    setBusyId(null);
+  };
 
   return (
     <div className="my-reports">
@@ -52,6 +76,8 @@ function MyMissingPetReports() {
         {!loading && reports.length === 0 && (
           <p>You have not submitted any missing pet reports yet.</p>
         )}
+
+        {foundError && <p role="alert">{foundError}</p>}
 
         {reports.map((pet) => (
 
@@ -97,16 +123,28 @@ function MyMissingPetReports() {
                 .toLowerCase()
                 .replaceAll(" ", "-")}`}
             >
-              {pet.status}
+              {reportStatusLabel(pet.status)}
             </span>
 
 
-            <Link
-              to={`/missing-pets/${pet.id}`}
-              className="my-reports__details"
-            >
-              View details
-            </Link>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <Link
+                to={`/missing-pets/${pet.id}`}
+                className="my-reports__details"
+              >
+                View details
+              </Link>
+
+              {pet.status === "Lost" && (
+                <button
+                  type="button"
+                  onClick={() => handleMarkFound(pet)}
+                  disabled={busyId === pet.id}
+                >
+                  {busyId === pet.id ? "Saving..." : "Mark as Found"}
+                </button>
+              )}
+            </div>
 
           </article>
 

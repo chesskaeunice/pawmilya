@@ -18,6 +18,7 @@ import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { displayPetName } from "../../../utils/petName.js";
 import StatusHelp from "../../../components/common/StatusHelp/StatusHelp.jsx";
 import { claimPeriodText } from "../../../utils/claimPeriod.js";
+import { reportStatusLabel } from "../../../utils/reportStatusLabel.js";
 import useAuth from "../../../hooks/useAuth.js";
 import useModals from "../../../hooks/useModals.js";
 import useMyClaims from "../../../hooks/useMyClaims.js";
@@ -119,7 +120,7 @@ function MissingPetDetails() {
                 .toLowerCase()
                 .replaceAll(" ", "-")}`}
             >
-              {pet.status}
+              {reportStatusLabel(pet.status)}
             </span>
 
           </div>
