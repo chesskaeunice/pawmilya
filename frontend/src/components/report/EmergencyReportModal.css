@@ -48,6 +48,43 @@
   accent-color: #c62828;
 }
 
+/* "I am the": plain radio options, no box around the selected one */
+.emergency__who {
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  min-width: 0;
+}
+
+.emergency__who legend {
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.emergency__who-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.emergency__who-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  color: var(--color-text);
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.emergency__who-option input {
+  margin: 0;
+
+  accent-color: var(--color-orange);
+}
+
 .emergency__heading {
   margin: 8px 0 0;
 

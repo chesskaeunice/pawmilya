@@ -15,12 +15,6 @@ import BackButton from "../../../components/common/BackButton.jsx";
 
 const PETS_PER_PAGE = 6;
 
-const AGE_OPTIONS = [
-  { value: "baby", label: "Under 1 year" },
-  { value: "young", label: "1 to 3 years" },
-  { value: "adult", label: "3 years and older" },
-];
-
 function AdoptablePets() {
   const listRef = useRef(null);
 
@@ -28,9 +22,7 @@ function AdoptablePets() {
   const [query, setQuery] = useState("");
   // Filters are sent to the API (only animals available for adoption come back)
   const [type, setType] = useState("All");
-  const [breed, setBreed] = useState("All");
   const [sex, setSex] = useState("All");
-  const [age, setAge] = useState("All");
   const [page, setPage] = useState(1);
 
   const debouncedQuery = useDebouncedValue(query);
@@ -40,20 +32,17 @@ function AdoptablePets() {
       listPets({
         q: debouncedQuery || undefined,
         type: type === "All" ? undefined : type,
-        breed: breed === "All" ? undefined : breed,
         sex: sex === "All" ? undefined : sex,
-        age: age === "All" ? undefined : age,
         per_page: PETS_PER_PAGE,
         page,
       }),
-    [debouncedQuery, type, breed, sex, age, page]
+    [debouncedQuery, type, sex, page]
   );
 
   const visiblePets = data?.data ?? [];
   const totalPets = data?.meta.total ?? 0;
   const totalPages = Math.max(1, data?.meta.last_page ?? 1);
   const currentPage = page;
-  const breeds = data?.breeds ?? [];
 
   const changeFilter = (setter) => (next) => {
     setter(next);
@@ -77,7 +66,9 @@ function AdoptablePets() {
 
   return (
     <div className="adoptable">
-      <BackButton fallback="/" />
+      <div className="page-back">
+        <BackButton fallback="/" />
+      </div>
 
 
       <section
@@ -133,19 +124,7 @@ function AdoptablePets() {
             <option value="All">All Types</option>
             <option value="Dog">Dogs</option>
             <option value="Cat">Cats</option>
-          </select>
-
-          <select
-            value={breed}
-            onChange={(event) =>
-              changeFilter(setBreed)(event.target.value)
-            }
-            aria-label="Breed"
-          >
-            <option value="All">All Breeds</option>
-            {breeds.map((name) => (
-              <option key={name} value={name}>{name}</option>
-            ))}
+            <option value="Other">Others</option>
           </select>
 
           <select
@@ -158,21 +137,6 @@ function AdoptablePets() {
             <option value="All">Any Sex</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-          </select>
-
-          <select
-            value={age}
-            onChange={(event) =>
-              changeFilter(setAge)(event.target.value)
-            }
-            aria-label="Age"
-          >
-            <option value="All">Any Age</option>
-            {AGE_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
           </select>
 
         </div>

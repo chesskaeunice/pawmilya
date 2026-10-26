@@ -108,6 +108,7 @@
     minmax(180px, 1.4fr)
     minmax(130px, 1fr)
     minmax(130px, 1fr)
+    minmax(140px, 1.2fr)
     36px;
 
   align-items: start;
@@ -192,8 +193,7 @@
     display: none;
   }
 
-  .vaccinations__row > input:nth-child(2),
-  .vaccinations__row > input:nth-child(3) {
+  .vaccinations__row > .vaccinations__cell {
     grid-column: 1;
   }
 
@@ -550,4 +550,159 @@
 
 .vaccinations__action--danger {
   color: #b94b3c;
+}
+
+/* ---------- one row per animal, with its vaccines inside ---------- */
+
+.vaccinations__sub {
+  display: block;
+
+  margin-top: 2px;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+}
+
+.vaccinations__chevron {
+  transition: transform 0.2s ease;
+}
+
+.vaccinations__action[aria-expanded="true"] .vaccinations__chevron {
+  transform: rotate(180deg);
+}
+
+/* the open animal row and its vaccine list read as one block */
+.vaccinations__animal--open td {
+  border-bottom-color: transparent;
+}
+
+.vaccinations__detail-row > td {
+  padding: 0;
+
+  background: #fffaf0;
+}
+
+/* opens smoothly: the height goes from 0 to the content (grid rows 0fr -> 1fr) */
+.vaccinations__collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+
+  visibility: hidden;
+
+  transition:
+    grid-template-rows 0.22s ease,
+    visibility 0s linear 0.22s;
+}
+
+.vaccinations__collapse.is-open {
+  grid-template-rows: 1fr;
+
+  visibility: visible;
+
+  transition:
+    grid-template-rows 0.22s ease,
+    visibility 0s;
+}
+
+.vaccinations__collapse-inner {
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+.vaccinations__detail {
+  padding: 4px 16px 16px;
+}
+
+.vaccinations__detail-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  font-size: 12px;
+}
+
+.vaccinations__detail-table th {
+  padding: 8px 10px;
+
+  color: var(--color-muted);
+
+  font-size: 11px;
+  text-align: left;
+}
+
+.vaccinations__detail-table td {
+  padding: 9px 10px;
+
+  border-top: 1px solid var(--color-border);
+
+  vertical-align: top;
+}
+
+.vaccinations__detail-add {
+  margin-top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vaccinations__collapse,
+  .vaccinations__chevron {
+    transition: none;
+  }
+}
+
+/* phones: the vaccine list stacks (a label above each value) and stays in view while the wide table scrolls */
+@media (max-width: 700px) {
+  .vaccinations__collapse-inner {
+    position: sticky;
+    left: 0;
+
+    width: calc(100vw - 72px);
+    max-width: 100%;
+  }
+
+  .vaccinations__detail {
+    padding: 4px 12px 14px;
+  }
+
+  .vaccinations__detail-table,
+  .vaccinations__detail-table tbody,
+  .vaccinations__detail-table tr,
+  .vaccinations__detail-table td {
+    display: block;
+  }
+
+  .vaccinations__detail-table thead {
+    display: none;
+  }
+
+  .vaccinations__detail-table tr {
+    margin-bottom: 10px;
+    padding: 6px 0;
+
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+
+    background: var(--color-white);
+  }
+
+  .vaccinations__detail-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 6px 12px;
+
+    border-top: 0;
+  }
+
+  .vaccinations__detail-table td::before {
+    content: attr(data-label);
+
+    flex-shrink: 0;
+
+    color: var(--color-muted);
+
+    font-weight: 600;
+  }
 }

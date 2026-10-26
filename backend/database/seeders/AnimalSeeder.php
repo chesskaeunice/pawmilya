@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Animal;
 use App\Models\HealthLog;
 use App\Models\User;
+use App\Models\Vaccine;
 use Illuminate\Database\Seeder;
 
 class AnimalSeeder extends Seeder
@@ -50,19 +51,46 @@ class AnimalSeeder extends Seeder
             'owner_contact' => '0920 555 0144',
         ]);
 
+        // Vaccinations, given by the vet tech. Every animal that is past its first day in the pound has
+        // 2 or 3 different vaccines that fit its species (PAW-0005 is newly rescued: none yet).
+        // [animal code, vaccine (from the vaccines table), date given, next due]
         $logs = [
-            ['PAW-0001', 'Rabies', '2026-09-26', '2027-09-26'],
-            ['PAW-0002', 'FVRCP', '2026-09-26', '2026-12-26'],
-            ['PAW-0003', 'DHPP', '2026-09-26', '2026-10-20'],
+            ['PAW-0001', 'Anti-rabies', '2026-09-26', '2027-09-26'],
+            ['PAW-0001', '5-in-1 / DHPP', '2026-09-26', '2027-09-26'],
+            ['PAW-0001', 'Kennel cough (Bordetella)', '2026-09-27', '2027-03-26'],
+
+            ['PAW-0002', '4-in-1 / FVRCP', '2026-09-26', '2026-12-26'],
+            ['PAW-0002', 'Anti-rabies', '2026-09-26', '2027-09-26'],
+            ['PAW-0002', 'FeLV', '2026-10-10', '2027-10-10'],
+
+            ['PAW-0003', '5-in-1 / DHPP', '2026-09-26', '2026-10-20'],
+            ['PAW-0003', 'Anti-rabies', '2026-10-02', '2027-10-02'],
+            ['PAW-0003', 'Leptospirosis', '2026-10-02', '2027-10-02'],
+
+            ['PAW-0004', 'Anti-rabies', '2026-10-09', '2027-10-09'],
+            ['PAW-0004', '4-in-1 / FVRCP', '2026-10-09', '2027-10-09'],
+
+            ['PAW-0006', 'Anti-rabies', '2026-10-14', '2027-10-14'],
+            ['PAW-0006', '5-in-1 / DHPP', '2026-10-14', '2026-11-04'],
+
+            ['PAW-0007', 'Anti-rabies', '2026-09-05', '2027-09-05'],
+            ['PAW-0007', '4-in-1 / FVRCP', '2026-09-05', '2026-12-05'],
+            ['PAW-0007', 'FeLV', '2026-09-12', '2027-09-12'],
         ];
 
-        foreach ($logs as [$code, $vaccine, $given, $due]) {
-            $animal = Animal::where('animal_code', $code)->first();
+        $vet = User::where('email', 'vet@pawmilya.com')->first() ?? $vet;
 
-            HealthLog::firstOrCreate(
-                ['animal_id' => $animal->id, 'vaccine' => $vaccine, 'administered_at' => $given],
-                ['next_due_date' => $due, 'recorded_by' => $vet?->id]
+        foreach ($logs as [$code, $vaccineName, $given, $due]) {
+            $animal = Animal::where('animal_code', $code)->first();
+            $vaccine = Vaccine::forSpecies($animal->species)->where('name', $vaccineName)->firstOrFail();
+
+            HealthLog::updateOrCreate(
+                ['animal_id' => $animal->id, 'vaccine' => $vaccine->name, 'administered_at' => $given],
+                ['vaccine_id' => $vaccine->id, 'other_vaccine_name' => null, 'next_due_date' => $due, 'recorded_by' => $vet?->id]
             );
         }
+
+        // "vaccinated" follows the records
+        Animal::whereIn('animal_code', array_unique(array_column($logs, 0)))->get()->each->refreshVaccinated();
     }
 }

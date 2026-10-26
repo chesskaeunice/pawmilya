@@ -10,6 +10,7 @@ import myApplicationsHero from "../../../assets/images/users/home/MyApplications
 
 import "./MyApplications.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 const STATUS_FILTERS = ["All", "Pending", "Approved", "Rejected"];
 
@@ -43,7 +44,9 @@ function MyApplications() {
 
   return (
     <div className="my-applications">
-      <BackButton fallback="/" />
+      <div className="page-back">
+        <BackButton fallback="/" />
+      </div>
 
       {/* HERO */}
 
@@ -99,7 +102,7 @@ function MyApplications() {
                 aria-label={`View full image of ${application.petName}`}
               >
                 {application.image ? (
-                  <img src={application.image} alt={application.petName} />
+                  <SafeImage type={application.type} src={application.image} alt={application.petName} />
                 ) : (
                   <span>Pet Image</span>
                 )}
@@ -185,7 +188,7 @@ function MyApplications() {
             onClick={(event) => event.stopPropagation()}
           >
             {expandedPet.image ? (
-              <img src={expandedPet.image} alt={expandedPet.petName} />
+              <SafeImage src={expandedPet.image} alt={expandedPet.petName} />
             ) : (
               <div className="my-applications__lightbox-placeholder">
                 Pet Image

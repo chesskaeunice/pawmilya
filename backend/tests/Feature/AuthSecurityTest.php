@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\AuditLog;
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Notifications\PawmilyaResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
@@ -184,7 +184,7 @@ class AuthSecurityTest extends TestCase
         $unknown = $this->postJson('/api/forgot-password', ['email' => 'nobody@test.com'])->assertOk()->json();
 
         $this->assertSame($known, $unknown);
-        Notification::assertSentToTimes(User::first(), ResetPassword::class, 1);
+        Notification::assertSentToTimes(User::first(), PawmilyaResetPassword::class, 1);
     }
 
     public function test_reset_works_once_and_revokes_tokens(): void

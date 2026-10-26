@@ -328,7 +328,7 @@ class AdoptionApplicationApiTest extends TestCase
         $animal = $this->animal();
         $first = $this->pendingApplication($this->makeUser('citizen', 'one@test.com'), $animal);
         $second = $this->pendingApplication($this->makeUser('citizen', 'two@test.com'), $animal);
-        $this->actingAs_($this->makeUser('kennel_manager'));
+        $this->actingAs_($this->makeUser('adoption_counselor'));
 
         $this->postJson("/api/adoption-applications/{$first->id}/approve")->assertOk();
 
@@ -345,7 +345,7 @@ class AdoptionApplicationApiTest extends TestCase
     {
         $animal = $this->animal(['status' => 'Reunited with Owner']);
         $application = $this->pendingApplication($this->makeUser('citizen'), $animal);
-        $this->actingAs_($this->makeUser('kennel_manager'));
+        $this->actingAs_($this->makeUser('adoption_counselor'));
 
         $this->postJson("/api/adoption-applications/{$application->id}/approve")->assertUnprocessable();
         $this->assertSame('Pending', $application->fresh()->status);
@@ -370,12 +370,24 @@ class AdoptionApplicationApiTest extends TestCase
         $animal = $this->animal();
         $application = $this->pendingApplication($this->makeUser('citizen'), $animal);
 
-        foreach (['pound_staff', 'vet_tech'] as $role) {
-            $this->actingAs_($this->makeUser($role));
+        // the adoption counselor is the only role that decides; the kennel manager only oversees
+        $kennelManager = null;
+        foreach (['pound_staff', 'vet_tech', 'kennel_manager', 'citizen'] as $role) {
+            $user = $this->makeUser($role, $role.'-staff@test.com');
+            $kennelManager = $role === 'kennel_manager' ? $user : $kennelManager;
+            $this->actingAs_($user);
             $this->postJson("/api/adoption-applications/{$application->id}/approve")->assertForbidden();
             $this->postJson("/api/adoption-applications/{$application->id}/reject")->assertForbidden();
         }
 
         $this->assertSame('Pending', $application->fresh()->status);
+
+        // the kennel manager can still read the applications
+        $this->actingAs_($kennelManager);
+        $this->getJson('/api/adoption-applications')->assertOk();
+        $this->getJson("/api/adoption-applications/{$application->id}")->assertOk();
+
+        $this->actingAs_($this->makeUser('adoption_counselor'));
+        $this->postJson("/api/adoption-applications/{$application->id}/reject")->assertOk();
     }
 }

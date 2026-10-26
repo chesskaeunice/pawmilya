@@ -12,10 +12,13 @@ class MissingPetReport extends Model
     // What a reporter can choose when filing (Reunited is set later)
     public const FILING_STATUSES = ['Lost', 'Sighted', 'Found'];
 
+    // "I am the" on the report forms: the pet's owner or a concerned citizen
+    public const REPORTER_TYPES = ['Owner', 'Citizen'];
+
     // status is set by the filing flow / staff, never mass assigned from a form
     protected $fillable = [
         'reporter_id', 'contact_name', 'contact_number', 'contact_email', 'name', 'species', 'other_species',
-        'breed', 'sex', 'color', 'markings', 'location', 'last_seen_at', 'details',
+        'breed', 'sex', 'color', 'markings', 'location', 'last_seen_at', 'details', 'reporter_type',
     ];
 
     protected function casts(): array
@@ -45,6 +48,12 @@ class MissingPetReport extends Model
     public function photos(): HasMany
     {
         return $this->hasMany(MissingPetPhoto::class)->orderBy('position');
+    }
+
+    // The animal registered in the pound from this (Found) report, if any
+    public function animal(): BelongsTo
+    {
+        return $this->belongsTo(Animal::class);
     }
 
     // Name of what the animal is: "Rabbit" for Other + other_species

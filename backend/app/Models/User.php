@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\PawmilyaResetPassword;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -68,5 +69,11 @@ class User extends Authenticatable
     public function staffShifts(): HasMany
     {
         return $this->hasMany(StaffShift::class);
+    }
+
+    // The branded PAWmilya reset email instead of Laravel's default one
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new PawmilyaResetPassword($token));
     }
 }

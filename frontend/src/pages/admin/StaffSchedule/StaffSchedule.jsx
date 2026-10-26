@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
+
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import useFetch from "../../../hooks/useFetch.js";
 import {
@@ -20,7 +22,6 @@ import {
 import "../../../components/admin/Shifts.css";
 import BackButton from "../../../components/common/BackButton.jsx";
 
-const DAYS_SHOWN = 14;
 const NONE = [];
 const STATUSES = ["pending", "active", "completed"];
 
@@ -34,11 +35,11 @@ const addDays = (iso, days) => {
 function StaffSchedule() {
   const todayISO = toISODate(new Date());
 
-  const [from, setFrom] = useState(todayISO);
-  const to = addDays(from, DAYS_SHOWN - 1);
+  // the one day that is shown: assignments, coverage and warnings are for this day only
+  const [day, setDay] = useState(todayISO);
 
   const meta = useFetch(() => getScheduleMeta(), []);
-  const schedule = useFetch(() => getAssignments({ from, to }), [from]);
+  const schedule = useFetch(() => getAssignments({ from: day, to: day }), [day]);
 
   const [form, setForm] = useState({ user_id: "", shift_id: "", assigned_date: todayISO });
   const [notice, setNotice] = useState(null);
@@ -52,22 +53,14 @@ function StaffSchedule() {
   const coverageFor = (date, shiftId) =>
     coverage.find((row) => row.date === date && row.shiftId === shiftId);
 
-  const days = useMemo(
-    () => Array.from({ length: DAYS_SHOWN }, (_, index) => addDays(from, index)),
-    [from]
-  );
+  // the chosen day's assignments, by shift
+  const byShift = {};
+  assignments.forEach((item) => {
+    (byShift[item.shiftId] ??= []).push(item);
+  });
 
-  // Assignments grouped by date, then by shift
-  const grouped = useMemo(() => {
-    const byDate = {};
-
-    assignments.forEach((item) => {
-      byDate[item.assignedDate] ??= {};
-      (byDate[item.assignedDate][item.shiftId] ??= []).push(item);
-    });
-
-    return byDate;
-  }, [assignments]);
+  // an invalid or empty date (while typing) keeps the day that is shown
+  const chooseDay = (value) => value && setDay(value);
 
   const missingText = (row) =>
     row.missing.map((role) => ROLE_LABELS[role]).join(" and ");
@@ -94,7 +87,10 @@ function StaffSchedule() {
       });
 
       setNotice(coverageNotice("Shift assigned.", result.coverage));
-      schedule.reload();
+
+      // show the day that was just assigned
+      if (form.assigned_date === day) schedule.reload();
+      else setDay(form.assigned_date);
     } catch (error) {
       const { message, fields } = formatApiError(error);
       setNotice({ type: "error", text: Object.values(fields)[0] || message });
@@ -240,14 +236,30 @@ function StaffSchedule() {
           </h2>
 
           <div className="shifts-list__actions">
-            <button type="button" className="staff-button staff-button--outline" onClick={() => setFrom(addDays(from, -7))}>
-              Earlier
+            <button
+              type="button"
+              className="staff-button staff-button--outline"
+              onClick={() => setDay(addDays(day, -1))}
+              aria-label="Previous day"
+            >
+              <ChevronLeft size={14} />
             </button>
-            <button type="button" className="staff-button staff-button--outline" onClick={() => setFrom(todayISO)}>
-              Today
-            </button>
-            <button type="button" className="staff-button staff-button--outline" onClick={() => setFrom(addDays(from, 7))}>
-              Later
+
+            <input
+              type="date"
+              className="schedule__day"
+              value={day}
+              onChange={(event) => chooseDay(event.target.value)}
+              aria-label="Day shown"
+            />
+
+            <button
+              type="button"
+              className="staff-button staff-button--outline"
+              onClick={() => setDay(addDays(day, 1))}
+              aria-label="Next day"
+            >
+              <ChevronRight size={14} />
             </button>
           </div>
         </div>
@@ -264,28 +276,26 @@ function StaffSchedule() {
             </thead>
 
             <tbody>
-              {days.map((day) => (
-                <tr key={day}>
-                  <td>{formatDay(day)}</td>
+              <tr>
+                <td>{formatDay(day)}</td>
 
-                  {shifts.map((shift) => {
-                    const row = coverageFor(day, shift.id);
+                {shifts.map((shift) => {
+                  const row = coverageFor(day, shift.id);
 
-                    return (
-                      <td key={shift.id}>
-                        {row && (
-                          <span
-                            className={`shifts-coverage ${row.complete ? "shifts-coverage--ok" : "shifts-coverage--missing"}`}
-                            title={row.complete ? "Covered" : `Missing: ${missingText(row)}`}
-                          >
-                            {row.complete ? "✓ Covered" : `✗ ${missingText(row)}`}
-                          </span>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
+                  return (
+                    <td key={shift.id}>
+                      {row && (
+                        <span
+                          className={`shifts-coverage ${row.complete ? "shifts-coverage--ok" : "shifts-coverage--missing"}`}
+                          title={row.complete ? "Covered" : `Missing: ${missingText(row)}`}
+                        >
+                          {row.complete ? "✓ Covered" : `✗ ${missingText(row)}`}
+                        </span>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
             </tbody>
           </table>
         </div>
@@ -295,12 +305,12 @@ function StaffSchedule() {
 
       <div className="schedule__layout shifts-card">
 
-        {/* ASSIGNMENTS, GROUPED BY DATE AND SHIFT */}
+        {/* ASSIGNMENTS OF THE CHOSEN DAY, BY SHIFT */}
 
         <section className="staff-detail-card">
 
           <h2 className="staff-detail-card__title">
-            Assignments
+            Assignments · {formatDay(day)}
           </h2>
 
           {schedule.loading && assignments.length === 0 && (
@@ -308,81 +318,71 @@ function StaffSchedule() {
           )}
 
           {!schedule.loading && assignments.length === 0 && (
-            <p className="shifts-empty">No assignments in this period.</p>
+            <p className="shifts-empty">No assignments on this day.</p>
           )}
 
-          {days
-            .filter((day) => grouped[day])
-            .map((day) => (
-              <div key={day} className="schedule__group">
+          {shifts
+            .filter((shift) => byShift[shift.id])
+            .map((shift) => {
+              const row = coverageFor(day, shift.id);
 
-                <h3>{formatDay(day)}</h3>
+              return (
+                <div key={shift.id} className="schedule__group">
 
-                {shifts
-                  .filter((shift) => grouped[day][shift.id])
-                  .map((shift) => {
-                    const row = coverageFor(day, shift.id);
+                  <div className="schedule__group-head">
+                    <strong>
+                      {shift.name} · {formatShiftTime(shift)}
+                    </strong>
 
-                    return (
-                      <div key={shift.id} className="schedule__group">
+                    {row && (
+                      <span className={`shifts-coverage ${row.complete ? "shifts-coverage--ok" : "shifts-coverage--missing"}`}>
+                        {row.complete ? "Covered" : `Needs ${missingText(row)}`}
+                      </span>
+                    )}
+                  </div>
 
-                        <div className="schedule__group-head">
-                          <strong>
-                            {shift.name} · {formatShiftTime(shift)}
-                          </strong>
+                  <ul className="shifts-list">
+                    {byShift[shift.id].map((item) => (
+                      <li key={item.id}>
 
-                          {row && (
-                            <span className={`shifts-coverage ${row.complete ? "shifts-coverage--ok" : "shifts-coverage--missing"}`}>
-                              {row.complete ? "Covered" : `Needs ${missingText(row)}`}
-                            </span>
-                          )}
+                        <div className="shifts-list__main">
+                          <strong>{item.userName}</strong>
+                          <span>
+                            {ROLE_LABELS[item.userRole]}
+                            {item.checkInTime && ` · in ${formatClock(item.checkInTime)}`}
+                            {item.checkOutTime && ` · out ${formatClock(item.checkOutTime)}`}
+                          </span>
                         </div>
 
-                        <ul className="shifts-list">
-                          {grouped[day][shift.id].map((item) => (
-                            <li key={item.id}>
+                        <div className="shifts-list__actions">
+                          <select
+                            value={item.status}
+                            onChange={(event) => handleStatus(item, event.target.value)}
+                            aria-label={`Status for ${item.userName}`}
+                          >
+                            {STATUSES.map((status) => (
+                              <option key={status} value={status}>
+                                {status}
+                              </option>
+                            ))}
+                          </select>
 
-                              <div className="shifts-list__main">
-                                <strong>{item.userName}</strong>
-                                <span>
-                                  {ROLE_LABELS[item.userRole]}
-                                  {item.checkInTime && ` · in ${formatClock(item.checkInTime)}`}
-                                  {item.checkOutTime && ` · out ${formatClock(item.checkOutTime)}`}
-                                </span>
-                              </div>
+                          <button
+                            type="button"
+                            className="schedule__remove"
+                            onClick={() => handleRemove(item)}
+                          >
+                            Remove
+                          </button>
+                        </div>
 
-                              <div className="shifts-list__actions">
-                                <select
-                                  value={item.status}
-                                  onChange={(event) => handleStatus(item, event.target.value)}
-                                  aria-label={`Status for ${item.userName}`}
-                                >
-                                  {STATUSES.map((status) => (
-                                    <option key={status} value={status}>
-                                      {status}
-                                    </option>
-                                  ))}
-                                </select>
+                      </li>
+                    ))}
+                  </ul>
 
-                                <button
-                                  type="button"
-                                  className="schedule__remove"
-                                  onClick={() => handleRemove(item)}
-                                >
-                                  Remove
-                                </button>
-                              </div>
-
-                            </li>
-                          ))}
-                        </ul>
-
-                      </div>
-                    );
+                </div>
+              );
                   })}
-
-              </div>
-            ))}
 
         </section>
 

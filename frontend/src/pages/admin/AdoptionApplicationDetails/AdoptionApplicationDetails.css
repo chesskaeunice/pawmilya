@@ -981,21 +981,6 @@
 }
 
 
-/* REQUEST */
-
-.application-details__request {
-  border:
-    1px solid
-    #d8b26e;
-
-  background:
-    #fff9ec;
-
-  color:
-    #85611f;
-}
-
-
 /* =========================================
    NOT FOUND
 ========================================= */

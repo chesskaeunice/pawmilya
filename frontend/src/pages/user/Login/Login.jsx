@@ -3,26 +3,34 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import useAuth from "../../../hooks/useAuth.js";
 import { PasswordInput } from "../../../components/user/PasswordInput.jsx";
+import FieldError, { FormError } from "../../../components/common/FieldError.jsx";
 import { formatApiError } from "../../../services/authService.js";
 import { CITIZEN } from "../../../config/rolePermissions.js";
 
 import "./Login.css";
-import BackButton from "../../../components/common/BackButton.jsx";
 
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [error, setError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+
+  // typing in a field clears its error (and the form message)
+  const clearError = (key) => {
+    setErrors((current) => ({ ...current, [key]: undefined }));
+    setFormError("");
+  };
 
   // Staff go to the admin area; citizens go back to the page they came from
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
 
-    setError("");
+    setFormError("");
+    setErrors({});
     setSubmitting(true);
 
     try {
@@ -34,7 +42,15 @@ function Login() {
       navigate(home, { replace: true });
     } catch (err) {
       const { message, fields } = formatApiError(err);
-      setError(fields.email || message);
+
+      if (fields.email && String(form.get("email")).trim()) {
+        // a rejected email + password pair is about the whole form, not one field
+        setFormError(fields.email);
+      } else if (Object.keys(fields).length) {
+        setErrors(fields);
+      } else {
+        setFormError(message);
+      }
       setSubmitting(false);
     }
   };
@@ -44,8 +60,6 @@ function Login() {
       <section className="login__container">
 
         <div className="login__intro">
-      <BackButton fallback="/" />
-
           <p className="login__eyebrow">
             Welcome Back
           </p>
@@ -80,17 +94,13 @@ function Login() {
           </div>
 
 
-          <form className="login__form" onSubmit={handleSubmit}>
+          <form className="login__form" onSubmit={handleSubmit} noValidate>
 
             {location.state?.notice && !error && (
               <p className="login__notice" role="status">{location.state.notice}</p>
             )}
 
-            {error && (
-              <p className="login__error" role="alert">
-                {error}
-              </p>
-            )}
+            <FormError message={formError} />
 
             <div className="login__field">
               <label htmlFor="email">
@@ -104,7 +114,11 @@ function Login() {
                 autoComplete="username"
                 required
                 placeholder="name@email.com"
+                onChange={() => clearError("email")}
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby="email-error"
               />
+              <FieldError id="email-error" message={errors.email} />
             </div>
 
 
@@ -119,7 +133,11 @@ function Login() {
                 autoComplete="current-password"
                 required
                 placeholder="Enter your password"
+                onChange={() => clearError("password")}
+                invalid={Boolean(errors.password)}
+                describedBy="password-error"
               />
+              <FieldError id="password-error" message={errors.password} />
             </div>
 
 

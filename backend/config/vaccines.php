@@ -5,6 +5,7 @@ return [
     'default_interval_days' => 365,
 
     'intervals' => [
+        'Kennel cough (Bordetella)' => 180,
         'Bordetella' => 180,
         'Canine Influenza' => 365,
         'Leptospirosis' => 365,

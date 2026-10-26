@@ -23,7 +23,7 @@ class PasswordRules
             function (string $attribute, mixed $value, \Closure $fail) use ($identity) {
                 foreach ($identity ? $identity() : [] as $part) {
                     if ($part && strcasecmp(trim((string) $part), (string) $value) === 0) {
-                        $fail('The password cannot be the same as your email or name.');
+                        $fail('Your password cannot be the same as your email or name.');
                     }
                 }
             },

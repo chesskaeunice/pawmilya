@@ -22,6 +22,7 @@ import {
 
 import "./EditAnimal.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
 function EditAnimal() {
@@ -102,26 +103,26 @@ function EditAnimalForm({ pet }) {
      The API enforces the same rules.
   ========================================= */
 
-  // Name, type, breed, sex, owner info: Kennel Manager only
+  // Name, type, breed, sex, owner info: Pound Staff only
   const canEditBasic = can("animals.edit");
 
-  // General status: Kennel Manager full, Counselor / Vet Tech limited
+  // General status: Pound Staff (Rescued / Reunited with Owner only), Counselor and Vet Tech (limited)
   const canEditStatus =
     can("animals.edit") ||
     can("animals.adoptionUpdate") ||
     can("animals.healthUpdate");
 
-  // Health status: Kennel Manager and Vet Tech
+  // Health status: Pound Staff and Vet Tech
   const canEditHealth =
     can("animals.edit") ||
     can("animals.healthUpdate");
 
-  // Kennel location: Kennel Manager and Pound Staff
+  // Kennel location: Pound Staff only
   const canEditLocation =
     can("animals.edit") ||
     can("animals.husbandryUpdate");
 
-  // Description / behavior notes: all except Vet Tech
+  // Description / behavior notes: Pound Staff and Adoption Counselor
   const canEditNotes =
     can("animals.edit") ||
     can("animals.adoptionUpdate") ||
@@ -179,7 +180,7 @@ function EditAnimalForm({ pet }) {
         </div>
 
         {photo && (
-          <img src={photo} alt={`Main photo of ${petName}`} style={{ maxWidth: 180, borderRadius: 12 }} />
+          <SafeImage src={photo} alt={`Main photo of ${petName}`} style={{ maxWidth: 180, borderRadius: 12 }} />
         )}
 
         <input type="file" accept="image/jpeg,image/png,image/webp" onChange={changePhoto} />
@@ -303,7 +304,7 @@ function EditAnimalForm({ pet }) {
                 disabled={!canEditStatus}
               >
                 {/* the current status always stays listed, even when this role cannot pick it */}
-                {[...new Set([pet.status, ...allowedStatuses(can)])].map((value) => (
+                {[...new Set([pet.status, ...allowedStatuses(can, pet.status)])].map((value) => (
                   <option key={value}>{value}</option>
                 ))}
               </select>

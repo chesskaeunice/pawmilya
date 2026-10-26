@@ -16,6 +16,10 @@ class StaffMissingPetResource extends MissingPetResource
             'reporterPhone' => $this->contact_number ?: $reporter?->phone,
             'reporterEmail' => $this->contact_email ?: $reporter?->email,
             'reportedBy' => $reporter ? 'Citizen' : 'Guest',
+            // "Owner" or "Citizen" (who filed it: the pet's owner or a concerned citizen); null on older reports
+            'reporterType' => $this->reporter_type,
+            // set once the pet is registered as an animal in the pound
+            'animal_id' => $this->animal_id,
         ]);
     }
 }

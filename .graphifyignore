@@ -5,3 +5,7 @@ vendor/
 dist/
 
 .engram/
+
+references/pawfectly_yours/
+references/Wireframes/
+references/*.pdf

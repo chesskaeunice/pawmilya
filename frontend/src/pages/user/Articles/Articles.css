@@ -77,6 +77,11 @@
 
 @media (max-width: 650px) {
 
+  /* the content is 12px from the edge on phones: the Back button follows (see BackButton.css) */
+  .articles-page {
+    --page-back-width: min(100% - 24px, 1180px);
+  }
+
   .articles-page__header,
   .articles-page__container {
     width: min(100% - 24px, 1180px);
@@ -105,3 +110,4 @@
   background-color: var(--color-brown);
   color: var(--color-white);
 }
+

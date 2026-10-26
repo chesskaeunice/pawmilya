@@ -3,7 +3,7 @@
 
   margin: 0 auto;
 
-  padding: 55px 0 80px;
+  padding: 0 0 80px;
 }
 
 .report-pet__header {
@@ -102,9 +102,44 @@
   font-weight: 700;
 }
 
+/* Pet Information grid, fixed so choosing a type or a breed never moves the other fields:
+   row 1  Pet Name | Pet Type
+   row 2  Breed type (or a plain Breed input for Others) | Breed dropdown (dog, cat) or Specify the animal (Others)
+   row 3  Color / Markings | Specify the breed */
+.report-pet .breed-select__kind {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.report-pet .breed-select__choice,
+.report-pet__other {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.report-pet .breed-select__specify {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.report-pet__color {
+  grid-column: 1;
+  grid-row: 3;
+}
+
 @media (max-width: 600px) {
   .report-pet__grid {
     grid-template-columns: 1fr;
+  }
+
+  /* single column: the fields simply follow each other */
+  .report-pet .breed-select__kind,
+  .report-pet .breed-select__choice,
+  .report-pet .breed-select__specify,
+  .report-pet__other,
+  .report-pet__color {
+    grid-column: auto;
+    grid-row: auto;
   }
 }
 
@@ -123,6 +158,7 @@
 .report-pet__back {
   min-width: 40px;
   height: 40px;
+}
 
 
 /* =========================================
@@ -157,6 +193,13 @@
 .report-pet__radio input {
   width: auto;
   margin: 0;
+}
+
+/* the options and their error line: the line takes no space until there is an error */
+.report-pet__radio-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 /* =========================================
@@ -258,6 +301,19 @@
   min-height: 0;
   margin: 0;
   padding: 0;
+}
+
+/* a radio is not a text field: no box around it when it is selected or focused;
+   keyboard users get a small ring on the circle itself */
+.report-pet__form .report-pet__radio input[type="radio"] {
+  border: 0;
+  box-shadow: none;
+}
+
+.report-pet__form .report-pet__radio input[type="radio"]:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+  border-radius: 50%;
 }
 
 .report-pet__form .report-pet__radio > span {

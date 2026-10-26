@@ -42,7 +42,7 @@ function getLinks(isLoggedIn) {
 // styles/user-layout.css). Guests have no account buttons; a logged-in user
 // gets an avatar menu at the far right.
 function UserNavbar() {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
   const activeId = useActiveSection(sectionIds);
   const goToSection = useGoToSection();
   const navigate = useNavigate();
@@ -166,14 +166,9 @@ function UserNavbar() {
         <div className="user-navbar__actions">
 
           {!isLoggedIn && (
-            <>
-              <Link to="/login" className="user-navbar__login">
-                Log In
-              </Link>
-              <Link to="/signup" className="user-navbar__signup">
-                Sign Up
-              </Link>
-            </>
+            <Link to="/login" className="user-navbar__login">
+              Log In
+            </Link>
           )}
 
           {isLoggedIn && (
@@ -189,7 +184,11 @@ function UserNavbar() {
                 aria-controls="user-menu-list"
                 aria-label="Account menu"
               >
-                <User size={20} aria-hidden="true" />
+                {user?.avatar_url ? (
+                  <img src={user.avatar_url} alt="" className="user-menu__photo" />
+                ) : (
+                  <User size={20} aria-hidden="true" />
+                )}
               </button>
 
               {menuOpen && (

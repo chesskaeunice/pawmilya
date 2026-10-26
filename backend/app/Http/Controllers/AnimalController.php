@@ -59,6 +59,7 @@ class AnimalController extends Controller
 
         $animal = DB::transaction(function () use ($request, $data) {
             $animal = new Animal($data);
+            $animal->status = StoreAnimalRequest::START_STATUS;
             $animal->created_by = $request->user()->id;
             $animal->save();
 
@@ -91,7 +92,7 @@ class AnimalController extends Controller
         return new AnimalResource($animal->load('photos'));
     }
 
-    // Replaces the main photo (first position). Every staff role may do this (animals.photo).
+    // Replaces the main photo (first position). Adoption counselor, vet tech and pound staff (animals.photo).
     public function updatePhoto(Request $request, Animal $animal): AnimalResource
     {
         $request->validate(['image' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);

@@ -13,7 +13,7 @@ import SignInModal from "../components/common/SignInModal.jsx";
 // that needs an account (RequireSignIn puts signInFrom in the route state).
 export function ModalProvider({ children }) {
   const location = useLocation();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
 
   const [active, setActive] = useState(null);
   const [signIn, setSignIn] = useState({ from: "/", reason: "" });
@@ -48,9 +48,10 @@ export function ModalProvider({ children }) {
     <ModalContext.Provider value={value}>
       {children}
 
-      {/* guests only */}
+      {/* guests only; not while a stored login is still being checked, or the pop-up would
+          open for a visitor who turns out to be logged in and then vanish */}
       <EmergencyReportModal
-        isOpen={active === "emergency" && !isLoggedIn}
+        isOpen={active === "emergency" && !isLoggedIn && !loading}
         onClose={close}
       />
 

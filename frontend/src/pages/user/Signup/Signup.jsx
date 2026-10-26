@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import useAuth from "../../../hooks/useAuth.js";
-import { FieldError, PasswordHelp, PasswordInput } from "../../../components/user/PasswordInput.jsx";
+import { PasswordHelp, PasswordInput } from "../../../components/user/PasswordInput.jsx";
+import FieldError, { FormError } from "../../../components/common/FieldError.jsx";
+import { moveConfirmationError } from "../../../utils/formErrors.js";
 import { formatApiError } from "../../../services/authService.js";
 
 import "./Signup.css";
-import BackButton from "../../../components/common/BackButton.jsx";
 
 function Signup() {
   const { register } = useAuth();
@@ -15,9 +16,22 @@ function Signup() {
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  // the password help is only open while this field is being used
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const [values, setValues] = useState({ firstName: "", lastName: "", email: "", password: "" });
 
-  const track = (key) => (event) => setValues({ ...values, [key]: event.target.value });
+  const clearError = (...keys) =>
+    setErrors((current) => {
+      const next = { ...current };
+      keys.forEach((key) => delete next[key]);
+      return next;
+    });
+
+  // typing in a field clears that field's error (red border and message go away)
+  const track = (key, ...errorKeys) => (event) => {
+    setValues({ ...values, [key]: event.target.value });
+    clearError(...errorKeys);
+  };
 
   // Creates a citizen account and logs in
   const handleSubmit = async (event) => {
@@ -41,7 +55,7 @@ function Signup() {
       navigate("/", { replace: true });
     } catch (err) {
       const { message, fields } = formatApiError(err);
-      setErrors(fields);
+      setErrors(moveConfirmationError(fields));
       setFormError(Object.keys(fields).length ? "" : message);
       setSubmitting(false);
     }
@@ -52,8 +66,6 @@ function Signup() {
       <section className="signup__container">
 
         <div className="signup__intro">
-      <BackButton fallback="/" />
-
           <p className="signup__eyebrow">
             Join PAWmilya
           </p>
@@ -88,11 +100,9 @@ function Signup() {
           </div>
 
 
-          <form className="signup__form" onSubmit={handleSubmit}>
+          <form className="signup__form" onSubmit={handleSubmit} noValidate>
 
-            {formError && (
-              <p className="signup__error" role="alert">{formError}</p>
-            )}
+            <FormError message={formError} />
 
             <div className="signup__name-grid">
 
@@ -108,10 +118,12 @@ function Signup() {
                   autoComplete="given-name"
                   maxLength={100}
                   value={values.firstName}
-                  onChange={track("firstName")}
+                  onChange={track("firstName", "first_name")}
+                  aria-invalid={Boolean(errors.first_name)}
+                  aria-describedby="firstName-error"
                   placeholder="Enter first name"
                 />
-                <FieldError message={errors.first_name} />
+                <FieldError id="firstName-error" message={errors.first_name} />
               </div>
 
 
@@ -127,10 +139,12 @@ function Signup() {
                   autoComplete="family-name"
                   maxLength={100}
                   value={values.lastName}
-                  onChange={track("lastName")}
+                  onChange={track("lastName", "last_name")}
+                  aria-invalid={Boolean(errors.last_name)}
+                  aria-describedby="lastName-error"
                   placeholder="Enter last name"
                 />
-                <FieldError message={errors.last_name} />
+                <FieldError id="lastName-error" message={errors.last_name} />
               </div>
 
             </div>
@@ -147,10 +161,12 @@ function Signup() {
                 name="email"
                 autoComplete="username"
                 value={values.email}
-                onChange={track("email")}
+                onChange={track("email", "email")}
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby="email-error"
                 placeholder="name@email.com"
               />
-              <FieldError message={errors.email} />
+              <FieldError id="email-error" message={errors.email} />
             </div>
 
 
@@ -165,8 +181,11 @@ function Signup() {
                 name="phone"
                 autoComplete="tel"
                 placeholder="09XX XXX XXXX"
+                onChange={() => clearError("phone")}
+                aria-invalid={Boolean(errors.phone)}
+                aria-describedby="phone-error"
               />
-              <FieldError message={errors.phone} />
+              <FieldError id="phone-error" message={errors.phone} />
             </div>
 
 
@@ -183,9 +202,13 @@ function Signup() {
                   autoComplete="new-password"
                   placeholder="Enter password"
                   value={values.password}
-                  onChange={track("password")}
+                  onChange={track("password", "password", "password_confirmation")}
+                  invalid={Boolean(errors.password)}
+                  onFocus={() => setPasswordFocused(true)}
+                  onBlur={() => setPasswordFocused(false)}
+                  describedBy="password-error password-help"
                 />
-                <FieldError message={errors.password} />
+                <FieldError id="password-error" message={errors.password} />
               </div>
 
 
@@ -199,13 +222,21 @@ function Signup() {
                   name="confirmPassword"
                   autoComplete="new-password"
                   placeholder="Repeat password"
+                  onChange={() => clearError("password_confirmation")}
+                  invalid={Boolean(errors.password_confirmation)}
+                  describedBy="confirmPassword-error"
                 />
+                <FieldError id="confirmPassword-error" message={errors.password_confirmation} />
               </div>
 
             </div>
 
 
             <PasswordHelp
+              id="password-help"
+              collapsible
+              focused={passwordFocused}
+              forceOpen={Boolean(errors.password)}
               password={values.password}
               context={{
                 email: values.email,
@@ -219,14 +250,36 @@ function Signup() {
               <input
                 type="checkbox"
                 name="terms"
+                onChange={() => clearError("terms")}
+                aria-invalid={Boolean(errors.terms)}
+                aria-describedby="terms-error"
               />
 
               <span>
-                I agree to the Terms of Use and Privacy Policy.
+                I agree to the{" "}
+                {/* new tab, so the sign-up form is not lost; the click must not toggle the checkbox */}
+                <a
+                  href="/terms-of-service?from=signup"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  Terms of Use
+                </a>{" "}
+                and{" "}
+                <a
+                  href="/privacy-policy?from=signup"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  Privacy Policy
+                </a>
+                .
               </span>
 
             </label>
-            <FieldError message={errors.terms} />
+            <FieldError id="terms-error" message={errors.terms} />
 
 
             <button

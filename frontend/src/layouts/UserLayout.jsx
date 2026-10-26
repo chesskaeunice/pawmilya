@@ -11,20 +11,24 @@ import "../styles/landing-motion.css";
 // Pages that get the soft fade between pages (landing, adoptable, missing, articles)
 const FADE_PATHS = ["/", "/adoptable-pets", "/missing-pets", "/articles"];
 
+// Login and Sign Up are full-screen pages: no navbar and no footer
+const BARE_PATHS = ["/login", "/signup"];
+
 const usesFade = (pathname) =>
   pathname === "/" ||
   FADE_PATHS.some((base) => base !== "/" && pathname.startsWith(base));
 
 function UserLayout() {
   const { pathname } = useLocation();
+  const bare = BARE_PATHS.includes(pathname);
 
   useScrollOnNavigate();
 
   return (
       <ModalProvider>
-      <div className="user-layout">
+      <div className={bare ? "user-layout user-layout--bare" : "user-layout"}>
 
-        <UserNavbar />
+        {!bare && <UserNavbar />}
 
         <main
           key={usesFade(pathname) ? pathname : "other"}
@@ -37,7 +41,7 @@ function UserLayout() {
           <Outlet />
         </main>
 
-        <UserFooter />
+        {!bare && <UserFooter />}
 
         <EmergencyButton />
 

@@ -17,6 +17,8 @@ class AnimalResource extends JsonResource
             'animal_code' => $this->animal_code,
             'name' => $this->name,
             'type' => $this->species,
+            // what an animal of type Other is ("Rabbit"), when known
+            'other_species' => $this->other_species,
             'breed' => $this->breed,
             'sex' => $this->sex,
             'age_months' => $this->age_months,

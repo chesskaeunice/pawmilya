@@ -13,15 +13,28 @@ export const HEALTH_STATUSES = [
   "Cleared",
 ];
 
-// "Limited" status changes for roles without animals.edit (the API enforces the same list)
+// The statuses that belong to the adoption flow (counselor, approval of an application)
+const ADOPTION_STATUSES = ["Available for Adoption", "Pending Adoption", "Adopted"];
+
+// Which statuses each permission may set (the API enforces the same lists).
+// animals.edit (pound staff) covers Rescued and Reunited with Owner only.
 const STATUS_LIMITS = {
-  "animals.adoptionUpdate": ["Available for Adoption", "Pending Adoption", "Adopted"],
+  "animals.edit": ["Rescued", "Reunited with Owner"],
+  "animals.adoptionUpdate": ADOPTION_STATUSES,
   "animals.healthUpdate": ["Rescued", "Available for Adoption"],
 };
 
-// Statuses a role may choose; `can` is the permission check from useAuth
-export function allowedStatuses(can) {
-  if (can("animals.edit")) return ANIMAL_STATUSES;
+// Statuses a role may choose for an animal that has `currentStatus` (the current one is always
+// listed by the Edit page). `can` is the permission check from useAuth.
+export function allowedStatuses(can, currentStatus) {
+  // an animal in the adoption flow can only be moved by the roles of that flow
+  if (
+    ADOPTION_STATUSES.includes(currentStatus) &&
+    !can("animals.adoptionUpdate") &&
+    !can("animals.healthUpdate")
+  ) {
+    return [];
+  }
 
   return ANIMAL_STATUSES.filter((status) =>
     Object.entries(STATUS_LIMITS).some(([permission, list]) => can(permission) && list.includes(status))

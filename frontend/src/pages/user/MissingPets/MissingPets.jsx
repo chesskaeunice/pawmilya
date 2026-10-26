@@ -25,6 +25,7 @@ import missingPetsHero from "../../../assets/images/users/missing-pets/missing-p
 
 import "./MissingPets.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
 const PETS_PER_PAGE = 9;
@@ -334,7 +335,9 @@ function MissingPets() {
 
   return (
     <div className="missing-pets">
-      <BackButton fallback="/" />
+      <div className="page-back">
+        <BackButton fallback="/" />
+      </div>
 
 
       {/* =====================================
@@ -781,7 +784,7 @@ function MissingPets() {
                 <div className="missing-pets__image">
 
                   {pet.image ? (
-                    <img
+                    <SafeImage type={pet.type}
                       src={pet.image}
                       alt={displayPetName(pet.name)}
                     />
@@ -810,8 +813,7 @@ function MissingPets() {
 
 
                       <p className="missing-pets__type">
-                        {pet.type} ·{" "}
-                        {pet.breed}
+                        {[pet.type, pet.breed].filter(Boolean).join(" · ")}
                       </p>
 
                     </div>

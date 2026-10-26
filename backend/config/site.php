@@ -4,11 +4,13 @@
 // these values are used only until the first save. An empty value hides that line on the site.
 return [
 
+    // PLACEHOLDERS: the street, phone number and email below are NOT real. The kennel manager must
+    // replace them in Settings > Pound information before the site goes live.
     'pound' => [
         'name' => 'Pawmilya Animal Pound',
-        'address' => 'Animal Pound Compound, Katipunan Avenue, Quezon City, Metro Manila',
-        'phone' => '(02) 8123 4567',
-        'email' => 'hello@pawmilya.ph',
+        'address' => 'Placeholder Street, Quiapo, Manila',
+        'phone' => '(02) 8000 0000',
+        'email' => 'pound@example.com',
         'hours' => 'Mon-Sat, 8:00 AM - 5:00 PM',
         'map_link' => '',
     ],

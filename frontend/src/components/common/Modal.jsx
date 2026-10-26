@@ -9,7 +9,8 @@ const FOCUSABLE =
 
 // Simple accessible dialog: Esc closes, backdrop click closes,
 // focus stays inside and returns to the opener on close.
-function Modal({ isOpen, onClose, title, children, size = "medium" }) {
+// `hideScrollbar` hides the scroll bar of this dialog only (it still scrolls).
+function Modal({ isOpen, onClose, title, children, size = "medium", hideScrollbar = false }) {
   const dialogRef = useRef(null);
   const onCloseRef = useRef(onClose);
 
@@ -67,7 +68,7 @@ function Modal({ isOpen, onClose, title, children, size = "medium" }) {
       }}
     >
       <div
-        className={`modal modal--${size}`}
+        className={`modal modal--${size}${hideScrollbar ? " modal--no-scrollbar" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-label={title}

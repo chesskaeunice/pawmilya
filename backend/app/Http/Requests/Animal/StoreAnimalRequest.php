@@ -3,12 +3,15 @@
 namespace App\Http\Requests\Animal;
 
 use App\Models\Animal;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreAnimalRequest extends FormRequest
 {
+    // Every new animal starts as Rescued. The other statuses are set later (the adoption statuses by
+    // the adoption counselor / vet tech, see UpdateAnimalRequest), so no other status is accepted here.
+    public const START_STATUS = 'Rescued';
+
     public const CLEARED_MESSAGE = 'An animal can only be set to "Available for Adoption" when its health status is "Cleared".';
 
     public function authorize(): bool
@@ -26,7 +29,7 @@ class StoreAnimalRequest extends FormRequest
             'age_months' => ['required', 'integer', 'min:0', 'max:360'],
             'color' => ['nullable', 'string', 'max:100'],
             'location' => ['required', 'string', 'max:255'],
-            'status' => ['required', Rule::in(Animal::STATUSES)],
+            'status' => ['sometimes', Rule::in([self::START_STATUS])],
             'health_status' => ['required', Rule::in(Animal::HEALTH_STATUSES)],
             'rescued_at' => ['required', 'date', 'before_or_equal:today'],
             'description' => ['required', 'string', 'max:500'],
@@ -41,15 +44,11 @@ class StoreAnimalRequest extends FormRequest
         ];
     }
 
-    // Only a cleared animal can be listed for adoption
-    public function after(): array
+    public function messages(): array
     {
         return [
-            function (Validator $validator) {
-                if ($this->input('status') === Animal::ADOPTABLE && $this->input('health_status') !== Animal::CLEARED) {
-                    $validator->errors()->add('status', self::CLEARED_MESSAGE);
-                }
-            },
+            'status.in' => 'A new animal always starts as "Rescued". Its status is changed later: '
+                .'Available, Pending and Adopted by the adoption counselor, Rescued and Reunited with Owner by pound staff.',
         ];
     }
 }

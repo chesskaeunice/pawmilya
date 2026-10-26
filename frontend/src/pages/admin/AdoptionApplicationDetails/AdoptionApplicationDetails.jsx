@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 
 import useFetch from "../../../hooks/useFetch.js";
+import useAuth from "../../../hooks/useAuth.js";
 import {
   approveApplication,
   getApplication,
@@ -37,11 +38,18 @@ import { formatApiError } from "../../../services/authService.js";
 
 import "./AdoptionApplicationDetails.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
 function AdoptionApplicationDetails() {
   const { applicationId } =
     useParams();
+
+  const { can } = useAuth();
+
+  // only roles with these permissions (the adoption counselor) review and decide
+  const canApprove = can("adoptionApplications.approve");
+  const canReject = can("adoptionApplications.reject");
 
 
   const { data: application, loading, reload } =
@@ -154,13 +162,6 @@ Reason (shown to the applicant, optional):`
         )
       );
     }
-  };
-
-
-  const handleRequestInfo = () => {
-    window.alert(
-      "Request More Information will be connected when Laravel integration is added."
-    );
   };
 
 
@@ -562,7 +563,7 @@ Reason (shown to the applicant, optional):`
                     >
 
                       {photo.url ? (
-                        <img
+                        <SafeImage
                           src={
                             photo.url
                           }
@@ -724,7 +725,7 @@ Reason (shown to the applicant, optional):`
               <div className="application-details__animal-photo">
 
                 {application.petImage ? (
-                  <img
+                  <SafeImage
                     src={
                       application.petImage
                     }
@@ -744,7 +745,7 @@ Reason (shown to the applicant, optional):`
               {application.petImages?.length > 1 && (
                 <div style={{ display: "flex", gap: 6 }}>
                   {application.petImages.slice(1).map((url) => (
-                    <img
+                    <SafeImage
                       key={url}
                       src={url}
                       alt={`${application.petName} photo`}
@@ -859,7 +860,7 @@ Reason (shown to the applicant, optional):`
 
               <div className="application-details__id-preview">
 
-                <img
+                <SafeImage
                   src={
                     application.validId.url
                   }
@@ -1013,6 +1014,7 @@ Reason (shown to the applicant, optional):`
           COUNSELOR ACTIONS
       ====================================== */}
 
+      {(canApprove || canReject) && (
       <section className="application-details__decision">
 
         <div>
@@ -1039,21 +1041,7 @@ Reason (shown to the applicant, optional):`
 
         <div className="application-details__actions">
 
-          <button
-            type="button"
-            className="application-details__request"
-            onClick={
-              handleRequestInfo
-            }
-          >
-            <MessageSquareText
-              size={14}
-            />
-
-            Request More Information
-          </button>
-
-
+          {canReject && (
           <button
             type="button"
             className="application-details__reject"
@@ -1069,8 +1057,10 @@ Reason (shown to the applicant, optional):`
 
             Reject
           </button>
+          )}
 
 
+          {canApprove && (
           <button
             type="button"
             className="application-details__approve"
@@ -1086,10 +1076,12 @@ Reason (shown to the applicant, optional):`
 
             Approve Application
           </button>
+          )}
 
         </div>
 
       </section>
+      )}
 
     </div>
   );

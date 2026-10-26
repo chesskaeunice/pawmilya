@@ -1,0 +1,77 @@
+/* Shared form errors (see FieldError.jsx). Red = --color-danger (AA on white). */
+
+/* The error line takes no space until there is a message. Then it expands (grid rows 0fr -> 1fr)
+   and collapses again when the error is fixed.
+   --field-error-gap is the 6px flex gap fields put above it: while collapsed the line cancels
+   that gap with a negative margin, so a field without an error has no extra space under it. */
+.field-error {
+  --field-error-gap: 6px;
+
+  display: grid;
+  grid-template-rows: 0fr;
+
+  margin: calc(-1 * var(--field-error-gap)) 0 0;
+  opacity: 0;
+
+  transition:
+    grid-template-rows 0.15s ease,
+    margin-top 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.field-error.is-open {
+  grid-template-rows: 1fr;
+
+  margin-top: 0;
+  opacity: 1;
+}
+
+.field-error__text {
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.field-error__content {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.field-error svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field-error {
+    transition: none;
+  }
+}
+
+.form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  margin: 0;
+  padding: 10px 14px;
+
+  border-radius: 10px;
+
+  background-color: #fdecec;
+  color: var(--color-danger);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.form-error svg {
+  flex: none;
+  margin-top: 2px;
+}

@@ -7,7 +7,9 @@ import {
   formatApiError,
   resetPasswordRequest,
 } from "../../../services/authService.js";
-import { FieldError, PasswordHelp, PasswordInput } from "../../../components/user/PasswordInput.jsx";
+import { PasswordHelp, PasswordInput } from "../../../components/user/PasswordInput.jsx";
+import FieldError, { FormError } from "../../../components/common/FieldError.jsx";
+import { moveConfirmationError } from "../../../utils/formErrors.js";
 
 import "../Login/Login.css";
 import "./PasswordPages.css";
@@ -35,7 +37,7 @@ function Card({ title, intro, children }) {
 
 export function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState({ sent: false, error: "" });
+  const [status, setStatus] = useState({ sent: false, error: "", emailError: "" });
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (event) => {
@@ -44,9 +46,10 @@ export function ForgotPassword() {
 
     try {
       await forgotPasswordRequest(email.trim().toLowerCase());
-      setStatus({ sent: true, error: "" });
+      setStatus({ sent: true, error: "", emailError: "" });
     } catch (err) {
-      setStatus({ sent: false, error: formatApiError(err).message });
+      const { message, fields } = formatApiError(err);
+      setStatus({ sent: false, error: fields.email ? "" : message, emailError: fields.email ?? "" });
     }
     setSubmitting(false);
   };
@@ -58,8 +61,8 @@ export function ForgotPassword() {
           If that email has an account, a reset link has been sent. It is valid for 60 minutes.
         </p>
       ) : (
-        <form className="login__form" onSubmit={handleSubmit}>
-          {status.error && <p className="login__error" role="alert">{status.error}</p>}
+        <form className="login__form" onSubmit={handleSubmit} noValidate>
+          <FormError message={status.error} />
 
           <div className="login__field">
             <label htmlFor="email">Email Address</label>
@@ -69,9 +72,15 @@ export function ForgotPassword() {
               autoComplete="username"
               required
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                setStatus((current) => ({ ...current, error: "", emailError: "" }));
+              }}
               placeholder="name@email.com"
+              aria-invalid={Boolean(status.emailError)}
+              aria-describedby="email-error"
             />
+            <FieldError id="email-error" message={status.emailError} />
           </div>
 
           <button type="submit" className="login__submit" disabled={submitting}>
@@ -96,6 +105,14 @@ export function ResetPassword() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
+  // typing in a field clears its error
+  const clearError = (...keys) =>
+    setErrors((current) => {
+      const next = { ...current };
+      keys.forEach((key) => delete next[key]);
+      return next;
+    });
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrors({});
@@ -106,15 +123,15 @@ export function ResetPassword() {
       navigate("/login", { replace: true, state: { notice: "Password reset. You can log in now." } });
     } catch (err) {
       const { message, fields } = formatApiError(err);
-      setErrors(Object.keys(fields).length ? fields : { email: message });
+      setErrors(Object.keys(fields).length ? moveConfirmationError(fields) : { email: message });
       setSubmitting(false);
     }
   };
 
   return (
     <Card title="Reset Password" intro={`Choose a new password for ${email || "your account"}.`}>
-      <form className="login__form" onSubmit={handleSubmit}>
-        {errors.email && <p className="login__error" role="alert">{errors.email}</p>}
+      <form className="login__form" onSubmit={handleSubmit} noValidate>
+        <FormError message={errors.email} />
 
         <div className="login__field">
           <label htmlFor="password">New Password</label>
@@ -123,9 +140,14 @@ export function ResetPassword() {
             autoComplete="new-password"
             required
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              clearError("password", "password_confirmation");
+            }}
+            invalid={Boolean(errors.password)}
+            describedBy="password-error"
           />
-          <FieldError message={errors.password} />
+          <FieldError id="password-error" message={errors.password} />
           <PasswordHelp password={password} context={{ email }} />
         </div>
 
@@ -136,8 +158,14 @@ export function ResetPassword() {
             autoComplete="new-password"
             required
             value={confirmation}
-            onChange={(event) => setConfirmation(event.target.value)}
+            onChange={(event) => {
+              setConfirmation(event.target.value);
+              clearError("password_confirmation");
+            }}
+            invalid={Boolean(errors.password_confirmation)}
+            describedBy="confirmation-error"
           />
+          <FieldError id="confirmation-error" message={errors.password_confirmation} />
         </div>
 
         <button type="submit" className="login__submit" disabled={submitting || !token}>
@@ -160,7 +188,15 @@ export function ChangePassword() {
   if (loading) return null;
   if (!user) return <Navigate to="/login" replace />;
 
-  const update = (key) => (event) => setForm({ ...form, [key]: event.target.value });
+  // typing in a field clears its error (and the ones that depend on it)
+  const update = (key, ...errorKeys) => (event) => {
+    setForm({ ...form, [key]: event.target.value });
+    setErrors((current) => {
+      const next = { ...current };
+      errorKeys.forEach((errorKey) => delete next[errorKey]);
+      return next;
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -176,7 +212,7 @@ export function ChangePassword() {
       navigate(user.role === "citizen" ? "/" : "/admin", { replace: true });
     } catch (err) {
       const { message, fields } = formatApiError(err);
-      setErrors(Object.keys(fields).length ? fields : { form: message });
+      setErrors(Object.keys(fields).length ? moveConfirmationError(fields) : { form: message });
       setSubmitting(false);
     }
   };
@@ -186,25 +222,50 @@ export function ChangePassword() {
       title="Change Password"
       intro={user.mustChangePassword ? "Your account has a temporary password. Set your own to continue." : "Choose a new password."}
     >
-      <form className="login__form" onSubmit={handleSubmit}>
-        {errors.form && <p className="login__error" role="alert">{errors.form}</p>}
+      <form className="login__form" onSubmit={handleSubmit} noValidate>
+        <FormError message={errors.form} />
 
         <div className="login__field">
           <label htmlFor="current">Current Password</label>
-          <PasswordInput id="current" autoComplete="current-password" required value={form.current} onChange={update("current")} />
-          <FieldError message={errors.current_password} />
+          <PasswordInput
+            id="current"
+            autoComplete="current-password"
+            required
+            value={form.current}
+            onChange={update("current", "current_password")}
+            invalid={Boolean(errors.current_password)}
+            describedBy="current-error"
+          />
+          <FieldError id="current-error" message={errors.current_password} />
         </div>
 
         <div className="login__field">
           <label htmlFor="password">New Password</label>
-          <PasswordInput id="password" autoComplete="new-password" required value={form.password} onChange={update("password")} />
-          <FieldError message={errors.password} />
+          <PasswordInput
+            id="password"
+            autoComplete="new-password"
+            required
+            value={form.password}
+            onChange={update("password", "password", "password_confirmation")}
+            invalid={Boolean(errors.password)}
+            describedBy="password-error"
+          />
+          <FieldError id="password-error" message={errors.password} />
           <PasswordHelp password={form.password} context={{ email: user.email, name: user.name }} />
         </div>
 
         <div className="login__field">
           <label htmlFor="confirmation">Confirm New Password</label>
-          <PasswordInput id="confirmation" autoComplete="new-password" required value={form.confirmation} onChange={update("confirmation")} />
+          <PasswordInput
+            id="confirmation"
+            autoComplete="new-password"
+            required
+            value={form.confirmation}
+            onChange={update("confirmation", "password_confirmation")}
+            invalid={Boolean(errors.password_confirmation)}
+            describedBy="confirmation-error"
+          />
+          <FieldError id="confirmation-error" message={errors.password_confirmation} />
         </div>
 
         <button type="submit" className="login__submit" disabled={submitting}>

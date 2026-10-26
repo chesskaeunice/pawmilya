@@ -1,0 +1,45 @@
+/* Breed field (BreedSelect.jsx). Layout only, plus low-priority defaults (:where has no
+   specificity), so the page the field is in keeps control of how its labels and inputs look. */
+
+.breed-select {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* inline: the cells take part in the parent's grid; the parent places them */
+.breed-select--inline {
+  display: contents;
+}
+
+@media (max-width: 600px) {
+  .breed-select {
+    grid-template-columns: 1fr;
+  }
+}
+
+:where(.breed-select) label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  margin-bottom: 15px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+:where(.breed-select) select,
+:where(.breed-select) input[type="text"] {
+  padding: 12px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+
+  font: inherit;
+}
+
+.breed-select__required {
+  color: var(--color-danger);
+}
+

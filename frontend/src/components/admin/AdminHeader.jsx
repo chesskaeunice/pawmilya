@@ -1,25 +1,23 @@
-import useAuth from "../../hooks/useAuth.js";
+import { Menu } from "lucide-react";
 
-// Plain (non-clickable) identity of the logged-in staff member; logout is in the sidebar
-function AdminHeader() {
-  const { user, roleLabel } = useAuth();
-  const name = user?.name ?? "";
-
+// Staff header: just the menu button (the sidebar's hamburger). The staff member's name and role
+// are at the bottom of the sidebar, next to Log out.
+//   expanded: true while the sidebar is open (drawer open on phones, not collapsed on desktop)
+function AdminHeader({ expanded, onToggleMenu, buttonRef }) {
   return (
     <header className="staff-header">
 
-      <div className="staff-header__profile">
-
-        <div className="staff-header__avatar" aria-hidden="true">
-          {name.charAt(0).toUpperCase() || "S"}
-        </div>
-
-        <div className="staff-header__identity">
-          <strong>{name}</strong>
-          <span>{roleLabel}</span>
-        </div>
-
-      </div>
+      <button
+        type="button"
+        ref={buttonRef}
+        className="staff-header__menu"
+        onClick={onToggleMenu}
+        aria-label={expanded ? "Close menu" : "Open menu"}
+        aria-expanded={expanded}
+        aria-controls="staff-sidebar"
+      >
+        <Menu size={20} strokeWidth={1.8} aria-hidden="true" />
+      </button>
 
     </header>
   );

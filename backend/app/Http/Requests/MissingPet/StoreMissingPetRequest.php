@@ -40,6 +40,9 @@ class StoreMissingPetRequest extends FormRequest
             'status' => ['required', Rule::in(MissingPetReport::FILING_STATUSES)],
             'details' => ['nullable', 'string', 'max:2000'],
 
+            // "I am the": the pet's owner or a concerned citizen
+            'reporter_type' => ['required', Rule::in(MissingPetReport::REPORTER_TYPES)],
+
             // Guests must leave a contact name and number; citizens default to their account details
             'contact_name' => [Rule::requiredIf($isGuest), 'nullable', 'string', 'max:255'],
             'contact_number' => [Rule::requiredIf($isGuest), 'nullable', 'string', 'max:30', 'regex:/^[0-9+()\s-]{7,}$/'],
@@ -49,6 +52,14 @@ class StoreMissingPetRequest extends FormRequest
             'pet_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'last_seen_images' => ['required', 'array', 'min:1', 'max:3'],
             'last_seen_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'reporter_type.required' => 'Please choose one.',
+            'reporter_type.in' => 'Please choose one.',
         ];
     }
 

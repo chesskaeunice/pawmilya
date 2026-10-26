@@ -48,7 +48,7 @@ class MissingPetApiTest extends TestCase
         return array_merge([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
             'location' => 'Katipunan, Quezon City', 'last_seen_at' => '2026-10-18 01:15:00', 'status' => 'Lost',
-            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166',
+            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'reporter_type' => 'Citizen',
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
         ], $override);
@@ -93,6 +93,48 @@ class MissingPetApiTest extends TestCase
         $this->assertSame('Liza Ramos', $report->contact_name);
         $this->assertCount(3, $report->photos);
         $this->assertDatabaseHas('audit_logs', ['action' => 'missing_pet.reported', 'entity_id' => $report->id]);
+    }
+
+    public function test_reporter_type_is_required_and_must_be_owner_or_citizen(): void
+    {
+        Storage::fake('public');
+
+        // missing, empty and unknown values are refused with the same message
+        foreach ([null, '', 'Vet', 'owner', 'Pet owner'] as $value) {
+            $payload = $this->payload(['name' => 'Try '.($value ?? 'none')]);
+            unset($payload['reporter_type']);
+            if ($value !== null) {
+                $payload['reporter_type'] = $value;
+            }
+
+            $this->post('/api/missing-pets', $payload, ['Accept' => 'application/json'])
+                ->assertUnprocessable()
+                ->assertJsonValidationErrors(['reporter_type'])
+                ->assertJsonPath('errors.reporter_type.0', 'Please choose one.');
+        }
+
+        $this->assertSame(0, MissingPetReport::count());
+    }
+
+    public function test_both_reporter_types_are_saved_and_shown_to_staff_only(): void
+    {
+        Storage::fake('public');
+
+        $owner = $this->report(['name' => 'Miming', 'reporter_type' => 'Owner'])->assertCreated();
+        $citizen = $this->report(['name' => 'Bruno', 'reporter_type' => 'Citizen'])->assertCreated();
+
+        $this->assertDatabaseHas('missing_pet_reports', ['id' => $owner->json('data.id'), 'reporter_type' => 'Owner']);
+        $this->assertDatabaseHas('missing_pet_reports', ['id' => $citizen->json('data.id'), 'reporter_type' => 'Citizen']);
+
+        // the public view does not carry it
+        $this->assertArrayNotHasKey('reporterType', $owner->json('data'));
+
+        // staff see it as `reporterType`; an older report without a value shows null
+        $this->actingAs_($this->makeUser('pound_staff'));
+        $old = $this->storedReport(['name' => 'Old', 'fingerprint' => sha1('old')]);
+        $this->getJson('/api/missing-pet-reports/'.$owner->json('data.id'))->assertOk()->assertJsonPath('data.reporterType', 'Owner');
+        $this->getJson('/api/missing-pet-reports/'.$citizen->json('data.id'))->assertOk()->assertJsonPath('data.reporterType', 'Citizen');
+        $this->getJson("/api/missing-pet-reports/{$old->id}")->assertOk()->assertJsonPath('data.reporterType', null);
     }
 
     public function test_guest_must_leave_contact_name_and_number(): void
@@ -245,10 +287,15 @@ class MissingPetApiTest extends TestCase
     {
         $report = $this->storedReport();
 
-        $this->actingAs_($this->makeUser('pound_staff'));
-        $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertForbidden();
+        // only pound staff change a report's status; everyone else can still read it
+        foreach (['adoption_counselor', 'kennel_manager', 'vet_tech'] as $role) {
+            $this->actingAs_($this->makeUser($role));
+            $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertForbidden();
+            $this->getJson("/api/missing-pet-reports/{$report->id}")->assertOk();
+        }
+        $this->assertSame('Lost', $report->fresh()->status);
 
-        $this->actingAs_($this->makeUser('adoption_counselor'));
+        $this->actingAs_($this->makeUser('pound_staff'));
         $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Nope'])->assertUnprocessable();
         $this->patchJson("/api/missing-pet-reports/{$report->id}/status", ['status' => 'Found'])->assertOk()->assertJsonPath('data.status', 'Found');
         $this->assertDatabaseHas('audit_logs', ['action' => 'missing_pet.status_changed', 'entity_id' => $report->id]);

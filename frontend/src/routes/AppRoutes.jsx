@@ -150,7 +150,11 @@ function AppRoutes() {
 
         <Route
           path="/profile"
-          element={<Profile />}
+          element={
+            <RequireSignIn reason="You need an account to view your profile.">
+              <Profile />
+            </RequireSignIn>
+          }
         />
 
         <Route

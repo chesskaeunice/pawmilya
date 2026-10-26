@@ -1,12 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, X } from "lucide-react";
+
+import useAuth from "../../../hooks/useAuth.js";
+import { formatApiError } from "../../../services/authService.js";
 
 import "./Profile.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import FieldError from "../../../components/common/FieldError.jsx";
+import SuggestInput from "../../../components/common/SuggestInput.jsx";
+import { loadPhLocations } from "../../../config/phLocations.js";
 
 /* ---------- mock profile store (no API yet) ----------
-   Kept in memory for this session, and (except the password) in
-   sessionStorage so the saved values also survive a page reload. */
+   Kept in memory for this session, and in sessionStorage so the saved
+   values also survive a page reload. */
 
 const STORAGE_KEY = "pawmilya-mock-profile";
 
@@ -16,7 +22,6 @@ const DEFAULT_PROFILE = {
   email: "user@email.com",
   phone: "",
   address: "",
-  password: "password123",
 };
 
 let memoryProfile = null;
@@ -39,10 +44,7 @@ function saveProfile(profile) {
   memoryProfile = profile;
 
   try {
-    // never keep the password in browser storage, even as mock data
-    const stored = { ...profile };
-    delete stored.password;
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
   } catch {
     /* storage can be blocked; the in-memory copy still works */
   }
@@ -50,7 +52,8 @@ function saveProfile(profile) {
 
 /* ---------- validation ---------- */
 
-const FIELD_ORDER = ["fullName", "birthDate", "email", "phone", "address", "password"];
+const ADDRESS_FIELDS = ["province", "city", "barangay", "street"];
+const FIELD_ORDER = ["fullName", "birthDate", "email", "phone", ...ADDRESS_FIELDS];
 
 function todayLocal() {
   const now = new Date();
@@ -58,7 +61,9 @@ function todayLocal() {
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
 
-function validate(values) {
+// `check` = { places, province, city, barangay, changed }: the address list and the typed values that
+// matched a suggestion ("" when they did not)
+function validate(values, check) {
   const errors = {};
 
   if (!values.fullName.trim()) {
@@ -80,10 +85,18 @@ function validate(values) {
     errors.phone = "Enter a valid phone number, for example 0917 123 4567.";
   }
 
-  if (!values.password) {
-    errors.password = "Please enter a password.";
-  } else if (values.password.length < 8) {
-    errors.password = "Your password must have at least 8 characters.";
+  // province, city and barangay must be picked from the suggestions (checked when the address changed,
+  // so an old single-line address in the street field does not block saving the other fields)
+  const hasAddress = ADDRESS_FIELDS.some((field) => values[field].trim());
+
+  if (check.changed && hasAddress) {
+    if (!check.places) {
+      errors.province = "The address list is still loading. Please try again in a moment.";
+    } else {
+      if (!check.province) errors.province = "Please choose your province from the list.";
+      else if (!check.city) errors.city = "Please choose your city or municipality from the list.";
+      else if (!check.barangay) errors.barangay = "Please choose your barangay from the list.";
+    }
   }
 
   return errors;
@@ -91,9 +104,62 @@ function validate(values) {
 
 const SAVED_MESSAGE_MS = 4000;
 
+// "Maria Santos" -> "MS" (shown when there is no profile photo)
+function initialsOf(name) {
+  const letters = (name || "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase());
+
+  return letters.join("") || "U";
+}
+
 function Profile() {
-  const [saved, setSaved] = useState(loadProfile);
-  const [values, setValues] = useState(loadProfile);
+  const { user, updateEmail, updateAddress, uploadAvatar, removeAvatar } = useAuth();
+
+  // profile photo: the file picker is hidden behind the "Change photo" button
+  const photoInputRef = useRef(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState("");
+
+  // the email and the address are the real ones from the account; the other fields are still the mock store
+  const startProfile = () => {
+    const mock = loadProfile();
+    const address = user.address ?? {};
+    const hasAddress = ADDRESS_FIELDS.some((field) => address[field]);
+
+    return {
+      ...mock,
+      email: user.email,
+      province: address.province ?? "",
+      city: address.city ?? "",
+      barangay: address.barangay ?? "",
+      // an address written before the parts existed (one line) is shown in the street field
+      street: hasAddress ? (address.street ?? "") : (mock.address ?? ""),
+    };
+  };
+
+  const [saved, setSaved] = useState(startProfile);
+  const [values, setValues] = useState(startProfile);
+  // errors sent by the API ("This email is already registered.")
+  const [emailError, setEmailError] = useState("");
+  const [addressErrors, setAddressErrors] = useState({});
+
+  // the Philippine address list (static data, loaded on this page only)
+  const [places, setPlaces] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+
+    loadPhLocations()
+      .then((loaded) => active && setPlaces(loaded))
+      .catch(() => {});
+
+    return () => {
+      active = false;
+    };
+  }, []);
   const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
@@ -103,14 +169,53 @@ function Profile() {
 
   useEffect(() => () => clearTimeout(hideTimerRef.current), []);
 
-  const errors = validate(values);
+  // suggestions for province -> city -> barangay, each limited by the one before
+  const provinceList = places?.provinces ?? [];
+  const province = places ? places.pick(provinceList, values.province) : "";
+  const cityList = useMemo(() => (province ? places.cities(province) : []), [places, province]);
+  const city = places ? places.pick(cityList, values.city) : "";
+  const barangayList = useMemo(() => (city ? places.barangays(province, city) : []), [places, province, city]);
+  const barangay = places ? places.pick(barangayList, values.barangay) : "";
+
+  const addressChanged = ADDRESS_FIELDS.some((field) => values[field] !== saved[field]);
+  const errors = validate(values, { places, province, city, barangay, changed: addressChanged });
   const changed = FIELD_ORDER.some((field) => values[field] !== saved[field]);
 
   const errorFor = (field) =>
-    (touched[field] || submitted) ? errors[field] : "";
+    (field === "email" && emailError) ||
+    addressErrors[field] ||
+    ((touched[field] || submitted) ? errors[field] : "");
 
   const setField = (field) => (event) => {
     setValues((current) => ({ ...current, [field]: event.target.value }));
+    if (field === "email") setEmailError("");
+    setShowSaved(false);
+  };
+
+  // province / city: choosing another value clears the fields that depend on it
+  const setPlace = (field) => (event) => {
+    const typed = event.target.value;
+
+    setValues((current) => {
+      const next = { ...current, [field]: typed };
+
+      if (places && field === "province") {
+        const before = places.pick(places.provinces, current.province);
+        if (places.pick(places.provinces, typed) !== before) {
+          next.city = "";
+          next.barangay = "";
+        }
+      }
+
+      if (places && field === "city") {
+        const list = places.cities(province);
+        if (places.pick(list, typed) !== places.pick(list, current.city)) next.barangay = "";
+      }
+
+      return next;
+    });
+
+    setAddressErrors({});
     setShowSaved(false);
   };
 
@@ -122,7 +227,39 @@ function Profile() {
     setShowSaved(false);
   };
 
-  const handleSubmit = (event) => {
+  // upload right after choosing the file; the API checks type (jpg, png, webp) and size (2 MB)
+  const handlePhoto = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setPhotoBusy(true);
+    setPhotoError("");
+
+    try {
+      await uploadAvatar(file);
+    } catch (error) {
+      const { message, fields } = formatApiError(error);
+      setPhotoError(fields.avatar || message);
+    }
+
+    setPhotoBusy(false);
+  };
+
+  const handleRemovePhoto = async () => {
+    setPhotoBusy(true);
+    setPhotoError("");
+
+    try {
+      await removeAvatar();
+    } catch (error) {
+      setPhotoError(formatApiError(error).message);
+    }
+
+    setPhotoBusy(false);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!changed) return;
 
@@ -136,12 +273,46 @@ function Profile() {
       return;
     }
 
+    // a changed email is saved in the account first (trimmed and lowercase by the API)
+    let email = saved.email;
+    const wantedEmail = values.email.trim().toLowerCase();
+
+    if (wantedEmail !== saved.email) {
+      try {
+        email = (await updateEmail(wantedEmail)).email;
+      } catch (error) {
+        const { message, fields } = formatApiError(error);
+        setEmailError(fields.email || message);
+        fieldRefs.current.email?.focus();
+        return;
+      }
+    }
+
+    // a changed address is saved in the account too (the three list fields as written in the list)
+    const address = {
+      province: addressChanged && values.province.trim() ? province : values.province,
+      city: addressChanged && values.city.trim() ? city : values.city,
+      barangay: addressChanged && values.barangay.trim() ? barangay : values.barangay,
+      street: values.street.trim(),
+    };
+
+    if (ADDRESS_FIELDS.some((field) => address[field] !== saved[field])) {
+      try {
+        await updateAddress(address);
+      } catch (error) {
+        const { message, fields } = formatApiError(error);
+        setAddressErrors(Object.keys(fields).length ? fields : { street: message });
+        return;
+      }
+    }
+
     const next = {
       ...values,
+      ...address,
       fullName: values.fullName.trim(),
-      email: values.email.trim(),
+      email,
       phone: values.phone.trim(),
-      address: values.address.trim(),
+      address: "",
     };
 
     saveProfile(next);
@@ -160,6 +331,7 @@ function Profile() {
     ref: (element) => {
       fieldRefs.current[field] = element;
     },
+    id: `profile-${field}`,
     value: values[field],
     onChange: setField(field),
     onBlur: markTouched(field),
@@ -176,10 +348,10 @@ function Profile() {
 
   return (
     <div className="profile">
-      <BackButton fallback="/" />
-
 
       <section className="profile__header">
+
+        <BackButton fallback="/" />
 
         <p className="profile__eyebrow">
           My Account
@@ -199,128 +371,186 @@ function Profile() {
 
       <section className="profile__layout">
 
-        <aside className="profile__sidebar">
-
-          <div className="profile__avatar">
-            U
-          </div>
-
-          <h2>{saved.fullName}</h2>
-
-          <p>{saved.email}</p>
-
-
-          <nav>
-
-            <button type="button">
-              Account Information
-            </button>
-
-          </nav>
-
-        </aside>
-
-
         <form className="profile__content" onSubmit={handleSubmit} noValidate>
 
-          <section className="profile__card">
+          <div className="profile__photo">
 
-            <div>
-              <h2>
-                Personal Information
-              </h2>
+            <div className="profile__avatar" aria-hidden="true">
+              {user.avatar_url ? (
+                <img src={user.avatar_url} alt="" />
+              ) : (
+                initialsOf(user.name)
+              )}
             </div>
 
+            <h2 className="profile__name">{user.name}</h2>
 
-            <div className="profile__grid">
+            <p className="profile__email">{user.email}</p>
 
-              <label>
-                Full Name
+            <div className="profile__photo-buttons">
+              <button
+                type="button"
+                className="profile__photo-change"
+                onClick={() => photoInputRef.current?.click()}
+                disabled={photoBusy}
+              >
+                {photoBusy ? "Saving..." : "Change photo"}
+              </button>
+
+              <button
+                type="button"
+                className="profile__photo-remove"
+                onClick={handleRemovePhoto}
+                disabled={photoBusy || !user.avatar_url}
+              >
+                Remove
+              </button>
+            </div>
+
+            <FieldError id="profile-photo-error" message={photoError} />
+
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+              onChange={handlePhoto}
+              aria-describedby="profile-photo-error"
+              aria-label="Profile photo"
+            />
+
+          </div>
+
+
+          <section className="profile__section">
+
+            <h2 className="profile__section-title">About you</h2>
+
+            <div className="profile__row">
+              <label className="profile__label" htmlFor="profile-fullName">Full Name</label>
+              <div className="profile__control">
                 <input
                   type="text"
                   autoComplete="name"
                   {...inputProps("fullName")}
                 />
                 {fieldError("fullName")}
-              </label>
+              </div>
+            </div>
 
-              <label>
-                Date of Birth
+            <div className="profile__row">
+              <label className="profile__label" htmlFor="profile-birthDate">Date of Birth</label>
+              <div className="profile__control">
                 <input
                   type="date"
                   {...inputProps("birthDate")}
                 />
                 {fieldError("birthDate")}
-              </label>
-
+              </div>
             </div>
 
           </section>
 
 
-          <section className="profile__card">
+          <section className="profile__section">
 
-            <div>
-              <h2>
-                Contact Details
-              </h2>
-            </div>
+            <h2 className="profile__section-title">Contact</h2>
 
-
-            <div className="profile__grid">
-
-              <label>
-                Email Address
+            <div className="profile__row">
+              <label className="profile__label" htmlFor="profile-email">Email Address</label>
+              <div className="profile__control">
                 <input
                   type="email"
                   autoComplete="email"
                   {...inputProps("email")}
                 />
-                {fieldError("email")}
-              </label>
+                <FieldError id="profile-email-error" message={errorFor("email")} />
+                <p className="profile__help">Used to log in and to send you updates.</p>
+              </div>
+            </div>
 
-              <label>
-                Phone Number
+            <div className="profile__row">
+              <label className="profile__label" htmlFor="profile-phone">Phone Number</label>
+              <div className="profile__control">
                 <input
                   type="tel"
                   autoComplete="tel"
                   {...inputProps("phone")}
                 />
                 {fieldError("phone")}
-              </label>
-
-              <label>
-                Address
-                <input
-                  type="text"
-                  autoComplete="street-address"
-                  {...inputProps("address")}
-                />
-                {fieldError("address")}
-              </label>
-
+                <p className="profile__help">
+                  Used when staff need to contact you about your applications or reports.
+                </p>
+              </div>
             </div>
 
           </section>
 
 
-          <section className="profile__card">
+          <section className="profile__section">
 
-            <div>
-              <h2>
-                Password & Security
-              </h2>
+            <h2 className="profile__section-title">Address</h2>
+
+            <div className="profile__row">
+              <label className="profile__label" htmlFor="profile-province">Province</label>
+              <div className="profile__control">
+                <SuggestInput
+                  listId="profile-province-list"
+                  options={provinceList}
+                  maxLength={120}
+                  placeholder="Start typing your province"
+                  {...inputProps("province")}
+                  onChange={setPlace("province")}
+                />
+                <FieldError id="profile-province-error" message={errorFor("province")} />
+              </div>
             </div>
 
-            <label className="profile__password">
-              <span className="profile__sr-only">Password</span>
-              <input
-                type="password"
-                autoComplete="new-password"
-                {...inputProps("password")}
-              />
-              {fieldError("password")}
-            </label>
+            <div className="profile__row">
+              <label className="profile__label" htmlFor="profile-city">City / Municipality</label>
+              <div className="profile__control">
+                <SuggestInput
+                  listId="profile-city-list"
+                  options={cityList}
+                  maxLength={120}
+                  disabled={!province}
+                  placeholder={province ? "Start typing your city or municipality" : "Choose a province first"}
+                  {...inputProps("city")}
+                  onChange={setPlace("city")}
+                />
+                <FieldError id="profile-city-error" message={errorFor("city")} />
+              </div>
+            </div>
+
+            <div className="profile__row">
+              <label className="profile__label" htmlFor="profile-barangay">Barangay</label>
+              <div className="profile__control">
+                <SuggestInput
+                  listId="profile-barangay-list"
+                  options={barangayList}
+                  maxLength={120}
+                  disabled={!city}
+                  placeholder={city ? "Start typing your barangay" : "Choose a city first"}
+                  {...inputProps("barangay")}
+                  onChange={setPlace("barangay")}
+                />
+                <FieldError id="profile-barangay-error" message={errorFor("barangay")} />
+              </div>
+            </div>
+
+            <div className="profile__row">
+              <label className="profile__label" htmlFor="profile-street">House no. / Street</label>
+              <div className="profile__control">
+                <input
+                  type="text"
+                  autoComplete="street-address"
+                  maxLength={255}
+                  placeholder="Example: 12 Hidalgo Street"
+                  {...inputProps("street")}
+                />
+                <FieldError id="profile-street-error" message={errorFor("street")} />
+              </div>
+            </div>
 
           </section>
 

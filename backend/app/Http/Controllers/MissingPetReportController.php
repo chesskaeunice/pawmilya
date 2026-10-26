@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MissingPet\StoreMissingPetRequest;
+use App\Http\Resources\AnimalResource;
 use App\Http\Resources\MissingPetResource;
 use App\Http\Resources\StaffMissingPetResource;
+use App\Models\Animal;
 use App\Models\MissingPetReport;
 use App\Support\Audit;
 use App\Support\PoundMatcher;
 use App\Support\PublicCache;
+use App\Support\ReportAnimalRegistrar;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class MissingPetReportController extends Controller
 {
@@ -119,27 +123,80 @@ class MissingPetReportController extends Controller
         return new StaffMissingPetResource($report->load(['photos', 'reporter']));
     }
 
-    public function updateStatus(Request $request, MissingPetReport $report): StaffMissingPetResource
+    // Setting a report to Found also registers the pet as an animal (same steps as registerAnimal),
+    // in the same transaction: if that fails, the status stays as it was.
+    public function updateStatus(Request $request, MissingPetReport $report, ReportAnimalRegistrar $registrar): StaffMissingPetResource
     {
         $data = $request->validate(['status' => ['required', Rule::in(MissingPetReport::STATUSES)]]);
+        $to = $data['status'];
 
-        $from = $report->status;
-
-        if ($from !== $data['status']) {
+        if ($report->status !== $to) {
             try {
-                $report->forceFill(['status' => $data['status']])->save();
+                [$report, $from, $animal] = DB::transaction(function () use ($request, $report, $to, $registrar) {
+                    $locked = MissingPetReport::with('photos')->whereKey($report->id)->lockForUpdate()->firstOrFail();
+                    $from = $locked->status;
+
+                    if ($from === $to) {
+                        return [$locked, $from, null];
+                    }
+
+                    $locked->forceFill(['status' => $to])->save();
+
+                    $animal = $to === 'Found' && ! $locked->animal_id
+                        ? $registrar->register($locked, $request->user())
+                        : null;
+
+                    return [$locked, $from, $animal];
+                });
             } catch (UniqueConstraintViolationException) {
                 // Re-opening a Reunited report while the same reporter already filed an open one
                 throw ValidationException::withMessages(['status' => ['The same pet was already reported again by this reporter.']]);
+            } catch (Throwable $e) {
+                report($e);
+
+                throw ValidationException::withMessages(['status' => ['The pet could not be added to the Animals list, so the status was not changed. Please try again.']]);
             }
 
-            Audit::record($request, 'missing_pet.status_changed', $report, ['from' => $from, 'to' => $data['status']]);
+            if ($from !== $to) {
+                Audit::record($request, 'missing_pet.status_changed', $report, ['from' => $from, 'to' => $to]);
+            }
+            if ($animal) {
+                $registrar->audit($request, $animal, $report);
+            }
         }
 
         return new StaffMissingPetResource($report->load(['photos', 'reporter']));
     }
 
     // Animals in the pound that could be this pet
+    // A Found report means the pet is now at the pound: register it as an animal (status Rescued) and
+    // link the two, so staff can print its QR / collar tag. Pound staff only.
+    public function registerAnimal(Request $request, MissingPetReport $report, ReportAnimalRegistrar $registrar): JsonResponse
+    {
+        $result = DB::transaction(function () use ($request, $report, $registrar) {
+            // lock the row, so a double click or two staff members cannot register it twice
+            $report = MissingPetReport::with('photos')->whereKey($report->id)->lockForUpdate()->firstOrFail();
+
+            if ($report->status !== 'Found') {
+                return ['error' => ['message' => 'Only a Found report can be registered in the pound.']];
+            }
+
+            if ($report->animal_id) {
+                return ['error' => ['message' => 'This report is already registered as an animal.', 'animal_id' => $report->animal_id]];
+            }
+
+            return ['animal' => $registrar->register($report, $request->user()), 'report' => $report];
+        });
+
+        if (isset($result['error'])) {
+            return response()->json($result['error'], 422);
+        }
+
+        $registrar->audit($request, $result['animal'], $result['report']);
+
+        return (new AnimalResource($result['animal']->load('photos')))->response()->setStatusCode(201);
+    }
+
     public function matches(MissingPetReport $report, PoundMatcher $matcher): JsonResponse
     {
         $matches = $matcher->matchesFor($report)->map(fn ($match) => [

@@ -28,6 +28,17 @@
   animation: modal-rise 0.25s ease both;
 }
 
+/* Scrolls with wheel, trackpad, touch and keyboard, but shows no scroll bar.
+   A hidden bar takes no width, so the content does not shift sideways. */
+.modal--no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.modal--no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .modal--small { max-width: 420px; }
 .modal--medium { max-width: 560px; }
 .modal--large { max-width: 720px; }

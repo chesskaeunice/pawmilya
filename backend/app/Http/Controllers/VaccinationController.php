@@ -6,6 +6,7 @@ use App\Http\Requests\Vaccination\StoreVaccinationRequest;
 use App\Http\Requests\Vaccination\UpdateVaccinationRequest;
 use App\Http\Resources\VaccinationResource;
 use App\Models\HealthLog;
+use App\Models\Vaccine;
 use App\Support\Audit;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,7 @@ class VaccinationController extends Controller
     public function index(Request $request)
     {
         return VaccinationResource::collection(
-            HealthLog::with('animal')
+            HealthLog::with(['animal:id,name,animal_code,species,breed', 'recorder:id,name', 'vaccineType:id,name'])
                 ->when($request->query('animal_id'), fn ($q, $id) => $q->where('animal_id', $id))
                 ->orderByDesc('administered_at')->orderByDesc('id')->limit(2000)->get()
         );
@@ -34,11 +35,13 @@ class VaccinationController extends Controller
         try {
             DB::transaction(function () use ($request, $animalId, &$created) {
                 foreach ($request->validated('records') as $record) {
-                    $vaccine = trim($record['vaccine']);
+                    [$vaccineId, $otherName, $vaccine] = Vaccine::resolve($record['vaccine_id'] ?? null, $record['other_vaccine_name'] ?? null);
                     $given = substr($record['administered_at'], 0, 10);
 
                     $log = HealthLog::create([
                         'animal_id' => $animalId,
+                        'vaccine_id' => $vaccineId,
+                        'other_vaccine_name' => $otherName,
                         'vaccine' => $vaccine,
                         'administered_at' => $given,
                         // no date given: date given + the vaccine's usual interval
@@ -58,7 +61,7 @@ class VaccinationController extends Controller
 
         $created->first()->animal->refreshVaccinated();
 
-        $logs = HealthLog::with('animal')->whereIn('id', $created->pluck('id'))->orderBy('id')->get();
+        $logs = HealthLog::with(['animal', 'recorder:id,name', 'vaccineType:id,name'])->whereIn('id', $created->pluck('id'))->orderBy('id')->get();
 
         return VaccinationResource::collection($logs)->response()->setStatusCode(201);
     }
@@ -67,8 +70,9 @@ class VaccinationController extends Controller
     {
         $data = $request->validated();
 
-        if (isset($data['vaccine'])) {
-            $data['vaccine'] = trim($data['vaccine']);
+        // a new vaccine (from the list, or typed): the name stored with the record follows it
+        if ($request->changesVaccine()) {
+            [$data['vaccine_id'], $data['other_vaccine_name'], $data['vaccine']] = Vaccine::resolve($data['vaccine_id'] ?? null, $data['other_vaccine_name'] ?? null);
         }
 
         // Changing the date or vaccine without a new next due date recalculates it

@@ -1,9 +1,10 @@
+/* Back button sits inside this container, like on the detail pages */
 .profile__header {
-  width: min(1180px, calc(100% - 40px));
+  width: min(760px, calc(100% - 40px));
 
   margin: 0 auto;
 
-  padding: 55px 0 30px;
+  padding: 0 0 30px;
 }
 
 .profile__eyebrow {
@@ -29,37 +30,53 @@
 }
 
 .profile__layout {
-  width: min(1180px, calc(100% - 40px));
+  width: min(760px, calc(100% - 40px));
 
   margin: 0 auto;
 
   display: grid;
 
-  grid-template-columns: 250px 1fr;
-
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr);
 
   padding-bottom: 70px;
 }
 
-.profile__sidebar {
-  padding: 25px;
+/* The one card: photo block, then the sections (About you, Contact, Address) */
+.profile__content {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 28px;
+
+  padding: 32px;
 
   background: white;
 
   border: 1px solid var(--color-border);
 
   border-radius: 15px;
+}
+
+/* top, centered: avatar, name, email, Change photo / Remove */
+.profile__photo {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 6px;
 
   text-align: center;
 }
 
 .profile__avatar {
-  width: 80px;
+  width: 96px;
 
-  height: 80px;
+  height: 96px;
 
-  margin: 0 auto 15px;
+  flex: none;
 
   display: flex;
 
@@ -67,97 +84,172 @@
 
   justify-content: center;
 
+  overflow: hidden;
+
+  margin-bottom: 8px;
+
   border-radius: 50%;
 
   background: var(--color-cream);
 
-  font-size: 30px;
+  color: var(--color-brown);
+
+  font-size: 32px;
+
+  font-weight: 700;
 }
 
-.profile__sidebar h2 {
+.profile__avatar img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.profile__name {
   margin: 0;
+
+  font-size: 22px;
 }
 
-.profile__sidebar p {
+.profile__email {
+  margin: 0;
+
+  color: var(--color-muted);
+
+  font-size: 13px;
+}
+
+.profile__photo-buttons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  margin-top: 10px;
+}
+
+.profile__photo-change {
+  padding: 8px 16px;
+
+  border: 2px solid var(--color-brown);
+
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: var(--color-brown);
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.profile__photo-change:hover:not(:disabled) {
+  background: var(--color-brown);
+
+  color: var(--color-white);
+}
+
+.profile__photo-remove {
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--color-muted);
+
+  font-size: 14px;
+
+  text-decoration: underline;
+}
+
+.profile__photo-remove:hover:not(:disabled) {
+  color: var(--color-danger);
+}
+
+.profile__photo-change:disabled,
+.profile__photo-remove:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+.profile__photo-change:focus-visible,
+.profile__photo-remove:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* a section: small uppercase heading, a thin line, then the rows */
+.profile__section-title {
+  margin: 0;
+
+  padding-bottom: 10px;
+
+  border-bottom: 1px solid var(--color-border);
+
   color: var(--color-muted);
 
   font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
 }
 
-.profile__sidebar nav {
-  margin-top: 25px;
+/* a row: label on the left (fixed column), the field on the right */
+.profile__row {
+  display: grid;
 
+  grid-template-columns: 170px minmax(0, 1fr);
+
+  gap: 8px 24px;
+
+  padding: 16px 0;
+}
+
+.profile__row + .profile__row {
+  border-top: 1px solid var(--color-border);
+}
+
+.profile .profile__label {
+  display: block;
+
+  padding-top: 12px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+.profile__control {
   display: flex;
 
   flex-direction: column;
 
   gap: 6px;
+
+  min-width: 0;
 }
 
-.profile__sidebar nav button {
-  text-align: left;
+.profile__help {
+  margin: 0;
 
-  padding: 10px;
+  color: var(--color-muted);
 
-  border: none;
+  font-size: 12px;
 
-  background: transparent;
-
-  border-radius: 8px;
-}
-
-.profile__sidebar nav button:hover {
-  background: var(--color-cream);
-}
-
-.profile__content {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 15px;
-}
-
-.profile__card {
-  padding: 25px;
-
-  background: white;
-
-  border: 1px solid var(--color-border);
-
-  border-radius: 15px;
-}
-
-.profile__card > div:first-child {
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-}
-
-.profile__card h2 {
-  margin: 0 0 18px;
-}
-
-.profile__card button {
-  border: 1px solid var(--color-orange);
-
-  background: white;
-
-  color: var(--color-orange);
-
-  padding: 7px 12px;
-
-  border-radius: 999px;
-}
-
-.profile__grid {
-  display: grid;
-
-  grid-template-columns: repeat(2, 1fr);
-
-  gap: 15px;
+  line-height: 1.4;
 }
 
 .profile label {
@@ -180,34 +272,22 @@
   border-radius: 8px;
 }
 
-@media (max-width: 800px) {
-  .profile__layout {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* ---------- always-editable form: errors, Save Changes, saved message ---------- */
 
 .profile input[aria-invalid="true"] {
   border-color: var(--color-danger);
 }
 
+/* the address list fields wait for the one before them */
+.profile input:disabled {
+  background: var(--color-cream);
+  cursor: not-allowed;
+}
+
 .profile__error {
   color: var(--color-danger);
   font-size: 12px;
   line-height: 1.4;
-}
-
-/* the password field has no visible label (as before); this one is for screen readers */
-.profile__sr-only {
-  position: absolute;
-
-  width: 1px;
-  height: 1px;
-
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
 }
 
 .profile__actions {
@@ -298,15 +378,20 @@
   outline-offset: 2px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
 
-  /* phones: one column so the fields (the date box is wide) fit the screen */
-  .profile__layout {
-    grid-template-columns: minmax(0, 1fr);
+  .profile__content {
+    padding: 24px;
   }
 
-  .profile__grid {
-    grid-template-columns: 1fr;
+  .profile__row {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 6px;
+  }
+
+  .profile .profile__label {
+    padding-top: 0;
   }
 
   .profile input {

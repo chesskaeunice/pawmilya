@@ -1,15 +1,18 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import { Clock } from "lucide-react";
 
 import { articlePlaceholders } from "../../assets/images/placeholders/index.js";
+import { formatDate } from "../../utils/formatDateTime.js";
 
 import "./PreviewCards.css";
 
-// Full-bleed image, dark gradient overlay, text on top.
+// Full-bleed image, dark gradient overlay, text on top. Opens the original article.
 function ArticleCard({ article }) {
-  const image =
-    article.image ||
+  const [imageFailed, setImageFailed] = useState(false);
+
+  const placeholder =
     articlePlaceholders[article.imageIndex % articlePlaceholders.length];
+  const image = article.image && !imageFailed ? article.image : placeholder;
 
   return (
     <article className="article-card">
@@ -19,6 +22,7 @@ function ArticleCard({ article }) {
         src={image}
         alt=""
         loading="lazy"
+        onError={() => setImageFailed(true)}
       />
 
       <div className="article-card__overlay" />
@@ -26,22 +30,26 @@ function ArticleCard({ article }) {
       <div className="article-card__content">
 
         <p className="article-card__tags">
-          {article.tags.join(" · ")}
+          {article.source}
         </p>
 
         <h3 className="article-card__title">
           {/* Stretched link: the whole card opens the article */}
-          <Link to={`/articles/${article.id}`}>
+          <a href={article.url} target="_blank" rel="noopener noreferrer">
             {article.title}
-          </Link>
+          </a>
         </h3>
 
-        <p className="article-card__excerpt">{article.excerpt}</p>
+        {article.excerpt && (
+          <p className="article-card__excerpt">{article.excerpt}</p>
+        )}
 
-        <p className="article-card__time">
-          <Clock size={13} aria-hidden="true" />
-          {article.readingTime}
-        </p>
+        {article.publishedAt && (
+          <p className="article-card__time">
+            <Clock size={13} aria-hidden="true" />
+            {formatDate(article.publishedAt)}
+          </p>
+        )}
 
       </div>
 

@@ -5,14 +5,14 @@ return [
 
     'citizen' => [],
 
+    // Overview of the whole system, not hands-on: sees everything, plus Staff Schedule,
+    // Users, Audit Logs and the website settings (settings.system)
     'kennel_manager' => [
         'dashboard.view',
-        'animals.view', 'animals.create', 'animals.edit', 'animals.delete', 'animals.photo',
-        'qr.generate',
-        'adoptionApplications.view', 'adoptionApplications.review', 'adoptionApplications.approve',
-        'adoptionApplications.reject', 'adoptionApplications.export',
-        'missingPets.view', 'missingPets.edit', 'missingPets.updateStatus',
-        'vaccinations.view', 'vaccinations.create', 'vaccinations.edit', 'vaccinations.delete',
+        'animals.view',
+        'adoptionApplications.view', 'adoptionApplications.export',
+        'missingPets.view',
+        'vaccinations.view',
         'reports.view', 'reports.all',
         'settings.view', 'settings.system',
         'shifts.manage',
@@ -23,7 +23,7 @@ return [
         'animals.view', 'animals.adoptionUpdate', 'animals.photo',
         'adoptionApplications.view', 'adoptionApplications.review', 'adoptionApplications.approve',
         'adoptionApplications.reject',
-        'missingPets.view', 'missingPets.edit', 'missingPets.updateStatus',
+        'missingPets.view',
         'vaccinations.view',
         'reports.view', 'reports.adoption', 'reports.missingPets',
         'settings.view', 'settings.ownAccount',
@@ -42,9 +42,10 @@ return [
 
     'pound_staff' => [
         'dashboard.view',
-        'animals.view', 'animals.husbandryUpdate', 'animals.photo',
+        'animals.view', 'animals.create', 'animals.edit', 'animals.delete', 'animals.husbandryUpdate', 'animals.photo',
+        'animals.registerFromReport',
         'qr.generate',
-        'missingPets.view',
+        'missingPets.view', 'missingPets.updateStatus',
         'vaccinations.view',
         'settings.view', 'settings.ownAccount',
         'shifts.viewOwn',

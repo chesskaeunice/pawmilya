@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class HealthLog extends Model
 {
     protected $fillable = [
-        'animal_id', 'vaccine', 'administered_at', 'next_due_date', 'notes', 'recorded_by',
+        'animal_id', 'vaccine_id', 'other_vaccine_name', 'vaccine', 'administered_at', 'next_due_date', 'notes', 'recorded_by',
     ];
 
     protected function casts(): array
@@ -47,6 +47,19 @@ class HealthLog extends Model
     public function animal(): BelongsTo
     {
         return $this->belongsTo(Animal::class);
+    }
+
+    // The vaccine from the vaccines table (null when the vet tech typed another vaccine: other_vaccine_name).
+    // `vaccine` (the column) is the name as it was when the record was made.
+    public function vaccineType(): BelongsTo
+    {
+        return $this->belongsTo(Vaccine::class, 'vaccine_id');
+    }
+
+    // The name to show: the vaccines table first, then the typed name
+    public function vaccineName(): string
+    {
+        return $this->vaccineType?->name ?? $this->other_vaccine_name ?? $this->vaccine;
     }
 
     public function recorder(): BelongsTo

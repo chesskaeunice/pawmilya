@@ -5,6 +5,7 @@ import { Clock, HandHeart, Mail, MapPin, Phone } from "lucide-react";
 import { checkHealth } from "../../services/api";
 import { sectionLinks, siteInfo } from "../../data/siteInfo.js";
 import { useGoToSection } from "../../hooks/useSectionScroll.js";
+import usePoundInfo from "../../hooks/usePoundInfo.js";
 import DonateInKindModal from "./DonateInKindModal.jsx";
 import donationQr from "../../assets/images/placeholders/donation-qr-placeholder.svg";
 
@@ -28,7 +29,9 @@ function UserFooter() {
       .catch(() => setApiStatus("offline"));
   }, []);
 
-  const { contact, donation, legalLinks, brandName } = siteInfo;
+  const { donation, legalLinks, brandName } = siteInfo;
+  // edited by the kennel manager in Settings (data/siteInfo.js is the fallback)
+  const contact = usePoundInfo();
 
   // Columns, left to right: Donate, In-Kind, Explore, Legal, Contact Us
   return (

@@ -7,6 +7,16 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## PAWmilya setup: photos and uploads
+
+Uploaded photos (animals, missing pet reports, site images) are saved in `storage/app/public` and are shown at `<backend>/storage/...`. That address only works after the storage link is created, **once per machine** (and again if `public/storage` is ever deleted):
+
+```bash
+php artisan storage:link
+```
+
+If it says it cannot create the symlink on Windows, run the terminal as Administrator, or create a junction instead: `mklink /J public\storage storage\app\public` (cmd, inside `backend`). Photo URLs are built from the address the API was called on, so the frontend's `VITE_API_URL` (default `http://localhost:8000`) must point at the running backend. Also see `APP_URL` in `.env`.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

@@ -24,6 +24,7 @@ import useAdminLists from "../../../hooks/useAdminLists.js";
 import OnDutyToday from "../../../components/admin/OnDutyToday.jsx";
 
 import "./KennelManagerDashboard.css";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
 const ACTIVE_MISSING_STATUSES = [
@@ -604,7 +605,7 @@ function KennelManagerDashboard() {
 
                           {image ? (
 
-                            <img
+                            <SafeImage type={pet.type}
                               src={image}
                               alt={pet.name}
                             />
@@ -637,9 +638,7 @@ function KennelManagerDashboard() {
 
 
                           <span>
-                            {pet.type}
-                            {" · "}
-                            {pet.breed}
+                            {[pet.type, pet.breed].filter(Boolean).join(" · ")}
                           </span>
 
 

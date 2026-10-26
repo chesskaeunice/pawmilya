@@ -24,6 +24,24 @@ export async function fetchAdminLists(allowed) {
 }
 
 
+// The data behind the Reports tabs. Each report is checked by its own permission on the server,
+// so only the ones the role may read are requested; the others come back empty.
+export async function fetchReportLists(allowed) {
+  const empty = Promise.resolve([]);
+  const get = (path) => api.get(`/api/reports/${path}`).then((res) => res.data.data);
+
+  const [animals, applications, missingPets, vaccinations, health] = await Promise.all([
+    allowed.animals ? get("animals") : empty,
+    allowed.adoptions ? get("adoptions") : empty,
+    allowed.missingPets ? get("missing-pets") : empty,
+    allowed.vaccinations ? get("vaccinations") : empty,
+    allowed.health ? get("health") : empty,
+  ]);
+
+  return { animals, applications, missingPets, vaccinations, health };
+}
+
+
 /* ----- staff accounts (kennel manager) ----- */
 
 export const listStaffAccounts = () =>

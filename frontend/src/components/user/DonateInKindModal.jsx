@@ -2,16 +2,16 @@ import { Check, Home, Info, PawPrint } from "lucide-react";
 
 import Modal from "../common/Modal.jsx";
 import inKindWishlist from "../../data/inKindWishlist.js";
-import { siteInfo } from "../../data/siteInfo.js";
+import usePoundInfo from "../../hooks/usePoundInfo.js";
 
 import "./DonateInKindModal.css";
 
 const ICONS = { PawPrint, Home };
 
 // "Donate In-Kind" pop-up opened from the footer (guests and logged-in users).
-// Wishlists come from data/inKindWishlist.js; drop-off details from data/siteInfo.js.
+// Wishlists come from data/inKindWishlist.js; drop-off details from the pound info set in Settings.
 function DonateInKindModal({ isOpen, onClose }) {
-  const { address, hours, phone, email } = siteInfo.contact;
+  const { address, hours, phone, email } = usePoundInfo();
 
   return (
     <Modal

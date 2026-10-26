@@ -9,9 +9,10 @@ import "./EmergencyButton.css";
 // the menu (My Missing Pet Reports / Report Missing Pet page).
 function EmergencyButton() {
   const { openEmergency } = useModals();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
 
-  if (isLoggedIn) return null;
+  // While a stored login is being checked (/api/me) we do not know yet whether this is a guest
+  if (isLoggedIn || loading) return null;
 
   return (
     <button

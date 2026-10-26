@@ -1,7 +1,7 @@
 .adoption-form {
   background-color: var(--color-background);
 
-  padding: 55px 0 80px;
+  padding: 0 0 80px;
 }
 
 .adoption-form__container {
@@ -383,7 +383,7 @@
 
 @media (max-width: 600px) {
   .adoption-form {
-    padding-top: 40px;
+    padding-top: 0;
   }
 
   .adoption-form__header h1 {
@@ -436,12 +436,29 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-height: 46px;
   cursor: pointer;
 }
 
 .adoption-form__radio input {
   width: auto;
   margin: 0;
+}
+
+/* A radio is not a text field: it gets no box, border or glow when selected or focused.
+   (It used to take the field styles, a 46px tall box with a gold ring on focus. The label keeps
+   the 46px, so the rows stay as tall as before.) Keyboard users get a small ring on the circle. */
+.adoption-form__field .adoption-form__radio input[type="radio"] {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.adoption-form__field .adoption-form__radio input[type="radio"]:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+  border-radius: 50%;
 }
 
 .adoption-form__visually-hidden {

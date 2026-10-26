@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 // Forgot / reset (public) and change (logged in) password
 class PasswordController extends Controller
@@ -21,7 +22,13 @@ class PasswordController extends Controller
     {
         $request->validate(['email' => ['required', 'email']]);
 
-        Password::sendResetLink(['email' => strtolower(trim($request->input('email')))]);
+        // A mail server problem is only logged: the answer must not change (or fail)
+        // for an account that exists, or it would show which emails are registered
+        try {
+            Password::sendResetLink(['email' => strtolower(trim($request->input('email')))]);
+        } catch (Throwable $e) {
+            report($e);
+        }
 
         return response()->json(['message' => 'If that email has an account, a reset link has been sent.']);
     }

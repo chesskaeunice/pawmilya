@@ -32,6 +32,32 @@ export async function loginRequest(email, password) {
   return data.user;
 }
 
+// Profile page: change the logged-in user's email (returns the updated user)
+export async function updateEmailRequest(email) {
+  const { data } = await api.patch("/api/profile/email", { email });
+  return data.user;
+}
+
+// Profile page: the home address in parts { province, city, barangay, street } (returns the updated user)
+export async function updateAddressRequest(address) {
+  const { data } = await api.patch("/api/profile/address", address);
+  return data.user;
+}
+
+// Profile photo (one image file); both return the updated user, with `avatar_url` (null = no photo)
+export async function uploadAvatarRequest(file) {
+  const body = new FormData();
+  body.append("avatar", file);
+
+  const { data } = await api.post("/api/me/avatar", body);
+  return data.user;
+}
+
+export async function removeAvatarRequest() {
+  const { data } = await api.delete("/api/me/avatar");
+  return data.user;
+}
+
 export async function registerRequest(payload) {
   const { data } = await api.post("/api/register", payload);
   storeToken(data.token);
@@ -52,12 +78,23 @@ export async function fetchCurrentUser() {
   return data.user;
 }
 
-// Turns an Axios error into { message, fields } for the forms (422 field errors)
+const SERVER_ERROR_TEXT = "Something went wrong on our side. Please try again later.";
+const NETWORK_ERROR_TEXT = "We could not reach the server. Please check your connection and try again.";
+
+// Turns an Axios error into { message, fields } for the forms (422 field errors).
+// A server failure (5xx) or a lost connection only ever shows a friendly text: the technical detail
+// (SQL, class names, traces) goes to the console, never to the screen.
 export function formatApiError(error) {
   const response = error.response;
 
   if (!response) {
-    return { message: "Cannot reach the server. Please try again.", fields: {} };
+    console.error("Request failed without a response:", error);
+    return { message: NETWORK_ERROR_TEXT, fields: {} };
+  }
+
+  if (response.status >= 500) {
+    console.error(`Server error ${response.status}:`, response.data);
+    return { message: SERVER_ERROR_TEXT, fields: {} };
   }
 
   if (response.status === 429) {
@@ -74,8 +111,16 @@ export function formatApiError(error) {
     fields[name] = messages[0];
   }
 
+  const message = response.data?.message;
+
+  // safety net: a message that looks technical is never shown
+  if (typeof message === "string" && /SQLSTATE|Exception/.test(message)) {
+    console.error(`Technical message hidden (status ${response.status}):`, message);
+    return { message: SERVER_ERROR_TEXT, fields: {} };
+  }
+
   return {
-    message: response.data?.message || "Something went wrong.",
+    message: message || "Something went wrong.",
     fields,
   };
 }

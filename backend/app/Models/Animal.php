@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class Animal extends Model
@@ -29,7 +30,7 @@ class Animal extends Model
     ];
 
     protected $fillable = [
-        'animal_code', 'name', 'species', 'breed', 'sex', 'age_months', 'color', 'location',
+        'animal_code', 'name', 'species', 'other_species', 'breed', 'sex', 'age_months', 'color', 'location',
         'status', 'health_status', 'personality', 'vaccinated', 'neutered', 'description', 'ideal_home',
         'rescued_at', 'owner_name', 'owner_contact', 'created_by',
     ];
@@ -60,9 +61,21 @@ class Animal extends Model
         });
     }
 
+    // The Found missing pet report this animal was registered from, if any
+    public function missingPetReport(): HasOne
+    {
+        return $this->hasOne(MissingPetReport::class);
+    }
+
     public function healthLogs(): HasMany
     {
         return $this->hasMany(HealthLog::class);
+    }
+
+    // The vaccination records of this animal (the health_logs table)
+    public function vaccinations(): HasMany
+    {
+        return $this->healthLogs();
     }
 
     public function adoptionApplications(): HasMany

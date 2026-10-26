@@ -44,6 +44,44 @@ textarea {
 }
 
 
+/* Dropdowns (every <select>, citizen and admin pages): our own chevron, 14px from the
+   right border, and room for it so long text never runs under it. The values are
+   !important because many page styles set `padding` / `background` on their selects. */
+select:not([multiple]) {
+  -webkit-appearance: none;
+  appearance: none;
+
+  padding-right: 40px !important;
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234d2a00' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  background-size: 16px 16px !important;
+
+  text-overflow: ellipsis;
+}
+
+select:not([multiple]):disabled {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23756b61' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+}
+
+
+/* Any field with an error (aria-invalid="true", see FieldError): red border, and a light
+   red focus ring instead of the usual one. Back to normal when the error is cleared.
+   !important because the pages style their own borders and focus rings. */
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--color-danger) !important;
+}
+
+input[aria-invalid="true"]:focus,
+select[aria-invalid="true"]:focus,
+textarea[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px rgba(182, 70, 70, 0.18) !important;
+}
+
+
 button {
   cursor: pointer;
 }

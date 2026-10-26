@@ -23,6 +23,7 @@ import { healthStatusClass, statusClass } from "../../../config/animalStatus.js"
 
 import "./AnimalDetails.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 const TABS = [
   { id: "about", label: "About", icon: PawPrint },
@@ -188,7 +189,7 @@ function AnimalDetails() {
 
           <div className="animal-details__main-photo">
             {mainPhoto ? (
-              <img
+              <SafeImage type={pet.type}
                 src={mainPhoto}
                 alt={`Photo of ${name}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
@@ -208,7 +209,7 @@ function AnimalDetails() {
                 onClick={() => setPhotoIndex(index)}
                 aria-label={`Show photo ${index + 1}`}
               >
-                <img
+                <SafeImage type={pet.type}
                   src={url}
                   alt=""
                   style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}

@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use App\Support\PublicCache;
 use App\Support\SiteContent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 // Guests and citizens: only animals "Available for Adoption", never health_status.
 class PublicAnimalController extends Controller
@@ -62,7 +63,8 @@ class PublicAnimalController extends Controller
         $animal = Animal::with('photos')->where('qr_token', $token)->firstOrFail();
 
         return response()->json([
-            'data' => array_merge((new PublicAnimalResource($animal))->resolve(), [
+            // no age on the scan page
+            'data' => array_merge(Arr::except((new PublicAnimalResource($animal))->resolve(), ['ageLabel']), [
                 'color' => $animal->color,
                 'owner' => $animal->owner_name || $animal->owner_contact
                     ? ['name' => $animal->owner_name, 'contact' => $animal->owner_contact]

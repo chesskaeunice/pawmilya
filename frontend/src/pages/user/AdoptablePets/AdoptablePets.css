@@ -307,10 +307,10 @@
   }
 }
 
-/* Only search + Type now (no Age filter): two columns instead of three,
-   so there is no empty slot; stacked on tablet and phone */
+/* Search + Type and Sex (no Age or Breed filter): one row of three on desktop,
+   stacked on tablet and phone */
 .adoptable__filters {
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr repeat(2, 1fr);
 }
 
 @media (max-width: 980px) {

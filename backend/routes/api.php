@@ -6,10 +6,14 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MyShiftController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PetCareArticleController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SiteContentController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\VaccinationController;
+use App\Http\Controllers\VaccineController;
 use App\Http\Controllers\MissingPetReportController;
 use App\Http\Controllers\PublicAnimalController;
 use Illuminate\Http\Request;
@@ -33,13 +37,17 @@ Route::middleware(['auth:sanctum', 'password.changed'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/change-password', [PasswordController::class, 'change'])->middleware('throttle:5,1');
+    Route::patch('/profile/email', [ProfileController::class, 'updateEmail'])->middleware('throttle:10,1');
+    Route::patch('/profile/address', [ProfileController::class, 'updateAddress'])->middleware('throttle:10,1');
+    Route::post('/me/avatar', [ProfileController::class, 'updateAvatar'])->middleware('throttle:10,1');
+    Route::delete('/me/avatar', [ProfileController::class, 'deleteAvatar'])->middleware('throttle:10,1');
 
     // Staff animals (field-level permissions for update are in UpdateAnimalRequest)
     Route::get('/animals', [AnimalController::class, 'index'])->middleware('permission:animals.view');
     Route::get('/animals/{animal}', [AnimalController::class, 'show'])->middleware('permission:animals.view');
     Route::get('/animals/{animal}/history', [AnimalController::class, 'history'])->middleware('permission:animals.view');
     Route::get('/animals/{animal}/qr', [AnimalController::class, 'qr'])->middleware('permission:qr.generate');
-    Route::post('/animals', [AnimalController::class, 'store'])->middleware('permission:animals.view');
+    Route::post('/animals', [AnimalController::class, 'store'])->middleware('permission:animals.create');
     Route::patch('/animals/{animal}', [AnimalController::class, 'update'])->middleware('permission:animals.view');
     Route::post('/animals/{animal}/photo', [AnimalController::class, 'updatePhoto'])->middleware(['permission:animals.photo', 'throttle:30,1']);
     Route::delete('/animals/{animal}',[AnimalController::class, 'destroy'])->middleware('permission:animals.delete');
@@ -51,10 +59,20 @@ Route::middleware(['auth:sanctum', 'password.changed'])->group(function () {
     });
 
     // Vaccinations (health logs)
+    Route::get('/vaccines', [VaccineController::class, 'index'])->middleware('permission:vaccinations.view');
     Route::get('/vaccinations', [VaccinationController::class, 'index'])->middleware('permission:vaccinations.view');
     Route::post('/vaccinations', [VaccinationController::class, 'store'])->middleware('permission:vaccinations.view');
     Route::patch('/vaccinations/{log}', [VaccinationController::class, 'update'])->middleware('permission:vaccinations.view');
     Route::delete('/vaccinations/{log}', [VaccinationController::class, 'destroy'])->middleware('permission:vaccinations.delete');
+
+    // Reports page: each report checks its own permission (see ReportController)
+    Route::prefix('reports')->group(function () {
+        Route::get('/animals', [ReportController::class, 'animals']);
+        Route::get('/adoptions', [ReportController::class, 'adoptions']);
+        Route::get('/missing-pets', [ReportController::class, 'missingPets']);
+        Route::get('/vaccinations', [ReportController::class, 'vaccinations']);
+        Route::get('/health', [ReportController::class, 'health']);
+    });
 
     // Staff accounts and the audit trail (kennel manager)
     Route::middleware('permission:settings.system')->group(function () {
@@ -66,6 +84,7 @@ Route::middleware(['auth:sanctum', 'password.changed'])->group(function () {
         // Public site content (pound info, donation QR, about, in-kind wishlist)
         Route::get('/site-content', [SiteContentController::class, 'show']);
         Route::put('/site-content', [SiteContentController::class, 'update']);
+        Route::patch('/pound-info', [SiteContentController::class, 'updatePound']);
         Route::post('/site-content/images/{slot}', [SiteContentController::class, 'uploadImage'])->middleware('throttle:30,1');
         Route::delete('/site-content/images/{slot}', [SiteContentController::class, 'deleteImage']);
     });
@@ -99,6 +118,9 @@ Route::middleware(['auth:sanctum', 'password.changed'])->group(function () {
     Route::get('/missing-pet-reports/{report}/matches', [MissingPetReportController::class, 'matches'])->middleware('permission:missingPets.view');
     Route::patch('/missing-pet-reports/{report}/status', [MissingPetReportController::class, 'updateStatus'])->middleware('permission:missingPets.updateStatus');
 
+    // A Found report: register the pet as an animal in the pound (pound staff)
+    Route::post('/missing-pets/{report}/register-animal', [MissingPetReportController::class, 'registerAnimal'])->middleware(['permission:animals.registerFromReport', 'throttle:10,1']);
+
     // Staff review
     Route::get('/adoption-applications', [AdoptionApplicationController::class, 'index'])->middleware('permission:adoptionApplications.view');
     Route::get('/adoption-applications/{application}', [AdoptionApplicationController::class, 'show'])->middleware('permission:adoptionApplications.view');
@@ -113,6 +135,9 @@ Route::post('/missing-pets', [MissingPetReportController::class, 'store'])->midd
 
 // Public site content for the footer, About section and donation pop-ups
 Route::get('/public/site-info', [SiteContentController::class, 'publicInfo']);
+
+// Pet Care Corner: pet care articles from Google News (cached for 1 hour)
+Route::get('/pet-care-articles', [PetCareArticleController::class, 'index'])->middleware('throttle:60,1');
 
 // Public adoptable pets and the stray QR page
 Route::get('/pets', [PublicAnimalController::class, 'index']);

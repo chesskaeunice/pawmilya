@@ -23,6 +23,7 @@ import useAdminLists from "../../../hooks/useAdminLists.js";
 import MyShifts from "../../../components/admin/MyShifts.jsx";
 
 import "./VetTechDashboard.css";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
 const ATTENTION_STATUSES = [
@@ -500,7 +501,7 @@ function VetTechDashboard() {
 
                           {image ? (
 
-                            <img
+                            <SafeImage
                               src={image}
                               alt={animal.name}
                             />

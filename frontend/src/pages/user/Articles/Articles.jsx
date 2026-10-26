@@ -5,7 +5,7 @@ import FilterDropdown from "../../../components/common/FilterDropdown.jsx";
 import Pagination from "../../../components/common/Pagination.jsx";
 import ArticleCard from "../../../components/landing/ArticleCard.jsx";
 
-import { getAllArticles } from "../../../services/previewService.js";
+import usePetCareArticles from "../../../hooks/usePetCareArticles.js";
 import { matchesArticleSearch } from "../../../utils/liveSearch.js";
 import {
   defaultFilters,
@@ -17,10 +17,9 @@ import BackButton from "../../../components/common/BackButton.jsx";
 
 const ARTICLES_PER_PAGE = 6;
 
-const allArticles = getAllArticles();
-
 function Articles() {
   const listRef = useRef(null);
+  const { articles: allArticles, loading, failed } = usePetCareArticles();
 
   // live search: the grid filters on every keystroke
   const [query, setQuery] = useState("");
@@ -35,7 +34,7 @@ function Articles() {
         matchesDateRange(article.dateAdded, filters)
       );
     });
-  }, [query, filters]);
+  }, [allArticles, query, filters]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ARTICLES_PER_PAGE));
   const currentPage = Math.min(page, totalPages);
@@ -62,7 +61,9 @@ function Articles() {
 
   return (
     <div className="articles-page">
-      <BackButton fallback="/" />
+      <div className="page-back">
+        <BackButton fallback="/#articles" />
+      </div>
 
 
       <header className="articles-page__header">
@@ -79,52 +80,63 @@ function Articles() {
         style={{ scrollMarginTop: 90 }}
       >
 
-        <div className="list-toolbar">
-          <SearchBar
-            value={query}
-            onChange={changeQuery}
-            onClear={clearSearch}
-            placeholder="Search articles by title or topic"
-            label="Search articles"
-          />
-
-          <FilterDropdown
-            value={filters}
-            onChange={(next) => {
-              setFilters(next);
-              setPage(1);
-            }}
-            fields={["dateRange"]}
-          />
-        </div>
-
-        <p className="articles-page__count">
-          {filtered.length} {filtered.length === 1 ? "article" : "articles"} found
-        </p>
-
-        {visible.length > 0 ? (
-          <div className="articles-page__grid">
-            {visible.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
-        ) : (
+        {failed && (
           <div className="articles-page__empty" role="status">
-            <h2>No articles match your search</h2>
-            <p>Try a different title or topic.</p>
-
-            <button type="button" onClick={clearSearch}>
-              Clear search
-            </button>
+            <p>We could not load articles right now. Please try again later.</p>
           </div>
         )}
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onChange={changePage}
-          label="Articles pages"
-        />
+        {/* Nothing is shown while loading or when the articles could not be loaded */}
+        {!loading && !failed && (
+          <>
+            <div className="list-toolbar">
+              <SearchBar
+                value={query}
+                onChange={changeQuery}
+                onClear={clearSearch}
+                placeholder="Search articles by title or topic"
+                label="Search articles"
+              />
+
+              <FilterDropdown
+                value={filters}
+                onChange={(next) => {
+                  setFilters(next);
+                  setPage(1);
+                }}
+                fields={["dateRange"]}
+              />
+            </div>
+
+            <p className="articles-page__count">
+              {filtered.length} {filtered.length === 1 ? "article" : "articles"} found
+            </p>
+
+            {visible.length > 0 ? (
+              <div className="articles-page__grid">
+                {visible.map((article) => (
+                  <ArticleCard key={article.id} article={article} />
+                ))}
+              </div>
+            ) : (
+              <div className="articles-page__empty" role="status">
+                <h2>No articles match your search</h2>
+                <p>Try a different title or topic.</p>
+
+                <button type="button" onClick={clearSearch}>
+                  Clear search
+                </button>
+              </div>
+            )}
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onChange={changePage}
+              label="Articles pages"
+            />
+          </>
+        )}
 
       </section>
 

@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   CalendarDays,
   Clock3,
@@ -18,11 +20,17 @@ import StatusHelp from "../../../components/common/StatusHelp/StatusHelp.jsx";
 
 import "./MissingPetDetails.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
+import Modal from "../../../components/common/Modal.jsx";
 
 
 function MissingPetDetails() {
   const { reportId } =
     useParams();
+
+  // index of the last seen photo shown larger (null: none)
+  const [viewing, setViewing] =
+    useState(null);
 
 
   const { data: pet, loading } =
@@ -62,6 +70,10 @@ function MissingPetDetails() {
       </div>
     );
   }
+
+
+  const lastSeenPhotos =
+    pet.lastSeenImages ?? [];
 
 
   return (
@@ -119,7 +131,7 @@ function MissingPetDetails() {
 
         <div className="missing-detail__photo">
 
-          <img
+          <SafeImage type={pet.type}
             src={
               pet.image ||
               petPlaceholders[pet.type] ||
@@ -157,7 +169,7 @@ function MissingPetDetails() {
           <DetailRow
             icon={<PawPrint size={16} />}
             label="Breed"
-            value={pet.breed}
+            value={pet.breed || "Not given"}
           />
 
 
@@ -279,46 +291,49 @@ function MissingPetDetails() {
   </div>
 
 
-  <div className="missing-detail__photo-gallery">
+  {lastSeenPhotos.length > 0 ? (
+    <div className="missing-detail__thumbs">
 
-    {Array.from({ length: 3 }).map(
-      (_, index) => {
-
-        const photo =
-          pet.lastSeenImages?.[index];
-
-
-        return (
-          <div
-            className="missing-detail__gallery-photo"
+      {lastSeenPhotos.map(
+        (photo, index) => (
+          <button
+            type="button"
+            className="missing-detail__thumb"
             key={index}
+            onClick={() => setViewing(index)}
+            aria-label={`View last seen photo ${index + 1} larger`}
           >
 
-            {photo ? (
-              <img
-                src={photo}
-                alt={`${displayPetName(pet.name)} last seen ${index + 1}`}
-              />
-            ) : (
-              <div className="missing-detail__gallery-placeholder">
+            {/* a missing or broken file shows "Photo not available" at the same size */}
+            <SafeImage
+              src={photo}
+              alt={`${displayPetName(pet.name)} last seen ${index + 1}`}
+              loading="lazy"
+            />
 
-                <span>
-                  Last Seen Photo
-                </span>
+          </button>
+        )
+      )}
 
-                <small>
-                  Image {index + 1}
-                </small>
+    </div>
+  ) : (
+    <div className="missing-detail__no-photo">
+      No photo of the last seen area
+    </div>
+  )}
 
-              </div>
-            )}
-
-          </div>
-        );
-      }
-    )}
-
-  </div>
+  <Modal
+    isOpen={viewing !== null}
+    onClose={() => setViewing(null)}
+    title={`Last seen photo ${(viewing ?? 0) + 1} of ${lastSeenPhotos.length}`}
+    size="large"
+  >
+    <SafeImage
+      className="missing-detail__lightbox-image"
+      src={lastSeenPhotos[viewing ?? 0]}
+      alt={`${displayPetName(pet.name)} last seen ${(viewing ?? 0) + 1}`}
+    />
+  </Modal>
 
 </section>
 

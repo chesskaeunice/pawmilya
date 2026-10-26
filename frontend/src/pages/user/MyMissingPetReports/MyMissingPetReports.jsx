@@ -1,50 +1,27 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import useFetch from "../../../hooks/useFetch.js";
 import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { displayPetName } from "../../../utils/petName.js";
-import {
-  listMyMissingReports,
-  markMyReportReunited,
-} from "../../../services/missingPetService.js";
-import { formatApiError } from "../../../services/authService.js";
+import { listMyMissingReports } from "../../../services/missingPetService.js";
 
 import "./MyMissingPetReports.css";
 // status badge: same style as the Missing Pets page (missing-pets__status)
 import "../MissingPets/MissingPets.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 // Shown only to logged-in citizens: the route is wrapped in RequireSignIn,
 // which opens the sign-in / sign-up prompt for guests.
 function MyMissingPetReports() {
-  const { data, loading, reload } = useFetch(() => listMyMissingReports(), []);
+  const { data, loading } = useFetch(() => listMyMissingReports(), []);
   const reports = data ?? [];
-
-  // blocks a second click while the update is being saved
-  const [busyId, setBusyId] = useState(null);
-
-  const handleFound = async (report) => {
-    const confirmed = window.confirm(
-      `Mark ${displayPetName(report.name)} as found? The report will be closed as Reunited.`
-    );
-
-    if (!confirmed || busyId) return;
-
-    setBusyId(report.id);
-
-    try {
-      await markMyReportReunited(report.id);
-    } catch (error) {
-      window.alert(formatApiError(error).message);
-    }
-
-    reload();
-    setBusyId(null);
-  };
 
   return (
     <div className="my-reports">
-      <BackButton fallback="/" />
+      <div className="page-back">
+        <BackButton fallback="/" />
+      </div>
 
 
       <section className="my-reports__header">
@@ -82,7 +59,7 @@ function MyMissingPetReports() {
 
             <div className="my-reports__image">
               {pet.image ? (
-                <img
+                <SafeImage type={pet.type}
                   src={pet.image}
                   alt={displayPetName(pet.name)}
                   style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
@@ -121,18 +98,12 @@ function MyMissingPetReports() {
             </span>
 
 
-            <button type="button">
-              Edit
-            </button>
-
-
-            <button
-              type="button"
-              disabled={pet.status === "Reunited" || busyId === pet.id}
-              onClick={() => handleFound(pet)}
+            <Link
+              to={`/missing-pets/${pet.id}`}
+              className="my-reports__details"
             >
-              Mark as Found
-            </button>
+              View details
+            </Link>
 
           </article>
 

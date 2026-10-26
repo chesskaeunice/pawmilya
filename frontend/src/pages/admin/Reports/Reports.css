@@ -377,7 +377,8 @@
   margin-bottom: 12px;
 }
 
-.reports__toolbar select {
+.reports__toolbar select,
+.reports__section-title select {
   min-height: 34px;
 
   padding: 0 10px;

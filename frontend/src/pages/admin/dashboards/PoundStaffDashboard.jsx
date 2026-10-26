@@ -20,6 +20,7 @@ import useAdminLists from "../../../hooks/useAdminLists.js";
 import MyShifts from "../../../components/admin/MyShifts.jsx";
 
 import "./PoundStaffDashboard.css";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
 /* =========================================
@@ -294,7 +295,7 @@ function PoundStaffDashboard() {
 
                             {image ? (
 
-                              <img
+                              <SafeImage
                                 src={image}
                                 alt={animal.name}
                               />
@@ -407,7 +408,7 @@ function PoundStaffDashboard() {
 
                           {image ? (
 
-                            <img
+                            <SafeImage
                               src={image}
                               alt={animal.name}
                             />
@@ -510,7 +511,7 @@ function PoundStaffDashboard() {
 
                           {image ? (
 
-                            <img
+                            <SafeImage type={pet.type}
                               src={image}
                               alt={pet.name}
                             />
@@ -543,9 +544,7 @@ function PoundStaffDashboard() {
 
 
                           <span>
-                            {pet.type}
-                            {" · "}
-                            {pet.breed}
+                            {[pet.type, pet.breed].filter(Boolean).join(" · ")}
                           </span>
 
 

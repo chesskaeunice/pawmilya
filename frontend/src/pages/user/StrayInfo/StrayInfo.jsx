@@ -4,14 +4,17 @@ import useFetch from "../../../hooks/useFetch.js";
 import { getStray } from "../../../services/animalService.js";
 import { petPlaceholders } from "../../../assets/images/placeholders/index.js";
 import { displayPetName } from "../../../utils/petName.js";
+import usePoundInfo from "../../../hooks/usePoundInfo.js";
 
 import "./StrayInfo.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 // Public page opened by scanning an animal's QR code (no login needed):
 // pet information and the owner's information when it is known.
 function StrayInfo() {
   const { token } = useParams();
+  const pound = usePoundInfo();
 
   const { data: pet, loading } = useFetch(() => getStray(token), [token]);
 
@@ -47,7 +50,7 @@ function StrayInfo() {
       <BackButton fallback="/" />
 
 
-        <img
+        <SafeImage type={pet.type}
           className="stray__photo"
           src={image}
           alt={`Photo of ${name}`}
@@ -58,7 +61,7 @@ function StrayInfo() {
         <h1>{name}</h1>
 
         <p className="stray__summary">
-          {[pet.type, pet.breed, pet.sex, pet.ageLabel].filter(Boolean).join(" · ")}
+          {[pet.type, pet.breed, pet.sex].filter(Boolean).join(" · ")}
         </p>
 
         <dl className="stray__data">
@@ -76,7 +79,7 @@ function StrayInfo() {
 
           <div>
             <dt>Currently at</dt>
-            <dd>{pet.location || "Pawmilya Animal Pound"}</dd>
+            <dd>{pet.location || pound.name}</dd>
           </div>
         </dl>
 
@@ -96,6 +99,13 @@ function StrayInfo() {
               Pawmilya animal pound.
             </p>
           )}
+        </section>
+
+        <section className="stray__owner">
+          <h2>{pound.name}</h2>
+
+          {pound.address && <p>{pound.address}</p>}
+          {pound.phone && <p>{pound.phone}</p>}
         </section>
 
       </div>

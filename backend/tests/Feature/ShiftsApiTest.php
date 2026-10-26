@@ -270,7 +270,7 @@ class ShiftsApiTest extends TestCase
 
         // one role only: the other required role is reported as missing
         $this->postJson('/api/schedule/assignments', $body($poundStaff))->assertCreated()
-            ->assertJsonPath('data.status', 'pending')
+            ->assertJsonPath('data.status', 'active')
             ->assertJsonPath('coverage.complete', false)
             ->assertJsonPath('coverage.missing', ['vet_tech']);
 
@@ -280,6 +280,35 @@ class ShiftsApiTest extends TestCase
 
         $this->assertSame(2, AuditLog::where('action', 'shift.assigned')->count());
         $this->assertSame($manager->id, StaffShift::first()->assigned_by);
+    }
+
+    public function test_a_new_assignment_is_active_whatever_the_request_says(): void
+    {
+        $staff = $this->makeUser('pound_staff');
+        $this->actingAs_($this->makeUser('kennel_manager'));
+
+        $this->postJson('/api/schedule/assignments', ['user_id' => $staff->id, 'shift_id' => $this->morning->id, 'assigned_date' => '2026-10-23', 'status' => 'completed'])
+            ->assertCreated()->assertJsonPath('data.status', 'active');
+
+        $this->assertSame('active', StaffShift::firstOrFail()->status);
+
+        // and the column default (rows made without a status) is active too
+        $other = $this->makeUser('vet_tech');
+        $row = StaffShift::create(['user_id' => $other->id, 'shift_id' => $this->morning->id, 'assigned_date' => '2026-10-23']);
+        $this->assertSame('active', $row->fresh()->status);
+    }
+
+    public function test_the_schedule_can_be_asked_for_one_day(): void
+    {
+        $staff = $this->makeUser('pound_staff');
+        $this->assign($staff, $this->morning, '2026-10-22');
+        $this->assign($staff, $this->afternoon ?? $this->morning, '2026-10-23');
+        $this->actingAs_($this->makeUser('kennel_manager'));
+
+        $one = $this->getJson('/api/schedule/assignments?from=2026-10-22&to=2026-10-22')->assertOk();
+        $this->assertCount(1, $one->json('data'));
+        $this->assertSame('2026-10-22', $one->json('data.0.assignedDate'));
+        $this->assertSame(['2026-10-22'], array_values(array_unique(array_column($one->json('coverage'), 'date'))));
     }
 
     public function test_a_duplicate_assignment_is_refused_and_never_touches_the_existing_row(): void
@@ -341,7 +370,8 @@ class ShiftsApiTest extends TestCase
         $this->actingAs_($manager);
 
         $this->patchJson("/api/schedule/assignments/{$assignment->id}/status", ['status' => 'bogus'])->assertUnprocessable();
-        $this->patchJson("/api/schedule/assignments/{$assignment->id}/status", ['status' => 'active'])->assertOk()->assertJsonPath('data.status', 'active');
+        // new assignments are already active, so the change to test is to another status
+        $this->patchJson("/api/schedule/assignments/{$assignment->id}/status", ['status' => 'completed'])->assertOk()->assertJsonPath('data.status', 'completed');
         $this->assertDatabaseHas('audit_logs', ['action' => 'shift.status_changed', 'entity_id' => $assignment->id]);
 
         // soft remove: the row stays, with its check-in data, but no longer counts

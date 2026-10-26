@@ -91,6 +91,8 @@ class ScheduleController extends Controller
             // A duplicate is refused; the existing row (and its check-in data) is never touched
             $assignment = new StaffShift($data);
             $assignment->assigned_by = $request->user()->id;
+            // an assigned staff member is active at once (the status is never taken from the request)
+            $assignment->status = 'active';
             $assignment->save();
         } catch (UniqueConstraintViolationException) {
             throw ValidationException::withMessages(['user_id' => [AssignShiftRequest::DUPLICATE_MESSAGE]]);

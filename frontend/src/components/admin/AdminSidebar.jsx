@@ -147,19 +147,31 @@ const menuItems = [
 ];
 
 
-function AdminSidebar() {
+// collapsed: icons only (the name is the tooltip). hidden: the closed drawer on phones.
+// onNavigate: called when a menu link is clicked (the drawer closes).
+function AdminSidebar({
+  collapsed = false,
+  hidden = false,
+  onNavigate,
+}) {
   const {
     can,
     logout,
+    user,
+    roleLabel,
   } = useAuth();
+
+  const name = user?.name ?? "";
 
   const navigate =
     useNavigate();
 
 
   function handleLogout() {
+    // Manual logout goes to the homepage (replace: no admin page stays in the history);
+    // AdminLayout also sends the guest to "/" after a manual logout, not to /login
+    navigate("/", { replace: true });
     logout();
-    navigate("/login");
   }
 
 
@@ -171,7 +183,11 @@ function AdminSidebar() {
 
 
   return (
-    <aside className="staff-sidebar">
+    <aside
+      id="staff-sidebar"
+      className="staff-sidebar"
+      inert={hidden}
+    >
 
       {/* BRAND */}
 
@@ -213,6 +229,8 @@ function AdminSidebar() {
               <NavLink
                 key={item.path}
                 to={item.path}
+                title={collapsed ? item.label : undefined}
+                onClick={onNavigate}
                 className={({
                   isActive,
                 }) =>
@@ -240,14 +258,36 @@ function AdminSidebar() {
       </nav>
 
 
-      {/* LOG OUT (name and role are shown once, in the header) */}
+      {/* WHO IS LOGGED IN, then LOG OUT */}
 
       <div className="staff-sidebar__role">
+
+        <div
+          className="staff-sidebar__profile"
+          title={collapsed ? `${name}, ${roleLabel}` : undefined}
+        >
+
+          <div className="staff-sidebar__avatar" aria-hidden="true">
+            {user?.avatar_url ? (
+              <img src={user.avatar_url} alt="" className="staff-sidebar__photo" />
+            ) : (
+              name.charAt(0).toUpperCase() || "S"
+            )}
+          </div>
+
+          <div className="staff-sidebar__identity">
+            <strong>{name}</strong>
+            <span>{roleLabel}</span>
+          </div>
+
+        </div>
 
         <button
           type="button"
           className="staff-sidebar__logout"
           onClick={handleLogout}
+          title={collapsed ? "Log out" : undefined}
+          aria-label="Log out"
         >
           <LogOut
             size={14}

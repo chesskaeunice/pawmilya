@@ -134,13 +134,21 @@
   flex-direction: column;
 }
 
+/* Every field: label, 6px, input, then 16px before the next field. The error line (FieldError)
+   takes no space until there is an error; then it expands under the input. */
 .login__field {
   display: flex;
   flex-direction: column;
 
-  gap: 7px;
+  gap: 6px;
 
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+}
+
+/* Reset / Change Password: the help block starts below the error line, 8px after it
+   (6px field gap + 2px) */
+.login__field .password-help {
+  margin-top: 2px;
 }
 
 .login__field label {
@@ -191,7 +199,7 @@
 
   gap: 15px;
 
-  margin: 2px 0 22px;
+  margin: 0 0 22px;
 }
 
 .login__remember {
@@ -254,19 +262,6 @@
   transform: translateY(-1px);
 }
 
-
-.login__error {
-  margin: 0;
-
-  padding: 10px 14px;
-
-  border-radius: 10px;
-
-  background-color: #fdecec;
-  color: #a12a2a;
-
-  font-size: var(--font-xs);
-}
 
 .login__submit:disabled {
   opacity: 0.7;
@@ -354,4 +349,10 @@
   color: #2e6b34;
 
   font-size: var(--font-xs);
+}
+
+
+/* No navbar on this page (see UserLayout): fill the whole screen */
+.user-layout--bare .login {
+  min-height: 100vh;
 }

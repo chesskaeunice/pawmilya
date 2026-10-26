@@ -1665,6 +1665,11 @@
 
 @media (max-width: 650px) {
 
+  /* the content is 12px from the edge on phones: the Back button follows (see BackButton.css) */
+  .missing-pets {
+    --page-back-width: min(calc(100% - 24px), 1180px);
+  }
+
   .missing-pets__header {
     min-height:
       340px;

@@ -3,7 +3,6 @@ import {
 } from "react";
 
 import {
-  KeyRound,
   Save,
   ShieldCheck,
   UserCog,
@@ -24,6 +23,7 @@ import {
 
 import "./Settings.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import PoundInfoForm from "./PoundInfoForm.jsx";
 
 
 function Settings() {
@@ -180,39 +180,6 @@ function Settings() {
             </label>
           </div>
         </div>
-
-        <div className="staff-detail-card">
-          <h2 className="staff-detail-card__title">
-            <KeyRound size={15} />
-            Change Password
-          </h2>
-
-          <div className="settings__fields settings__fields--single">
-            <label>
-              Current Password
-              <input
-                type="password"
-                autoComplete="current-password"
-              />
-            </label>
-
-            <label>
-              New Password
-              <input
-                type="password"
-                autoComplete="new-password"
-              />
-            </label>
-
-            <label>
-              Confirm New Password
-              <input
-                type="password"
-                autoComplete="new-password"
-              />
-            </label>
-          </div>
-        </div>
       </section>
 
       <div className="settings__actions">
@@ -242,44 +209,10 @@ function Settings() {
           </div>
 
 
+          <PoundInfoForm />
+
+
           <section className="settings__grid">
-            <div className="staff-detail-card">
-              <h2 className="staff-detail-card__title">
-                Organization Information
-              </h2>
-
-              <div className="settings__fields">
-                <label>
-                  Organization Name
-                  <input
-                    defaultValue="Pawmilya"
-                  />
-                </label>
-
-                <label>
-                  Contact Number
-                  <input
-                    placeholder="Contact number"
-                  />
-                </label>
-
-                <label>
-                  Email Address
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                  />
-                </label>
-
-                <label>
-                  Office Address
-                  <input
-                    placeholder="Office address"
-                  />
-                </label>
-              </div>
-            </div>
-
             <div className="staff-detail-card">
               <h2 className="staff-detail-card__title">
                 Adoption Guidelines

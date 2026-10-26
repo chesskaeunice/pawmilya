@@ -9,11 +9,16 @@
 .mform__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* fields of different height (hint text) still start on the same line */
+  align-items: start;
   gap: 16px;
 }
 
 .mform__field {
+  position: relative;
   display: grid;
+  /* rows stay at the top when a neighbour in the row is taller (hint text) */
+  align-content: start;
   gap: 6px;
 }
 
@@ -30,7 +35,9 @@
 
 .mform__input,
 .mform__textarea,
-.mform__select {
+.mform__select,
+.mform__breed select,
+.mform__breed input[type="text"] {
   width: 100%;
 
   padding: 14px 16px;
@@ -55,7 +62,8 @@
 }
 
 .mform__input::placeholder,
-.mform__textarea::placeholder {
+.mform__textarea::placeholder,
+.mform__breed input::placeholder {
   color: #7d7266;
   font-size: 16px;
   line-height: 1.5;
@@ -64,7 +72,9 @@
 
 .mform__input:focus,
 .mform__textarea:focus,
-.mform__select:focus {
+.mform__select:focus,
+.mform__breed select:focus,
+.mform__breed input[type="text"]:focus {
   outline: none;
   border-color: var(--color-orange);
   box-shadow: 0 0 0 3px rgba(204, 111, 0, 0.14);
@@ -82,6 +92,77 @@
   color: var(--color-danger);
   font-size: 13px;
   line-height: 1.4;
+}
+
+/* Error line that sits in the gap below the field (the form's 16px row gap),
+   so the spacing is the same with or without an error and nothing moves */
+.mform__error--reserved {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+
+  margin-top: 1px;
+
+  line-height: 1.2;
+}
+
+/* Read-only values (City) and fields that do not apply yet look filled in, not editable */
+.mform__input[readonly],
+.mform__input:disabled,
+.mform__breed input:disabled,
+.mform__breed select:disabled {
+  background-color: var(--color-surface-alt);
+  color: var(--color-muted);
+}
+
+.mform__input:disabled {
+  cursor: not-allowed;
+}
+
+.mform__field--muted .mform__label {
+  color: var(--color-muted);
+}
+
+/* Breed field (the shared BreedSelect) in this modal: Breed type | Breed, then "Specify the
+   breed" across the full width in a reserved slot (muted until it is needed) */
+.mform__breed {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 16px;
+}
+
+.mform__breed label {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+
+  margin: 0;
+
+  color: var(--color-brown);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* the label is bold; what is typed or chosen is not (like the other fields) */
+.mform__breed select,
+.mform__breed input[type="text"] {
+  font-weight: 400;
+}
+
+.mform__breed .breed-select__optional {
+  color: var(--color-muted);
+  font-weight: 400;
+}
+
+.mform__breed .breed-select__plain,
+.mform__breed .breed-select__specify {
+  grid-column: 1 / -1;
+}
+
+.mform__breed .breed-select__choice--idle > span {
+  color: var(--color-muted);
 }
 
 .mform__primary,
@@ -203,7 +284,8 @@
 
 @media (max-width: 560px) {
 
-  .mform__row {
+  .mform__row,
+  .mform__breed {
     grid-template-columns: 1fr;
   }
 }

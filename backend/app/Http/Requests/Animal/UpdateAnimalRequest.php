@@ -28,10 +28,16 @@ class UpdateAnimalRequest extends FormRequest
         'description' => ['animals.edit', 'animals.adoptionUpdate', 'animals.husbandryUpdate'],
     ];
 
-    // "Limited" status changes: without animals.edit, a role may only set these statuses
+    // The statuses that belong to the adoption flow (the counselor, and the approval of an application)
+    public const ADOPTION_STATUSES = ['Available for Adoption', 'Pending Adoption', 'Adopted'];
+
+    // Which statuses each permission may set. A role gets everything its permissions allow.
+    // animals.edit (pound staff) covers Rescued and Reunited with Owner only: it cannot set an
+    // adoption status, nor move an animal out of one (see authorize()).
     // (counselor: adoption flow; vet tech: back to Rescued or ready for adoption)
     public const STATUS_LIMITS = [
-        'animals.adoptionUpdate' => ['Available for Adoption', 'Pending Adoption', 'Adopted'],
+        'animals.edit' => ['Rescued', 'Reunited with Owner'],
+        'animals.adoptionUpdate' => self::ADOPTION_STATUSES,
         'animals.healthUpdate' => ['Rescued', 'Available for Adoption'],
     ];
 
@@ -39,13 +45,24 @@ class UpdateAnimalRequest extends FormRequest
     public function authorize(): bool
     {
         $user = $this->user();
+        $animal = $this->route('animal');
 
-        if ($this->has('status') && ! $user->hasPermission('animals.edit')) {
+        // Only a real change is checked: the Edit page sends the current status along every time
+        if ($this->has('status') && $this->input('status') !== $animal->status) {
             $allowed = collect(self::STATUS_LIMITS)
                 ->filter(fn ($statuses, $permission) => $user->hasPermission($permission))
                 ->flatten();
 
             if (! $allowed->contains($this->input('status'))) {
+                return false;
+            }
+
+            // An animal in the adoption flow can only be moved by the roles of that flow
+            if (
+                in_array($animal->status, self::ADOPTION_STATUSES, true)
+                && ! $user->hasPermission('animals.adoptionUpdate')
+                && ! $user->hasPermission('animals.healthUpdate')
+            ) {
                 return false;
             }
         }

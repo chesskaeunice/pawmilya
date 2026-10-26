@@ -49,7 +49,6 @@
     90px
     1fr
     auto
-    auto
     auto;
 
   align-items: center;
@@ -99,7 +98,8 @@
   justify-self: start;
 }
 
-.my-reports__card button {
+.my-reports__card button,
+.my-reports__details {
   border: 1px solid var(--color-orange);
 
   background: white;
@@ -111,13 +111,22 @@
   border-radius: 999px;
 }
 
+/* the link looks like the outlined pill buttons */
+.my-reports__details {
+  text-align: center;
+  text-decoration: none;
+
+  font-size: 13.3333px;
+}
+
 @media (max-width: 800px) {
   .my-reports__card {
     grid-template-columns: 80px 1fr;
   }
 
   .my-reports__status,
-  .my-reports__card button {
+  .my-reports__card button,
+  .my-reports__details {
     grid-column: 2;
   }
 }

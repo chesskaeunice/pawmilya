@@ -19,6 +19,7 @@ import { listStaffReports } from "../../../services/missingPetService.js";
 
 import "./MissingPetReports.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
 const REPORTS_PER_PAGE = 9;
@@ -108,7 +109,6 @@ function MissingPetReports() {
                   ? ![
                       "Dog",
                       "Cat",
-                      "Bird",
                     ].includes(
                       pet.type
                     )
@@ -316,10 +316,6 @@ function MissingPetReports() {
             Cat
           </option>
 
-          <option value="Bird">
-            Bird
-          </option>
-
           <option value="Other">
             Other
           </option>
@@ -497,7 +493,7 @@ function MissingPetReports() {
                           <div className="missing-admin__photo">
 
                             {photo ? (
-                              <img
+                              <SafeImage type={pet.type}
                                 src={photo}
                                 alt={pet.name}
                               />
@@ -521,7 +517,7 @@ function MissingPetReports() {
                             </strong>
 
                             <span>
-                              {pet.breed}
+                              {pet.breed || "Breed not given"}
                             </span>
 
                           </div>

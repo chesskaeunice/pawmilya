@@ -9,18 +9,18 @@ import ArticleCard from "../../../components/landing/ArticleCard.jsx";
 
 import useAuth from "../../../hooks/useAuth.js";
 import useFetch from "../../../hooks/useFetch.js";
+import usePetCareArticles from "../../../hooks/usePetCareArticles.js";
 import useScrollReveal from "../../../hooks/useScrollReveal.js";
 import { useGoToSection } from "../../../hooks/useSectionScroll.js";
 import {
   getLatestAdoptablePets,
-  getLatestArticles,
   getLatestMissingReports,
 } from "../../../services/previewService.js";
 
+import usePoundInfo from "../../../hooks/usePoundInfo.js";
+
 import "./Home.css";
 import "./HomeSections.css";
-
-const articles = getLatestArticles(6);
 
 const aboutGoals = [
   "Make it easy for families to find and adopt pets in need of a home.",
@@ -31,12 +31,15 @@ const aboutGoals = [
 
 function Home() {
   const { isLoggedIn } = useAuth();
+  const poundInfo = usePoundInfo();
   const { data: adoptableData, loading: adoptableLoading, error: adoptableError } =
     useFetch(() => getLatestAdoptablePets(6), []);
   const adoptablePets = adoptableData ?? [];
   const { data: missingData, loading: missingLoading, error: missingError } =
     useFetch(() => getLatestMissingReports(6), []);
   const missingReports = missingData ?? [];
+  const { articles: allArticles, failed: articlesFailed } = usePetCareArticles();
+  const articles = allArticles.slice(0, 6);
   const goToSection = useGoToSection();
 
   useScrollReveal();
@@ -220,14 +223,26 @@ function Home() {
           </p>
         </header>
 
-        <ScrollStrip label="articles" showDots>
-          {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-        </ScrollStrip>
+        {articles.length > 0 ? (
+          <ScrollStrip label="articles" showDots>
+            {articles.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </ScrollStrip>
+        ) : (
+          <p className="landing-section__empty" role="status">
+            {articlesFailed && "We could not load articles right now. Please try again later."}
+          </p>
+        )}
 
         <div className="landing-section__action">
-          <Link to="/articles" className="landing-section__button">
+          {/* Remember the section in the Home history entry, so Back from /articles
+              lands on Pet Care Corner instead of the top of Home */}
+          <Link
+            to="/articles"
+            className="landing-section__button"
+            onClick={() => window.history.replaceState(window.history.state, "", "/#articles")}
+          >
             Read More Guides
           </Link>
         </div>
@@ -254,17 +269,10 @@ function Home() {
           <h2>Every pet deserves a safe place to call home.</h2>
 
           <h3>Our Vision</h3>
-          <p>
-            A community where no pet is left without care, and every
-            animal can find a loving family.
-          </p>
+          <p>{poundInfo.vision}</p>
 
           <h3>Our Mission</h3>
-          <p>
-            To connect adopters, pet owners and the animal pound through one
-            simple platform for adoption, lost-and-found reports and pet
-            education.
-          </p>
+          <p>{poundInfo.mission}</p>
 
           <h3>Our Goals</h3>
           <ul className="about__goals">

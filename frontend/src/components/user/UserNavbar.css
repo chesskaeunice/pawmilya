@@ -23,12 +23,30 @@
   background-color: var(--color-brown);
   color: var(--color-cream);
 
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .user-menu__avatar:hover,
 .user-menu__avatar[aria-expanded="true"] {
   background-color: var(--color-orange);
+}
+
+/* profile photo inside the round button */
+.user-menu__photo {
+  width: 100%;
+  height: 100%;
+
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* pressed: same inset shadow as the Log In button */
+.user-menu__avatar:active {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35);
 }
 
 .user-menu__avatar:focus-visible,

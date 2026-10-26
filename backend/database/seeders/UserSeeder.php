@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
         $users = [
             ['Ramon Villanueva', 'manager@pawmilya.com', '0917 555 0101', User::ROLE_KENNEL_MANAGER],
             ['Dina Mercado', 'staff@pawmilya.com', '0917 555 0102', User::ROLE_POUND_STAFF],
-            ['Dr. Paolo Aquino', 'vet@pawmilya.com', '0917 555 0103', User::ROLE_VET_TECH],
+            ['Paolo Aquino', 'vet@pawmilya.com', '0917 555 0103', User::ROLE_VET_TECH],
             ['Carla Bautista', 'counselor@pawmilya.com', '0917 555 0104', User::ROLE_ADOPTION_COUNSELOR],
             ['Jomar Dizon', 'staff2@pawmilya.com', '0917 555 0105', User::ROLE_POUND_STAFF],
             ['Liza Navarro', 'vet2@pawmilya.com', '0917 555 0106', User::ROLE_VET_TECH],

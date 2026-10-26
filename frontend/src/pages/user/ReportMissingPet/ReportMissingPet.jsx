@@ -1,14 +1,22 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { X } from "lucide-react";
 
-import { BREEDS } from "../../../config/petBreeds.js";
+import BreedSelect from "../../../components/common/BreedSelect.jsx";
+import FieldError from "../../../components/common/FieldError.jsx";
 import { submitMissingPetReport } from "../../../services/missingPetService.js";
 import { formatApiError } from "../../../services/authService.js";
+import useAuth from "../../../hooks/useAuth.js";
 
 import "./ReportMissingPet.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+
+// "I am the": value sent to the API, label shown
+const REPORTER_TYPES = [
+  { value: "Owner", label: "Pet owner" },
+  { value: "Citizen", label: "Concerned citizen" },
+];
 
 const STATUS_OPTIONS = [
   {
@@ -154,12 +162,44 @@ function ImageUpload({ id, label }) {
   );
 }
 
+// Surname parts that belong with the last word: "Juan Dela Cruz" -> "Juan" + "Dela Cruz"
+const SURNAME_PARTICLES = new Set(["de", "del", "dela", "delos", "san", "santa", "van", "von"]);
+
+// The account has one full name; the form has first and last name. A single word is only a first name.
+function splitName(fullName) {
+  const words = (fullName || "").trim().split(/\s+/).filter(Boolean);
+  if (words.length < 2) return { firstName: words[0] ?? "", lastName: "" };
+
+  let lastStart = words.length - 1;
+  while (lastStart > 1 && SURNAME_PARTICLES.has(words[lastStart - 1].toLowerCase())) lastStart -= 1;
+
+  return { firstName: words.slice(0, lastStart).join(" "), lastName: words.slice(lastStart).join(" ") };
+}
+
 // Open to guests (no login needed). A logged-in citizen's report is linked to the account.
 function ReportMissingPet() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const formRef = useRef(null);
+
+  // A logged-in user's contact fields start filled with the account data (still editable). This runs
+  // when the account arrives, and only fills fields that are still empty, so typing is never replaced.
+  useEffect(() => {
+    if (!user || !formRef.current) return;
+
+    const { firstName, lastName } = splitName(user.name);
+    const account = { firstName, lastName, contactNumber: user.phone, contactEmail: user.email };
+
+    for (const [field, value] of Object.entries(account)) {
+      const input = formRef.current.elements[field];
+      if (input && value && !input.value) input.value = value;
+    }
+  }, [user]);
 
   const [petType, setPetType] = useState("");
+  const isOther = petType === "Others";
   const [errors, setErrors] = useState([]);
+  const [reporterTypeError, setReporterTypeError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (event) => {
@@ -169,16 +209,25 @@ function ReportMissingPet() {
     if (submitting) return;
 
     const form = event.currentTarget.elements;
+
+    if (!form.reporterType.value) {
+      setReporterTypeError("Please choose one.");
+      form.reporterType[0].focus();
+      return;
+    }
+
     const body = new FormData();
 
     body.append("name", form.petName.value);
-    body.append("species", form.petType.value);
+    body.append("species", isOther ? "Other" : form.petType.value);
+    body.append("other_species", isOther ? form.otherSpecies.value.trim() : "");
     body.append("breed", form.breed.value);
     body.append("color", form.color.value);
     body.append("last_seen_at", `${form.lastSeenDate.value} 00:00:00`);
     body.append("location", form.location.value);
     body.append("status", form.status.value);
     body.append("details", form.details.value);
+    body.append("reporter_type", form.reporterType.value);
     body.append("contact_name", `${form.firstName.value} ${form.lastName.value}`.trim());
     body.append("contact_number", form.contactNumber.value);
     body.append("contact_email", form.contactEmail.value);
@@ -193,8 +242,9 @@ function ReportMissingPet() {
       navigate("/missing-pets");
     } catch (err) {
       const { message, fields } = formatApiError(err);
-      const messages = Object.values(fields);
-      setErrors(messages.length ? messages : [message]);
+      setReporterTypeError(fields.reporter_type ?? "");
+      const messages = Object.values({ ...fields, reporter_type: undefined }).filter(Boolean);
+      setErrors(messages.length ? messages : fields.reporter_type ? [] : [message]);
       setSubmitting(false);
     }
   };
@@ -215,7 +265,7 @@ function ReportMissingPet() {
         </p>
       </section>
 
-      <form className="report-pet__form" onSubmit={handleSubmit}>
+      <form className="report-pet__form" ref={formRef} onSubmit={handleSubmit}>
         <section className="report-pet__section">
           <h2>Pet Information</h2>
 
@@ -245,33 +295,31 @@ function ReportMissingPet() {
                 </option>
                 <option>Dog</option>
                 <option>Cat</option>
+                <option>Others</option>
               </select>
             </label>
 
-            <label>
-              <span>
-                Breed
-                <Required />
-              </span>
+            {/* Under Pet Type, in the slot the Breed dropdown uses for dogs and cats */}
+            {isOther && (
+              <label className="report-pet__other">
+                <span>
+                  Specify the animal
+                  <Required />
+                </span>
+                <input
+                  type="text"
+                  name="otherSpecies"
+                  maxLength={100}
+                  placeholder="Example: Rabbit, Bird, Turtle"
+                  required
+                />
+              </label>
+            )}
 
-              {/* the choices depend on the pet type; changing the type resets the breed */}
-              <select
-                name="breed"
-                key={petType}
-                defaultValue=""
-                required
-                disabled={!petType}
-              >
-                <option value="" disabled>
-                  {petType ? "Select breed" : "Select a pet type first"}
-                </option>
-                {(BREEDS[petType] ?? []).map((breed) => (
-                  <option key={breed}>{breed}</option>
-                ))}
-              </select>
-            </label>
+            {/* Breed type, Breed and Specify the breed; optional here; the field starts over when the pet type changes */}
+            <BreedSelect key={petType || "none"} petType={petType} inline />
 
-            <label>
+            <label className="report-pet__color">
               <span>
                 Color / Markings
                 <Required />
@@ -341,6 +389,32 @@ function ReportMissingPet() {
 
         <section className="report-pet__section">
           <h2>Contact Information</h2>
+
+          <fieldset className="report-pet__radio-group" aria-describedby="reporter-type-error">
+            <legend>
+              I am the
+              <Required />
+            </legend>
+
+            <div className="report-pet__radio-field">
+              <div className="report-pet__radio-options">
+                {REPORTER_TYPES.map((option) => (
+                  <label key={option.value} className="report-pet__radio">
+                    <input
+                      type="radio"
+                      name="reporterType"
+                      value={option.value}
+                      onChange={() => setReporterTypeError("")}
+                    />
+
+                    <span>{option.label}</span>
+                  </label>
+                ))}
+              </div>
+
+              <FieldError id="reporter-type-error" message={reporterTypeError} />
+            </div>
+          </fieldset>
 
           <div className="report-pet__grid">
             <label>

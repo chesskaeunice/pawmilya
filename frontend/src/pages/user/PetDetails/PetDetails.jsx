@@ -11,6 +11,7 @@ import useAuth from "../../../hooks/useAuth.js";
 import useModals from "../../../hooks/useModals.js";
 
 import "./PetDetails.css";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 function PetDetails() {
   const { petId } = useParams();
@@ -73,7 +74,7 @@ function PetDetails() {
           <section className="pet-details__gallery">
 
             <div className="pet-details__main-image">
-              <img
+              <SafeImage type={pet.type}
                 src={pet.image || petPlaceholders[pet.type] || petPlaceholders.Other}
                 alt={`Photo of ${pet.name}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}

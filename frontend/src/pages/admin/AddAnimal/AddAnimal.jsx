@@ -5,7 +5,6 @@ import { Plus, X } from "lucide-react";
 
 import {
   ADOPTION_NEEDS_CLEARED_MESSAGE,
-  ANIMAL_STATUSES,
   canBeAdoptable,
   DEFAULT_HEALTH_STATUS,
   DEFAULT_STATUS,
@@ -363,14 +362,12 @@ function AddAnimal() {
                 Status
                 <Required />
               </span>
+              {/* a new animal always starts as Rescued; the status is changed later */}
               <select
                 value={form.status}
-                onChange={updateStatus("status")}
-                required
+                disabled
               >
-                {ANIMAL_STATUSES.map((status) => (
-                  <option key={status}>{status}</option>
-                ))}
+                <option>{DEFAULT_STATUS}</option>
               </select>
             </label>
 

@@ -6,13 +6,17 @@ import {
   Dog,
   Download,
   Heart,
+  HeartPulse,
   PawPrint,
   Search,
   Syringe,
   X,
 } from "lucide-react";
 
-import useAdminLists from "../../../hooks/useAdminLists.js";
+import useAuth from "../../../hooks/useAuth.js";
+import useFetch from "../../../hooks/useFetch.js";
+import { fetchReportLists } from "../../../services/adminService.js";
+import { healthStatusClass, statusClass as animalStatusClass } from "../../../config/animalStatus.js";
 import { updateVaccination } from "../../../services/vaccinationService.js";
 import { formatApiError } from "../../../services/authService.js";
 
@@ -95,33 +99,58 @@ const normalizeVaccination = (record) => {
   return { ...record, date, nextDue, status: getStatus(nextDue) };
 };
 
-/* The animals, applications, missing pet reports and vaccinations come from the API
-   (loaded once by Reports and shared with the tabs). */
+/* The animals, applications, missing pet reports, vaccinations and health data come from the report
+   endpoints (loaded once by Reports and shared with the tabs). */
 const ReportDataContext = createContext({
   animals: [],
   applications: [],
   missingPets: [],
   vaccinations: [],
+  health: [],
   reload: () => {},
 });
 
 const useReportData = () => useContext(ReportDataContext);
 
-/* ---------- tabs + role access (from the RBAC matrix) ---------- */
+/* ---------- tabs: each one needs its own permission (reports.all opens all of them) ---------- */
 
 const TABS = [
-  { id: "animals", label: "Animals", icon: PawPrint },
-  { id: "adoptions", label: "Adoptions", icon: Heart },
-  { id: "missing", label: "Missing Pets", icon: Search },
-  { id: "vaccinations", label: "Vaccinations", icon: Syringe },
+  { id: "animals", label: "Animals", icon: PawPrint, allowed: (can) => can("reports.view") },
+  { id: "adoptions", label: "Adoptions", icon: Heart, allowed: (can) => can("reports.adoption") || can("reports.all") },
+  { id: "missing", label: "Missing Pets", icon: Search, allowed: (can) => can("reports.missingPets") || can("reports.all") },
+  { id: "vaccinations", label: "Vaccinations", icon: Syringe, allowed: (can) => can("reports.vaccinations") || can("reports.all") },
+  { id: "health", label: "Health", icon: HeartPulse, allowed: (can) => can("reports.health") || can("reports.all") },
 ];
 
-const ROLE_TABS = {
-  kennel_manager: ["animals", "adoptions", "missing", "vaccinations"],
-  adoption_counselor: ["animals", "adoptions", "missing"],
-  vet_tech: ["animals", "vaccinations"],
-  pound_staff: [],
-};
+const NO_ROWS = [];
+
+/* The report lists the user may read (one request each; the server checks the permission again) */
+function useReportLists(can) {
+  const allowed = {
+    animals: can("reports.view"),
+    adoptions: can("reports.adoption") || can("reports.all"),
+    missingPets: can("reports.missingPets") || can("reports.all"),
+    vaccinations: can("reports.vaccinations") || can("reports.all"),
+    health: can("reports.health") || can("reports.all"),
+  };
+
+  const { data, reload } = useFetch(
+    () => fetchReportLists(allowed),
+    [Object.values(allowed).join()]
+  );
+
+  return useMemo(
+    () => ({
+      animals: data?.animals ?? NO_ROWS,
+      applications: data?.applications ?? NO_ROWS,
+      missingPets: data?.missingPets ?? NO_ROWS,
+      vaccinations: data?.vaccinations ?? NO_ROWS,
+      health: data?.health ?? NO_ROWS,
+      reload,
+    }),
+    [data, reload]
+  );
+}
 
 /* ---------- small helpers ---------- */
 
@@ -166,15 +195,20 @@ const countOf = (rows, label) => rows.find((r) => r.label === label)?.value ?? 0
 
 /* ---------- main page ---------- */
 
-function Reports({ role = "kennel_manager" }) {
-  const lists = useAdminLists();
+function Reports() {
+  const { can } = useAuth();
+  const lists = useReportLists(can);
 
-  const allowedTabs = ROLE_TABS[role] ?? [];
-  const tabs = TABS.filter((tab) => allowedTabs.includes(tab.id));
+  const tabs = TABS.filter((tab) => tab.allowed(can));
 
-  const [activeTab, setActiveTab] = useState(
-    role === "vet_tech" ? "vaccinations" : tabs[0]?.id
-  );
+  // The first tab: Animals for someone who sees everything; otherwise the first tab of their own
+  // (the vet tech opens on Vaccinations, the adoption counselor on Adoptions)
+  const firstTab =
+    (can("reports.all") ? tabs[0] : tabs.find((tab) => tab.id !== "animals") ?? tabs[0])?.id;
+
+  const [picked, setPicked] = useState(null);
+  const activeTab = tabs.some((tab) => tab.id === picked) ? picked : firstTab;
+  const setActiveTab = setPicked;
 
   return (
     <div className="staff-page">
@@ -226,6 +260,7 @@ function Reports({ role = "kennel_manager" }) {
               {activeTab === "adoptions" && <AdoptionsReport />}
               {activeTab === "missing" && <MissingReport />}
               {activeTab === "vaccinations" && <VaccinationsReport />}
+              {activeTab === "health" && <HealthReport />}
             </ReportDataContext.Provider>
           </div>
         </>
@@ -270,7 +305,10 @@ const matchesRange = (record, range) => {
 function VaccinationsReport() {
   const navigate = useNavigate();
 
-  const { vaccinations, reload } = useReportData();
+  // "Log Vaccine" changes a vaccination record
+  const { can } = useAuth();
+
+  const { vaccinations, animals, reload } = useReportData();
   const records = useMemo(() => vaccinations.map(normalizeVaccination), [vaccinations]);
 
   const [range, setRange] = useState("all");
@@ -278,6 +316,9 @@ function VaccinationsReport() {
   const [showAll, setShowAll] = useState(false);
   const [logging, setLogging] = useState(null);
   const [toast, setToast] = useState("");
+  const [dueWindow, setDueWindow] = useState(30);
+  const [showAllDue, setShowAllDue] = useState(false);
+  const [showAllUnvaccinated, setShowAllUnvaccinated] = useState(false);
 
   /* auto-dismiss toast */
   useEffect(() => {
@@ -377,6 +418,33 @@ function VaccinationsReport() {
   );
 
   const visibleAttention = showAll ? attention : attention.slice(0, 6);
+
+  /* coming due in the next 7, 30 or 60 days (overdue ones are listed first and marked), for the chosen animal type */
+  const comingDue = useMemo(
+    () =>
+      records
+        .filter((r) => (type === "all" || r.petType === type) && r.nextDue && daysFromToday(r.nextDue) <= dueWindow)
+        .sort((a, b) => a.nextDue.localeCompare(b.nextDue) || a.petName.localeCompare(b.petName)),
+    [records, type, dueWindow]
+  );
+
+  const visibleDue = showAllDue ? comingDue : comingDue.slice(0, 6);
+
+  /* animals in the pound (not Adopted or Reunited) with no vaccination record at all */
+  const unvaccinated = useMemo(() => {
+    const vaccinatedIds = new Set(records.map((r) => r.petId));
+
+    return animals
+      .filter(
+        (a) =>
+          !["Adopted", "Reunited with Owner"].includes(a.status) &&
+          !vaccinatedIds.has(a.id) &&
+          (type === "all" || a.type === type)
+      )
+      .sort((a, b) => (a.dateAdded || "").localeCompare(b.dateAdded || ""));
+  }, [animals, records, type]);
+
+  const visibleUnvaccinated = showAllUnvaccinated ? unvaccinated : unvaccinated.slice(0, 6);
 
   /* ----- drill-down to the main Vaccinations page ----- */
 
@@ -646,13 +714,15 @@ function VaccinationsReport() {
                   <span className={`staff-status ${pillClass(r.status)}`}>{r.status}</span>
 
                   <div className="reports__row-actions">
-                    <button
-                      type="button"
-                      className="reports__row-btn reports__row-btn--primary"
-                      onClick={() => openLog(r)}
-                    >
-                      Log Vaccine
-                    </button>
+                    {can("vaccinations.edit") && (
+                      <button
+                        type="button"
+                        className="reports__row-btn reports__row-btn--primary"
+                        onClick={() => openLog(r)}
+                      >
+                        Log Vaccine
+                      </button>
+                    )}
 
                     {r.petId != null && (
                       <Link className="reports__row-btn" to={`/admin/animals/${r.petId}`}>
@@ -676,6 +746,96 @@ function VaccinationsReport() {
           </div>
         </section>
       )}
+
+      <section className="reports__grid">
+        <div className="staff-card reports__recent reports__card--wide">
+          <div className="reports__section-title">
+            <h2>Coming due ({comingDue.length})</h2>
+
+            <select
+              value={dueWindow}
+              onChange={(event) => { setDueWindow(Number(event.target.value)); setShowAllDue(false); }}
+              aria-label="Coming due within"
+            >
+              <option value={7}>Next 7 days</option>
+              <option value={30}>Next 30 days</option>
+              <option value={60}>Next 60 days</option>
+            </select>
+          </div>
+
+          {visibleDue.length === 0 ? (
+            <p className="reports__empty">No vaccinations are due in the next {dueWindow} days.</p>
+          ) : (
+            visibleDue.map((r) => (
+              <div className="reports__attention-row reports__attention-row--actions" key={`due-${r.id}`}>
+                <div>
+                  <strong>{r.petName}</strong>
+                  <span>{r.vaccine}</span>
+                </div>
+
+                <span>{formatDate(r.nextDue)}</span>
+
+                <span>{relativeDue(r.nextDue)}</span>
+
+                <span className={`staff-status ${pillClass(r.status)}`}>
+                  {r.status === "Overdue" ? "Overdue" : "Coming due"}
+                </span>
+
+                <div className="reports__row-actions">
+                  {r.petId != null && (
+                    <Link className="reports__row-btn" to={`/admin/animals/${r.petId}`}>
+                      View Animal
+                    </Link>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+
+          {comingDue.length > 6 && (
+            <button type="button" className="reports__more" onClick={() => setShowAllDue((v) => !v)}>
+              {showAllDue ? "Show less" : `Show all ${comingDue.length}`}
+            </button>
+          )}
+        </div>
+
+        <div className="staff-card reports__recent reports__card--wide">
+          <div className="reports__section-title">
+            <h2>Animals with no vaccine recorded ({unvaccinated.length})</h2>
+          </div>
+
+          {visibleUnvaccinated.length === 0 ? (
+            <p className="reports__empty">Every animal in the pound has a vaccination on record.</p>
+          ) : (
+            visibleUnvaccinated.map((a) => (
+              <div className="reports__attention-row reports__attention-row--actions" key={`none-${a.id}`}>
+                <div>
+                  <strong>{a.name || "Unnamed"}</strong>
+                  <span>{a.animal_code}</span>
+                </div>
+
+                <span>{a.type}</span>
+
+                <span>{a.dateAdded ? `In since ${formatDate(a.dateAdded)}` : ""}</span>
+
+                <span className={`staff-status ${animalStatusClass(a.status)}`}>{a.status}</span>
+
+                <div className="reports__row-actions">
+                  <Link className="reports__row-btn" to={`/admin/animals/${a.id}`}>
+                    View Animal
+                  </Link>
+                </div>
+              </div>
+            ))
+          )}
+
+          {unvaccinated.length > 6 && (
+            <button type="button" className="reports__more" onClick={() => setShowAllUnvaccinated((v) => !v)}>
+              {showAllUnvaccinated ? "Show less" : `Show all ${unvaccinated.length}`}
+            </button>
+          )}
+        </div>
+      </section>
 
       {/* Log Vaccine dialog */}
       {logging && (
@@ -750,6 +910,197 @@ function VaccinationsReport() {
         <div className="reports__toast" role="status">
           {toast}
         </div>
+      )}
+    </>
+  );
+}
+
+/* ---------- Health tab ---------- */
+
+const HEALTH_STATUSES = [
+  { label: "Under Observation", color: "#e7b04f" },
+  { label: "Under Treatment", color: "#c4533f" },
+  { label: "Cleared", color: "#8aa96b" },
+];
+
+const IN_POUND = (animal) => !["Adopted", "Reunited with Owner"].includes(animal.status);
+
+function HealthReport() {
+  const { health: animals } = useReportData();
+
+  const [type, setType] = useState("all");
+  const [showAllCare, setShowAllCare] = useState(false);
+  const [showAllWaiting, setShowAllWaiting] = useState(false);
+
+  const petTypes = useMemo(() => [...new Set(animals.map((a) => a.type))].sort(), [animals]);
+
+  const scoped = useMemo(
+    () => (type === "all" ? animals : animals.filter((a) => a.type === type)),
+    [animals, type]
+  );
+
+  const statusRows = HEALTH_STATUSES.map((row) => ({
+    ...row,
+    value: scoped.filter((a) => a.healthStatus === row.label).length,
+  }));
+
+  const countOfStatus = (label) => statusRows.find((row) => row.label === label).value;
+
+  /* in care now: Under Observation or Under Treatment, the ones waiting longest first */
+  const inCare = useMemo(
+    () =>
+      scoped
+        .filter((a) => IN_POUND(a) && a.healthStatus !== "Cleared")
+        .sort((a, b) => b.daysInStatus - a.daysInStatus || a.name?.localeCompare(b.name ?? "") || 0),
+    [scoped]
+  );
+
+  /* cleared, but no vaccine recorded yet: waiting before they can be listed for adoption */
+  const waiting = useMemo(
+    () => scoped.filter((a) => IN_POUND(a) && a.healthStatus === "Cleared" && a.vaccineCount === 0),
+    [scoped]
+  );
+
+  const visibleCare = showAllCare ? inCare : inCare.slice(0, 6);
+  const visibleWaiting = showAllWaiting ? waiting : waiting.slice(0, 6);
+
+  const daysText = (days) => (days === 0 ? "Since today" : `${days} day${days === 1 ? "" : "s"}`);
+
+  return (
+    <>
+      <div className="reports__toolbar">
+        <select value={type} onChange={(e) => setType(e.target.value)} aria-label="Animal type">
+          <option value="all">All Animal Types</option>
+          {petTypes.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+
+        <button
+          type="button"
+          className="reports__export"
+          disabled={scoped.length === 0}
+          onClick={() => exportRecords(`health-report-${toISO(new Date())}.csv`, scoped)}
+        >
+          <Download size={12} />
+          Export CSV ({scoped.length})
+        </button>
+      </div>
+
+      <section className="reports__stats">
+        <ReportStat value={scoped.length} label="Total Animals" />
+        <ReportStat value={countOfStatus("Under Observation")} label="Under Observation" />
+        <ReportStat value={countOfStatus("Under Treatment")} label="Under Treatment" />
+        <ReportStat value={countOfStatus("Cleared")} label="Cleared" />
+      </section>
+
+      {scoped.length === 0 ? (
+        <p className="reports__empty">No animals to report on yet.</p>
+      ) : (
+        <section className="reports__grid">
+          <div className="staff-card reports__chart-card">
+            <h2>Animals by Health Status</h2>
+
+            <Donut segments={statusRows} total={scoped.length} label="Total Animals" />
+          </div>
+
+          <div className="staff-card reports__chart-card">
+            <h2>Health Status by Animal Type</h2>
+
+            {petTypes
+              .filter((t) => type === "all" || t === type)
+              .map((t) => {
+                const group = animals.filter((a) => a.type === t);
+                const cleared = group.filter((a) => a.healthStatus === "Cleared").length;
+
+                return (
+                  <Bar
+                    key={t}
+                    icon={typeIcon(t)}
+                    label={`${t} cleared`}
+                    value={group.length ? Math.round((cleared / group.length) * 100) : 0}
+                    suffix="%"
+                  />
+                );
+              })}
+          </div>
+
+          <div className="staff-card reports__recent reports__card--wide">
+            <div className="reports__section-title">
+              <h2>In care now ({inCare.length})</h2>
+            </div>
+
+            {visibleCare.length === 0 ? (
+              <p className="reports__empty">No animal is under observation or treatment.</p>
+            ) : (
+              visibleCare.map((a) => (
+                <div className="reports__attention-row reports__attention-row--actions" key={a.id}>
+                  <div>
+                    <strong>{a.name || "Unnamed"}</strong>
+                    <span>{a.code} · {a.type}</span>
+                  </div>
+
+                  <span>Since {formatDate(a.since)}</span>
+
+                  <span>{daysText(a.daysInStatus)}</span>
+
+                  <span className={`staff-status ${healthStatusClass(a.healthStatus)}`}>{a.healthStatus}</span>
+
+                  <div className="reports__row-actions">
+                    <Link className="reports__row-btn" to={`/admin/animals/${a.id}`}>
+                      View Animal
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
+
+            {inCare.length > 6 && (
+              <button type="button" className="reports__more" onClick={() => setShowAllCare((v) => !v)}>
+                {showAllCare ? "Show less" : `Show all ${inCare.length}`}
+              </button>
+            )}
+          </div>
+
+          <div className="staff-card reports__recent reports__card--wide">
+            <div className="reports__section-title">
+              <h2>Cleared, no vaccine recorded ({waiting.length})</h2>
+            </div>
+
+            {visibleWaiting.length === 0 ? (
+              <p className="reports__empty">Every cleared animal has a vaccine on record.</p>
+            ) : (
+              visibleWaiting.map((a) => (
+                <div className="reports__attention-row reports__attention-row--actions" key={a.id}>
+                  <div>
+                    <strong>{a.name || "Unnamed"}</strong>
+                    <span>{a.code} · {a.type}</span>
+                  </div>
+
+                  <span>Cleared since {formatDate(a.since)}</span>
+
+                  <span>{daysText(a.daysInStatus)}</span>
+
+                  <span className={`staff-status ${animalStatusClass(a.status)}`}>{a.status}</span>
+
+                  <div className="reports__row-actions">
+                    <Link className="reports__row-btn" to={`/admin/animals/${a.id}`}>
+                      View Animal
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
+
+            {waiting.length > 6 && (
+              <button type="button" className="reports__more" onClick={() => setShowAllWaiting((v) => !v)}>
+                {showAllWaiting ? "Show less" : `Show all ${waiting.length}`}
+              </button>
+            )}
+          </div>
+        </section>
       )}
     </>
   );

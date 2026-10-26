@@ -8,6 +8,7 @@ import { formatDateTime } from "../../utils/formatDateTime.js";
 import { displayPetName } from "../../utils/petName.js";
 
 import "./PreviewCards.css";
+import SafeImage from "../common/SafeImage.jsx";
 
 // One card for both previews:
 //   kind="adoptable" -> item from pets.js, opens /adoptable-pets/:id
@@ -20,15 +21,14 @@ function PetPreviewCard({ kind, item }) {
   const image = item.image || petPlaceholders[item.type] || petPlaceholders.Other;
   const to = isMissing ? `/missing-pets/${item.id}` : `/adoptable-pets/${item.id}`;
 
-  const meta = isMissing
-    ? `${item.type} · ${item.breed}`
-    : `${item.type} · ${item.breed}`;
+  // the breed is optional on missing pet reports
+  const meta = [item.type, item.breed].filter(Boolean).join(" · ");
 
   return (
     <article className="preview-card">
 
       <div className="preview-card__image">
-        <img
+        <SafeImage type={item.type}
           src={image}
           alt={`Photo of ${name}`}
           loading="lazy"

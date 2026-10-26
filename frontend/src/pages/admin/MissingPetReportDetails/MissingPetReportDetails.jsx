@@ -4,6 +4,7 @@ import {
 
 import {
   Link,
+  useNavigate,
   useParams,
 } from "react-router-dom";
 
@@ -15,20 +16,25 @@ import {
   MapPin,
   PawPrint,
   Phone,
+  QrCode,
   Save,
   UserRound,
 } from "lucide-react";
 
 import useFetch from "../../../hooks/useFetch.js";
+import useAuth from "../../../hooks/useAuth.js";
 import {
   getReportMatches,
   getStaffReport,
+  registerAnimalFromReport,
   updateReportStatus,
 } from "../../../services/missingPetService.js";
 import { formatApiError } from "../../../services/authService.js";
 
 import "./MissingPetReportDetails.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
+import { FormError } from "../../../components/common/FieldError.jsx";
 
 
 const STATUS_OPTIONS = [
@@ -42,6 +48,10 @@ const STATUS_OPTIONS = [
 function MissingPetReportDetails() {
   const { reportId } =
     useParams();
+
+  const { can } = useAuth();
+
+  const navigate = useNavigate();
 
 
   const { data: pet, loading, reload } =
@@ -73,6 +83,19 @@ function MissingPetReportDetails() {
 
   const [selectedPhoto, setSelectedPhoto] =
     useState(0);
+
+
+  // set when saving the status as Found added the pet to the Animals list
+  const [addedAnimalId, setAddedAnimalId] =
+    useState(null);
+
+
+  // registering a Found pet as an animal in the pound
+  const [registering, setRegistering] =
+    useState(false);
+
+  const [registerError, setRegisterError] =
+    useState("");
 
 
   if (loading) {
@@ -136,6 +159,11 @@ function MissingPetReportDetails() {
     pet.reporterName ||
     "Not provided";
 
+  // "I am the" on the report form
+  const reportedBy =
+    { Owner: "Pet owner", Citizen: "Concerned citizen" }[pet.reporterType] ||
+    "Not specified";
+
 
   const currentStatus =
     pet.status;
@@ -149,9 +177,17 @@ function MissingPetReportDetails() {
     setSaving(true);
 
     try {
-      await updateReportStatus(
-        pet.id,
-        chosenStatus
+      const updated =
+        await updateReportStatus(
+          pet.id,
+          chosenStatus
+        );
+
+      // saving Found registered the pet as an animal (it had none before)
+      setAddedAnimalId(
+        updated.animal_id && !pet.animal_id
+          ? updated.animal_id
+          : null
       );
 
       setSelectedStatus(null);
@@ -163,6 +199,48 @@ function MissingPetReportDetails() {
     }
 
     setSaving(false);
+  };
+
+
+  // Found = the pet is at the pound: it can be registered as an animal, then its QR / collar tag made
+  const canRegister =
+    currentStatus === "Found" &&
+    !pet.animal_id &&
+    can("animals.registerFromReport");
+
+  const canOpenTag =
+    Boolean(pet.animal_id) &&
+    can("qr.generate");
+
+
+  const handleRegister = async () => {
+    if (
+      !window.confirm(
+        "Register this pet as an animal in the pound? " +
+        "A new animal record with its photos and QR code will be created from this report."
+      )
+    ) {
+      return;
+    }
+
+    setRegistering(true);
+    setRegisterError("");
+
+    try {
+      const animal =
+        await registerAnimalFromReport(
+          pet.id
+        );
+
+      navigate(
+        `/admin/animals/${animal.id}/collar-tag`
+      );
+    } catch (error) {
+      setRegisterError(
+        formatApiError(error).message
+      );
+      setRegistering(false);
+    }
   };
 
 
@@ -257,7 +335,7 @@ function MissingPetReportDetails() {
               <div className="missing-details__main-photo">
 
                 {mainPhoto ? (
-                  <img
+                  <SafeImage type={pet.type}
                     src={mainPhoto}
                     alt={pet.name}
                   />
@@ -314,7 +392,7 @@ function MissingPetReportDetails() {
                       >
 
                         {photo ? (
-                          <img
+                          <SafeImage type={pet.type}
                             src={photo}
                             alt={`${pet.name} ${index + 1}`}
                           />
@@ -381,7 +459,7 @@ function MissingPetReportDetails() {
                     >
 
                       {photo ? (
-                        <img
+                        <SafeImage
                           src={photo}
                           alt={`${pet.name} last seen ${index + 1}`}
                         />
@@ -497,7 +575,7 @@ function MissingPetReportDetails() {
                   >
 
                     {match.image ? (
-                      <img
+                      <SafeImage
                         src={match.image}
                         alt={match.name || "Animal"}
                         style={{ width: 56, height: 56, objectFit: "cover", borderRadius: 8 }}
@@ -607,7 +685,7 @@ function MissingPetReportDetails() {
               }
               label="Breed"
               value={
-                pet.breed
+                pet.breed || "Not given"
               }
             />
 
@@ -737,6 +815,19 @@ function MissingPetReportDetails() {
 
             <ContactRow
               icon={
+                <UserRound
+                  size={15}
+                />
+              }
+              label="Reported by"
+              value={
+                reportedBy
+              }
+            />
+
+
+            <ContactRow
+              icon={
                 <Phone
                   size={15}
                 />
@@ -785,6 +876,7 @@ function MissingPetReportDetails() {
             </div>
 
 
+            {can("missingPets.updateStatus") ? (
             <div className="missing-details__status-editor">
 
               <label htmlFor="reportStatus">
@@ -835,6 +927,69 @@ function MissingPetReportDetails() {
               </button>
 
             </div>
+            ) : (
+              /* no permission to change it: the current status, read-only, in the same place */
+              <div className="missing-details__status-editor">
+
+                <span>
+                  Current Status
+                </span>
+
+                <StatusBadge
+                  status={
+                    currentStatus
+                  }
+                />
+
+              </div>
+            )}
+
+
+            {addedAnimalId && (
+              <p role="status" style={{ marginTop: 16 }}>
+                The pet was added to the Animals list.
+                You can now generate its QR code.{" "}
+                <Link to={`/admin/animals/${addedAnimalId}`}>
+                  View animal
+                </Link>
+              </p>
+            )}
+
+
+            {/* Found report: register the pet in the pound, or open its QR / collar tag */}
+            {(canRegister || canOpenTag) && (
+              <div style={{ display: "grid", gap: 10, marginTop: 16 }}>
+
+                {canRegister && (
+                  <button
+                    type="button"
+                    className="staff-button"
+                    onClick={handleRegister}
+                    disabled={registering}
+                  >
+                    <QrCode size={13} />
+
+                    {registering
+                      ? "Registering..."
+                      : "Register in pound and generate QR"}
+                  </button>
+                )}
+
+                <FormError message={registerError} />
+
+                {canOpenTag && (
+                  <Link
+                    to={`/admin/animals/${pet.animal_id}/collar-tag`}
+                    className="staff-button"
+                  >
+                    <QrCode size={13} />
+
+                    Generate QR / Collar Tag
+                  </Link>
+                )}
+
+              </div>
+            )}
 
           </section>
 

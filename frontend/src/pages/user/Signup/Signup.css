@@ -138,16 +138,36 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 
+  /* top aligned: an error under one field does not move the input next to it */
+  align-items: start;
+
   gap: 14px;
 }
 
+/* Every field: label, 6px, input, then 16px before the next field. The error line (FieldError)
+   takes no space until there is an error; then it expands under the input. */
 .signup__field {
   display: flex;
   flex-direction: column;
 
-  gap: 7px;
+  gap: 6px;
 
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+}
+
+/* The password help block starts 8px below the password row (and its error line, if any):
+   the row ends with a 16px margin, so pull up 8px. 16px before the terms. Folded: no space. */
+.signup__name-grid + .password-help--collapsible {
+  margin: 0;
+
+  transition:
+    max-height 0.2s ease,
+    margin 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.signup__name-grid + .password-help--collapsible.is-open {
+  margin: -8px 0 16px;
 }
 
 .signup__field label {
@@ -197,12 +217,35 @@
 
   gap: 9px;
 
-  margin: 2px 0 22px;
+  margin: 0;
 
   color: var(--color-muted);
 
   font-size: 13px;
   line-height: 1.5;
+}
+
+/* Terms error: expands under the checkbox; 16px before the Create Account button.
+   (The form has no flex gap, so no negative margin is needed here.) */
+.signup__form .signup__terms + .field-error,
+.signup__form .signup__terms + .field-error.is-open {
+  margin: 0 0 16px;
+}
+
+/* 6px between the checkbox and the message (inside the collapsing part, so it animates too) */
+.signup__terms + .field-error .field-error__content {
+  padding-top: 6px;
+}
+
+/* Terms and Privacy links: same look as the Login link */
+.signup__terms a {
+  color: var(--color-orange);
+
+  font-weight: 700;
+}
+
+.signup__terms a:hover {
+  text-decoration: underline;
 }
 
 .signup__terms input {
@@ -239,19 +282,6 @@
   transform: translateY(-1px);
 }
 
-
-.signup__error {
-  margin: 0;
-
-  padding: 10px 14px 10px 30px;
-
-  border-radius: 10px;
-
-  background-color: #fdecec;
-  color: #a12a2a;
-
-  font-size: var(--font-xs);
-}
 
 .signup__submit:disabled {
   opacity: 0.7;
@@ -330,4 +360,10 @@
 
     gap: 0;
   }
+}
+
+
+/* No navbar on this page (see UserLayout): fill the whole screen */
+.user-layout--bare .signup {
+  min-height: 100vh;
 }

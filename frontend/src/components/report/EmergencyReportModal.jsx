@@ -4,10 +4,20 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 
 import Modal from "../common/Modal.jsx";
 import ImageDropzone from "./ImageDropzone.jsx";
+import BreedSelect from "../common/BreedSelect.jsx";
+import ErrorBoundary from "../common/ErrorBoundary.jsx";
+import SuggestInput from "../common/SuggestInput.jsx";
 import { formatDateTime } from "../../utils/formatDateTime.js";
 import { displayPetName } from "../../utils/petName.js";
 import { submitMissingPetReport } from "../../services/missingPetService.js";
 import { formatApiError } from "../../services/authService.js";
+import {
+  CITY,
+  QUIAPO_BARANGAYS,
+  QUIAPO_STREETS,
+  formatQuiapoLocation,
+  isQuiapoBarangay,
+} from "../../config/quiapoLocations.js";
 
 import "../common/ModalForm.css";
 import "./EmergencyReportModal.css";
@@ -23,15 +33,18 @@ const emptyForm = {
   description: "",
   // Step 2: last seen + contact
   reportType: "Lost",
-  location: "",
+  reporterType: "",
+  street: "",
+  barangay: "",
   dateTime: "",
-  contactName: "",
+  firstName: "",
+  lastName: "",
   contactNumber: "",
   contactEmail: "",
 };
 
 const STEP_1_FIELDS = ["species", "otherSpecies"];
-const STEP_2_FIELDS = ["location", "dateTime", "contactName", "contactNumber", "contactEmail"];
+const STEP_2_FIELDS = ["street", "barangay", "dateTime", "reporterType", "firstName", "lastName", "contactNumber", "contactEmail"];
 
 function isFutureDateTime(value) {
   const time = new Date(value).getTime();
@@ -50,16 +63,25 @@ function validate(values) {
   }
 
   // Step 2
-  if (!values.location.trim()) {
-    errors.location = "Please tell us where the pet was last seen.";
+  if (!values.street.trim()) {
+    errors.street = "Please enter the street name.";
+  }
+  if (!isQuiapoBarangay(values.barangay.trim())) {
+    errors.barangay = "Please choose a barangay from the list.";
   }
   if (!values.dateTime) {
     errors.dateTime = "Please enter the date and time.";
   } else if (isFutureDateTime(values.dateTime)) {
     errors.dateTime = "The date and time cannot be in the future.";
   }
-  if (!values.contactName.trim()) {
-    errors.contactName = "Please enter your name.";
+  if (!values.reporterType) {
+    errors.reporterType = "Please choose one.";
+  }
+  if (!values.firstName.trim()) {
+    errors.firstName = "Please enter your first name.";
+  }
+  if (!values.lastName.trim()) {
+    errors.lastName = "Please enter your last name.";
   }
 
   const digits = values.contactNumber.replace(/\D/g, "");
@@ -102,6 +124,9 @@ function EmergencyReportFlow({ onClose }) {
   const errors = validate(values);
   const showError = (field) => (touched[field] ? errors[field] : "");
 
+  // The API still gets one `location` string
+  const location = formatQuiapoLocation(values.street, values.barangay);
+
   /* ---------- what is still missing in each step ---------- */
 
   const petPhotos = photo1.length + photo2.length;
@@ -109,14 +134,17 @@ function EmergencyReportFlow({ onClose }) {
 
   const step1Missing = [];
   if (petPhotos < 2) step1Missing.push(petPhotos === 0 ? "2 pet photos" : "1 more pet photo");
-  if (errors.species) step1Missing.push("the species");
+  if (errors.species) step1Missing.push("the pet type");
   if (errors.otherSpecies) step1Missing.push("what animal it is");
 
   const step2Missing = [];
   if (areaPhotos < 1) step2Missing.push("at least 1 area photo");
-  if (!values.location.trim()) step2Missing.push("the last seen location");
+  if (errors.street) step2Missing.push("the street");
+  if (errors.barangay) step2Missing.push("the barangay");
   if (errors.dateTime) step2Missing.push(values.dateTime ? "a date and time that is not in the future" : "the date and time");
-  if (!values.contactName.trim()) step2Missing.push("your name");
+  if (errors.reporterType) step2Missing.push("who is reporting (pet owner or concerned citizen)");
+  if (errors.firstName) step2Missing.push("your first name");
+  if (errors.lastName) step2Missing.push("your last name");
   if (errors.contactNumber) step2Missing.push(values.contactNumber.trim() ? "a valid contact number" : "a contact number");
   if (errors.contactEmail) step2Missing.push("a valid email (or leave it empty)");
 
@@ -146,9 +174,15 @@ function EmergencyReportFlow({ onClose }) {
   const fieldClass = (field) =>
     `mform__field ${showError(field) ? "mform__field--invalid" : ""}`;
 
-  const fieldError = (field) =>
-    showError(field) && (
-      <p className="mform__error" role="alert">{showError(field)}</p>
+  // `reserve` puts the error in the gap below the field, so fields below do not move
+  const fieldError = (field, reserve = false) =>
+    (reserve || showError(field)) && (
+      <p
+        className={reserve ? "mform__error mform__error--reserved" : "mform__error"}
+        role="alert"
+      >
+        {showError(field)}
+      </p>
     );
 
   const handleSubmit = async (event) => {
@@ -174,9 +208,10 @@ function EmergencyReportFlow({ onClose }) {
     body.append("breed", values.breed.trim());
     body.append("details", values.description.trim());
     body.append("status", values.reportType);
-    body.append("location", values.location.trim());
+    body.append("location", location);
     body.append("last_seen_at", values.dateTime);
-    body.append("contact_name", values.contactName.trim());
+    body.append("reporter_type", values.reporterType);
+    body.append("contact_name", `${values.firstName} ${values.lastName}`.trim());
     body.append("contact_number", values.contactNumber.trim());
     body.append("contact_email", values.contactEmail.trim());
     [...photo1, ...photo2].forEach((item) => body.append("pet_images[]", item.file));
@@ -223,7 +258,7 @@ function EmergencyReportFlow({ onClose }) {
           </div>
           <div>
             <dt>Last seen</dt>
-            <dd>{values.location.trim()}</dd>
+            <dd>{location}</dd>
           </div>
           <div>
             <dt>Submitted</dt>
@@ -312,52 +347,53 @@ function EmergencyReportFlow({ onClose }) {
           </div>
 
           <div className={fieldClass("species")}>
-            <label className="mform__label" htmlFor="er-species">Species</label>
+            <label className="mform__label" htmlFor="er-species">Pet Type</label>
             <select
               id="er-species"
               className="mform__select"
               value={values.species}
-              onChange={setField("species")}
+              onChange={(event) =>
+                setValues((current) => ({ ...current, species: event.target.value, breed: "" }))
+              }
               onBlur={markTouched("species")}
               aria-invalid={Boolean(showError("species"))}
             >
-              <option value="" disabled>Select species</option>
+              <option value="" disabled>Select pet type</option>
               <option>Dog</option>
               <option>Cat</option>
               <option>Others</option>
             </select>
-            {fieldError("species")}
+            {fieldError("species", true)}
           </div>
         </div>
 
+        {/* Only shown when the pet type is "Others" */}
         {values.species === "Others" && (
-          <div className={fieldClass("otherSpecies")}>
-            <label className="mform__label" htmlFor="er-other-species">Specify the animal</label>
-            <input
-              id="er-other-species"
-              className="mform__input"
-              type="text"
-              placeholder="Example: Rabbit, Bird, Turtle"
-              value={values.otherSpecies}
-              onChange={setField("otherSpecies")}
-              onBlur={markTouched("otherSpecies")}
-              aria-invalid={Boolean(showError("otherSpecies"))}
-            />
-            {fieldError("otherSpecies")}
-          </div>
-        )}
-
-        <div className="mform__field">
-          <label className="mform__label" htmlFor="er-breed">
-            Breed <span className="mform__optional">(optional)</span>
-          </label>
+        <div className={fieldClass("otherSpecies")}>
+          <label className="mform__label" htmlFor="er-other-species">Specify the animal</label>
           <input
-            id="er-breed"
+            id="er-other-species"
             className="mform__input"
             type="text"
-            placeholder="Example: Aspin, Puspin, Shih Tzu"
-            value={values.breed}
-            onChange={setField("breed")}
+            placeholder="Example: Rabbit, Bird, Turtle"
+            value={values.otherSpecies}
+            onChange={setField("otherSpecies")}
+            onBlur={markTouched("otherSpecies")}
+            aria-invalid={Boolean(showError("otherSpecies"))}
+          />
+          {fieldError("otherSpecies", true)}
+        </div>
+        )}
+
+        {/* Optional. Depends on the pet type, so it starts over when the type changes (key).
+            The Breed dropdown keeps its slot. */}
+        <div className="mform__breed">
+          <BreedSelect
+            key={values.species || "none"}
+            petType={values.species}
+            inline
+            reserveSpecify
+            onChange={(breed) => setValues((current) => ({ ...current, breed }))}
           />
         </div>
 
@@ -409,19 +445,50 @@ function EmergencyReportFlow({ onClose }) {
           At least 1 area photo is required. The second one is optional.
         </p>
 
-        <div className={fieldClass("location")}>
-          <label className="mform__label" htmlFor="er-location">Last Seen Location</label>
-          <input
-            id="er-location"
+        <div className={fieldClass("street")}>
+          <label className="mform__label" htmlFor="er-street">Street</label>
+          <SuggestInput
+            listId="er-street-list"
+            options={QUIAPO_STREETS}
+            id="er-street"
             className="mform__input"
-            type="text"
-            placeholder="Street, barangay, city"
-            value={values.location}
-            onChange={setField("location")}
-            onBlur={markTouched("location")}
-            aria-invalid={Boolean(showError("location"))}
+            maxLength={200}
+            placeholder="Example: Hidalgo Street"
+            value={values.street}
+            onChange={setField("street")}
+            onBlur={markTouched("street")}
+            aria-invalid={Boolean(showError("street"))}
           />
-          {fieldError("location")}
+          {fieldError("street", true)}
+        </div>
+
+        <div className="mform__row">
+          <div className={fieldClass("barangay")}>
+            <label className="mform__label" htmlFor="er-barangay">Barangay</label>
+            <SuggestInput
+              listId="er-barangay-list"
+              options={QUIAPO_BARANGAYS}
+              id="er-barangay"
+              className="mform__input"
+              placeholder="Example: Barangay 306"
+              value={values.barangay}
+              onChange={setField("barangay")}
+              onBlur={markTouched("barangay")}
+              aria-invalid={Boolean(showError("barangay"))}
+            />
+            {fieldError("barangay", true)}
+          </div>
+
+          <div className="mform__field">
+            <label className="mform__label" htmlFor="er-city">City</label>
+            <input
+              id="er-city"
+              className="mform__input"
+              type="text"
+              value={CITY}
+              readOnly
+            />
+          </div>
         </div>
 
         <fieldset className="emergency__type">
@@ -468,23 +535,66 @@ function EmergencyReportFlow({ onClose }) {
 
         <h3 className="emergency__heading">Your contact details</h3>
 
-        <div className="mform__row">
-          <div className={fieldClass("contactName")}>
-            <label className="mform__label" htmlFor="er-contact-name">Your Name</label>
-            <input
-              id="er-contact-name"
-              className="mform__input"
-              type="text"
-              autoComplete="name"
-              placeholder="Juan Dela Cruz"
-              value={values.contactName}
-              onChange={setField("contactName")}
-              onBlur={markTouched("contactName")}
-              aria-invalid={Boolean(showError("contactName"))}
-            />
-            {fieldError("contactName")}
+        <fieldset className={`${fieldClass("reporterType")} emergency__who`}>
+          <legend className="mform__label">I am the</legend>
+
+          <div className="emergency__who-options">
+            {[["Owner", "Pet owner"], ["Citizen", "Concerned citizen"]].map(([value, label]) => (
+              <label key={value} className="emergency__who-option">
+                <input
+                  type="radio"
+                  name="reporterType"
+                  value={value}
+                  checked={values.reporterType === value}
+                  onChange={setField("reporterType")}
+                  onBlur={markTouched("reporterType")}
+                  aria-invalid={Boolean(showError("reporterType"))}
+                />
+                {label}
+              </label>
+            ))}
           </div>
 
+          {fieldError("reporterType", true)}
+        </fieldset>
+
+        <div className="mform__row">
+          <div className={fieldClass("firstName")}>
+            <label className="mform__label" htmlFor="er-first-name">First Name</label>
+            <input
+              id="er-first-name"
+              className="mform__input"
+              type="text"
+              autoComplete="given-name"
+              maxLength={100}
+              placeholder="Juan"
+              value={values.firstName}
+              onChange={setField("firstName")}
+              onBlur={markTouched("firstName")}
+              aria-invalid={Boolean(showError("firstName"))}
+            />
+            {fieldError("firstName")}
+          </div>
+
+          <div className={fieldClass("lastName")}>
+            <label className="mform__label" htmlFor="er-last-name">Last Name</label>
+            <input
+              id="er-last-name"
+              className="mform__input"
+              type="text"
+              autoComplete="family-name"
+              maxLength={100}
+              placeholder="Dela Cruz"
+              value={values.lastName}
+              onChange={setField("lastName")}
+              onBlur={markTouched("lastName")}
+              aria-invalid={Boolean(showError("lastName"))}
+            />
+            {fieldError("lastName")}
+          </div>
+        </div>
+
+        <div className="mform__row">
           <div className={fieldClass("contactNumber")}>
             <label className="mform__label" htmlFor="er-contact-number">Contact Number</label>
             <input
@@ -561,9 +671,13 @@ function EmergencyReportModal({ isOpen, onClose }) {
       onClose={onClose}
       title="Report a Missing Pet"
       size="large"
+      hideScrollbar
     >
-      {/* mounted only while open, so every opening starts with an empty form */}
-      <EmergencyReportFlow onClose={onClose} />
+      {/* mounted only while open, so every opening starts with an empty form; if the form
+          fails to render, a message with a Close button replaces it */}
+      <ErrorBoundary onClose={onClose}>
+        <EmergencyReportFlow onClose={onClose} />
+      </ErrorBoundary>
     </Modal>
   );
 }

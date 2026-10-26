@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use App\Models\Setting;
-use Illuminate\Support\Facades\Storage;
 
 // Public site content (pound info, donation, about, in-kind wishlist) kept in one setting.
 class SiteContent
@@ -50,7 +49,7 @@ class SiteContent
     public static function publicPayload(): array
     {
         $c = self::all();
-        $url = fn (?string $path) => $path ? Storage::disk('public')->url($path) : null;
+        $url = fn (?string $path) => $path ? PublicFile::url($path) : null;
         $filled = fn (array $list) => array_values(array_filter(array_map('trim', $list), 'strlen'));
 
         return [
@@ -74,7 +73,7 @@ class SiteContent
     public static function editorPayload(): array
     {
         $c = self::all();
-        $url = fn (?string $path) => $path ? Storage::disk('public')->url($path) : null;
+        $url = fn (?string $path) => $path ? PublicFile::url($path) : null;
 
         $c['donation']['qr'] = $url($c['donation']['qr']);
         $c['about']['images'] = array_map($url, $c['about']['images']);

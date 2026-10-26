@@ -43,8 +43,7 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'terms.accepted' => 'You must agree to the Terms of Use and Privacy Policy.',
-            'phone.regex' => 'Enter a valid Philippine mobile number (09XX XXX XXXX).',
+            'phone.regex' => 'Please enter a valid mobile number, for example 0917 123 4567.',
         ];
     }
 }

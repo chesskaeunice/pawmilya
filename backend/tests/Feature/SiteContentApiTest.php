@@ -45,7 +45,7 @@ class SiteContentApiTest extends TestCase
     public function test_public_site_info_needs_no_login_and_has_defaults(): void
     {
         $this->getJson('/api/public/site-info')->assertOk()
-            ->assertJsonPath('data.pound.phone', '(02) 8123 4567')
+            ->assertJsonPath('data.pound.phone', '(02) 8000 0000')
             ->assertJsonPath('data.donation.qr', null)
             ->assertJsonPath('data.about.images', [])
             ->assertJsonCount(2, 'data.inKind');
@@ -91,6 +91,64 @@ class SiteContentApiTest extends TestCase
 
         $this->withToken($token)->putJson('/api/site-content', ['donation' => ['qr' => '../../.env']])->assertOk();
         $this->assertNull($this->getJson('/api/public/site-info')->json('data.donation.qr'));
+    }
+
+    private function poundInfo(array $override = []): array
+    {
+        return array_merge([
+            'name' => 'Quiapo Animal Pound',
+            'address' => 'Barangay 387, Quiapo, Manila',
+            'phone' => '(02) 8555 0100',
+            'email' => 'pound@pawmilya.ph',
+            'hours' => 'Mon-Sat, 8:00 AM - 5:00 PM',
+            'vision' => 'A Manila where every pet has a home.',
+            'mission' => 'Connect adopters and the pound.',
+        ], $override);
+    }
+
+    public function test_kennel_manager_saves_pound_information_and_the_public_endpoint_returns_it(): void
+    {
+        $token = $this->tokenFor('kennel_manager');
+
+        $this->withToken($token)->patchJson('/api/pound-info', $this->poundInfo())
+            ->assertOk()->assertJsonPath('data.pound.name', 'Quiapo Animal Pound');
+
+        $this->flushHeaders();
+        $this->getJson('/api/public/site-info')->assertOk()
+            ->assertJsonPath('data.pound.name', 'Quiapo Animal Pound')
+            ->assertJsonPath('data.pound.address', 'Barangay 387, Quiapo, Manila')
+            ->assertJsonPath('data.pound.phone', '(02) 8555 0100')
+            ->assertJsonPath('data.pound.email', 'pound@pawmilya.ph')
+            ->assertJsonPath('data.pound.hours', 'Mon-Sat, 8:00 AM - 5:00 PM')
+            ->assertJsonPath('data.about.vision', 'A Manila where every pet has a home.')
+            ->assertJsonPath('data.about.mission', 'Connect adopters and the pound.');
+
+        $this->assertDatabaseHas('audit_logs', ['action' => 'site.pound_updated']);
+    }
+
+    public function test_pound_information_is_for_the_kennel_manager_only(): void
+    {
+        $this->patchJson('/api/pound-info', $this->poundInfo())->assertUnauthorized();
+
+        foreach (['pound_staff', 'vet_tech', 'adoption_counselor', 'citizen'] as $role) {
+            $this->withToken($this->tokenFor($role))->patchJson('/api/pound-info', $this->poundInfo())->assertForbidden();
+            $this->flushHeaders();
+        }
+    }
+
+    public function test_pound_information_is_validated(): void
+    {
+        $token = $this->tokenFor('kennel_manager');
+
+        $this->withToken($token)->patchJson('/api/pound-info', $this->poundInfo([
+            'name' => '', 'phone' => 'call me', 'email' => 'nope', 'address' => str_repeat('a', 256), 'vision' => str_repeat('v', 1001),
+        ]))->assertUnprocessable()->assertJsonValidationErrors(['name', 'phone', 'email', 'address', 'vision']);
+
+        $this->withToken($token)->patchJson('/api/pound-info', [])->assertUnprocessable()
+            ->assertJsonValidationErrors(['name', 'address', 'phone', 'email', 'hours', 'vision', 'mission']);
+
+        // nothing was saved
+        $this->assertSame('(02) 8000 0000', $this->getJson('/api/public/site-info')->json('data.pound.phone'));
     }
 
     public function test_image_upload_accepts_images_and_rejects_bad_files(): void

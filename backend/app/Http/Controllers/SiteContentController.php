@@ -67,6 +67,35 @@ class SiteContentController extends Controller
         return $this->show();
     }
 
+    // Pound information card in Settings: contact details plus the About Us vision and mission.
+    // Every field is required here (the public pages show them), the website name is not editable.
+    public function updatePound(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'address' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:40', 'regex:/^[0-9+()\-\s.]{7,40}$/'],
+            'email' => ['required', 'email', 'max:255'],
+            'hours' => ['required', 'string', 'max:255'],
+            'vision' => ['required', 'string', 'max:1000'],
+            'mission' => ['required', 'string', 'max:1000'],
+        ], [
+            'phone.regex' => 'Enter a valid contact number (digits, spaces, + ( ) - only).',
+        ]);
+
+        $content = SiteContent::all();
+        foreach (['name', 'address', 'phone', 'email', 'hours'] as $field) {
+            $content['pound'][$field] = trim($data[$field]);
+        }
+        $content['about']['vision'] = trim($data['vision']);
+        $content['about']['mission'] = trim($data['mission']);
+
+        SiteContent::save($content);
+        Audit::record($request, 'site.pound_updated');
+
+        return $this->show();
+    }
+
     // jpg/png/webp, max 5 MB, stored on the public disk (no image processing: gd is not installed)
     public function uploadImage(Request $request, string $slot): JsonResponse
     {

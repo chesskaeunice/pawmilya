@@ -21,6 +21,7 @@ import useAdminLists from "../../../hooks/useAdminLists.js";
 import MyShifts from "../../../components/admin/MyShifts.jsx";
 
 import "./AdoptionCounselorDashboard.css";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
 function AdoptionCounselorDashboard() {
@@ -450,7 +451,7 @@ function AdoptionCounselorDashboard() {
 
                           {image ? (
 
-                            <img
+                            <SafeImage type={pet.type}
                               src={image}
                               alt={pet.name}
                             />
@@ -483,9 +484,7 @@ function AdoptionCounselorDashboard() {
 
 
                           <span>
-                            {pet.type}
-                            {" · "}
-                            {pet.breed}
+                            {[pet.type, pet.breed].filter(Boolean).join(" · ")}
                           </span>
 
 

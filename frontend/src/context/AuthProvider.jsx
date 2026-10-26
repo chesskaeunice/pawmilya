@@ -15,12 +15,18 @@ import {
   loginRequest,
   logoutRequest,
   registerRequest,
+  removeAvatarRequest,
+  updateAddressRequest,
+  updateEmailRequest,
+  uploadAvatarRequest,
 } from "../services/authService.js";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   // Wait for /api/me before guards decide, when a token is already stored
   const [loading, setLoading] = useState(() => Boolean(getStoredToken()));
+  // true after the user pressed Log out (a session that ended by itself leaves it false)
+  const [loggedOutByUser, setLoggedOutByUser] = useState(false);
 
   useEffect(() => {
     if (!getStoredToken()) return;
@@ -34,12 +40,41 @@ export function AuthProvider({ children }) {
   // Both throw an Axios error on failure (422 with field errors, 403 if deactivated)
   const login = useCallback(async (email, password) => {
     const next = await loginRequest(email, password);
+    setLoggedOutByUser(false);
     setUser(next);
     return next;
   }, []);
 
   const register = useCallback(async (payload) => {
     const next = await registerRequest(payload);
+    setLoggedOutByUser(false);
+    setUser(next);
+    return next;
+  }, []);
+
+  // Throws an Axios error on failure (422 with the field error); the new email is in `user` at once
+  const updateEmail = useCallback(async (email) => {
+    const next = await updateEmailRequest(email);
+    setUser(next);
+    return next;
+  }, []);
+
+  // Throws an Axios error on failure (422 with the field errors); the new address is in `user` at once
+  const updateAddress = useCallback(async (address) => {
+    const next = await updateAddressRequest(address);
+    setUser(next);
+    return next;
+  }, []);
+
+  // Profile photo: the new `avatar_url` is in `user` at once (navbar, staff header, Profile page)
+  const uploadAvatar = useCallback(async (file) => {
+    const next = await uploadAvatarRequest(file);
+    setUser(next);
+    return next;
+  }, []);
+
+  const removeAvatar = useCallback(async () => {
+    const next = await removeAvatarRequest();
     setUser(next);
     return next;
   }, []);
@@ -50,6 +85,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(() => {
+    setLoggedOutByUser(true);
     setUser(null);
     logoutRequest();
   }, []);
@@ -61,16 +97,24 @@ export function AuthProvider({ children }) {
       user,
       role,
       loading,
+      loggedOutByUser,
       isLoggedIn: Boolean(user),
       isStaff: Boolean(user) && role !== CITIZEN && role in rolePermissions,
       roleLabel: ROLE_LABELS[role] || "Guest",
       can: (permission) => hasPermission(role, permission),
       login,
       register,
+      updateEmail,
+      updateAddress,
+      uploadAvatar,
+      removeAvatar,
       changePassword,
       logout,
     };
-  }, [user, loading, login, register, changePassword, logout]);
+  }, [
+    user, loading, loggedOutByUser, login, register, updateEmail, updateAddress, uploadAvatar, removeAvatar,
+    changePassword, logout,
+  ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

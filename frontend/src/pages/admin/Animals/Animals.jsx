@@ -21,6 +21,7 @@ import {
 
 import "./Animals.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import SafeImage from "../../../components/common/SafeImage.jsx";
 
 const SORTS = {
   Newest: "newest",
@@ -90,12 +91,6 @@ function Animals() {
           </p>
         </div>
 
-        <div className="staff-page__date">
-          September 30, 2026
-          <br />
-          Monday, 9:41 AM
-        </div>
-
       </div>
 
 
@@ -123,6 +118,10 @@ function Animals() {
 
           <option value="Cat">
             Cat
+          </option>
+
+          <option value="Other">
+            Others
           </option>
         </select>
 
@@ -177,13 +176,15 @@ function Animals() {
         </select>
 
 
-        <Link
-          to="/admin/animals/add"
-          className="staff-button"
-        >
-          <Plus size={13} />
-          Add Animal
-        </Link>
+        {can("animals.create") && (
+          <Link
+            to="/admin/animals/add"
+            className="staff-button"
+          >
+            <Plus size={13} />
+            Add Animal
+          </Link>
+        )}
 
       </div>
 
@@ -221,7 +222,7 @@ function Animals() {
                 <td>
                   <div className="staff-table__photo">
                     {pet.image ? (
-                      <img
+                      <SafeImage type={pet.type}
                         src={pet.image}
                         alt={pet.name || "Animal"}
                         style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
@@ -241,7 +242,7 @@ function Animals() {
 
 
                 <td>
-                  {pet.type}
+                  {pet.type === "Other" ? pet.other_species || "Other" : pet.type}
                 </td>
 
 
