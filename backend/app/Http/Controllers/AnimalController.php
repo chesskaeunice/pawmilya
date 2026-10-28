@@ -26,6 +26,7 @@ class AnimalController extends Controller
 {
     // Photos per animal (the same 3 to 4 as when it is created)
     private const MIN_PHOTOS = 3;
+
     private const MAX_PHOTOS = 4;
 
     public function index(Request $request)
@@ -63,26 +64,51 @@ class AnimalController extends Controller
     public function store(StoreAnimalRequest $request): JsonResponse
     {
         $data = $request->safe()->except('images');
+        $uploadedPaths = [];
 
-        $animal = DB::transaction(function () use ($request, $data) {
-            $animal = new Animal($data);
-            $animal->status = StoreAnimalRequest::START_STATUS;
-            $animal->created_by = $request->user()->id;
-            $animal->save();
+        try {
+            $animal = DB::transaction(function () use ($request, $data, &$uploadedPaths) {
+                $animal = new Animal($data);
+                $animal->status = StoreAnimalRequest::START_STATUS;
+                $animal->created_by = $request->user()->id;
+                $animal->save();
 
-            foreach ($request->file('images') as $position => $file) {
-                $animal->photos()->create([
-                    'path' => $file->store("animals/{$animal->id}", 'public'),
-                    'position' => $position,
-                ]);
+                foreach ($request->file('images') as $position => $file) {
+                    $path = $file->store("animals/{$animal->id}", 's3');
+
+                    if (! $path) {
+                        throw new \RuntimeException('Failed to upload animal photo.');
+                    }
+
+                    $uploadedPaths[] = $path;
+
+                    $animal->photos()->create([
+                        'path' => $path,
+                        'position' => $position,
+                    ]);
+                }
+
+                return $animal;
+            });
+        } catch (\Throwable $e) {
+            if (! empty($uploadedPaths)) {
+                try {
+                    Storage::disk('s3')->delete($uploadedPaths);
+                } catch (\Throwable $cleanupError) {
+                    report($cleanupError);
+                }
             }
 
-            return $animal;
-        });
+            throw $e;
+        }
 
-        Audit::record($request, 'animal.created', $animal, ['animal_code' => $animal->animal_code]);
+        Audit::record($request, 'animal.created', $animal, [
+            'animal_code' => $animal->animal_code,
+        ]);
 
-        return (new AnimalResource($animal->load('photos')))->response()->setStatusCode(201);
+        return (new AnimalResource($animal->load('photos')))
+            ->response()
+            ->setStatusCode(201);
     }
 
     public function update(UpdateAnimalRequest $request, Animal $animal, ReleaseUnclaimedReports $release): AnimalResource
@@ -106,18 +132,52 @@ class AnimalController extends Controller
     }
 
     // Replaces the main photo (first position). Adoption counselor, vet tech and pound staff (animals.photo).
+
     public function updatePhoto(Request $request, Animal $animal): AnimalResource
     {
-        $request->validate(['image' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
+        $request->validate([
+            'image' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
 
-        $path = $request->file('image')->store("animals/{$animal->id}", 'public');
-        $main = $animal->photos()->orderBy('position')->first();
+        $path = $request->file('image')->store("animals/{$animal->id}", 's3');
 
-        if ($main) {
-            Storage::disk('public')->delete($main->path);
-            $main->update(['path' => $path]);
-        } else {
-            $animal->photos()->create(['path' => $path, 'position' => 0]);
+        if (! $path) {
+            throw new \RuntimeException('Failed to upload animal photo.');
+        }
+
+        $oldPath = null;
+
+        try {
+            DB::transaction(function () use ($animal, $path, &$oldPath) {
+                $main = $animal->photos()->orderBy('position')->first();
+
+                if ($main) {
+                    $oldPath = $main->path;
+                    $main->update(['path' => $path]);
+                } else {
+                    $animal->photos()->create([
+                        'path' => $path,
+                        'position' => 0,
+                    ]);
+                }
+            });
+        } catch (\Throwable $e) {
+            try {
+                Storage::disk('s3')->delete($path);
+            } catch (\Throwable $cleanupError) {
+                report($cleanupError);
+            }
+
+            throw $e;
+        }
+
+        // Delete the previous photo only after the database update succeeds.
+        if ($oldPath !== null && $oldPath !== $path) {
+            try {
+                Storage::disk('s3')->delete($oldPath);
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
 
         Audit::record($request, 'animal.photo_changed', $animal);
@@ -126,36 +186,76 @@ class AnimalController extends Controller
     }
 
     // Adds a photo (pound staff, animals.edit). An animal keeps 3 to 4 photos.
+
     public function addPhoto(Request $request, Animal $animal): AnimalResource
     {
-        $request->validate(['image' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120']]);
+        $request->validate([
+            'image' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
 
         if ($animal->photos()->count() >= self::MAX_PHOTOS) {
-            throw ValidationException::withMessages(['image' => 'An animal can have at most '.self::MAX_PHOTOS.' photos. Remove one first.']);
+            throw ValidationException::withMessages([
+                'image' => 'An animal can have at most '.self::MAX_PHOTOS.' photos. Remove one first.',
+            ]);
         }
 
-        $position = ((int) $animal->photos()->max('position')) + 1;
-        $animal->photos()->create([
-            'path' => $request->file('image')->store("animals/{$animal->id}", 'public'),
-            'position' => $position,
-        ]);
+        $path = $request->file('image')->store("animals/{$animal->id}", 's3');
+
+        if (! $path) {
+            throw new \RuntimeException('Failed to upload animal photo.');
+        }
+
+        try {
+            DB::transaction(function () use ($animal, $path) {
+                $position = ((int) $animal->photos()->max('position')) + 1;
+
+                $animal->photos()->create([
+                    'path' => $path,
+                    'position' => $position,
+                ]);
+            });
+        } catch (\Throwable $e) {
+            try {
+                Storage::disk('s3')->delete($path);
+            } catch (\Throwable $cleanupError) {
+                report($cleanupError);
+            }
+
+            throw $e;
+        }
 
         Audit::record($request, 'animal.photo_added', $animal);
 
-        return new AnimalResource($animal->load(['photos', 'missingPetReport']));
+        return new AnimalResource($animal->load([
+            'photos',
+            'missingPetReport',
+        ]));
     }
 
     // Removes one photo (pound staff, animals.edit). The next photo becomes the main one when needed.
+
     public function removePhoto(Request $request, Animal $animal, AnimalPhoto $photo): AnimalResource
     {
         abort_unless($photo->animal_id === $animal->id, 404);
 
-        if ($animal->photos()->count() <= self::MIN_PHOTOS) {
-            throw ValidationException::withMessages(['photo' => 'An animal needs at least '.self::MIN_PHOTOS.' photos. Add another one before removing this one.']);
-        }
+        $path = $photo->path;
 
-        Storage::disk('public')->delete($photo->path);
-        $photo->delete();
+        DB::transaction(function () use ($animal, $photo) {
+            if ($animal->photos()->count() <= self::MIN_PHOTOS) {
+                throw ValidationException::withMessages([
+                    'photo' => 'An animal needs at least '.self::MIN_PHOTOS.' photos. Add another one before removing this one.',
+                ]);
+            }
+
+            $photo->delete();
+        });
+
+        // Delete from Supabase only after the database operation succeeds.
+        try {
+            Storage::disk('s3')->delete($path);
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         Audit::record($request, 'animal.photo_removed', $animal);
 
@@ -164,18 +264,50 @@ class AnimalController extends Controller
 
     public function destroy(Request $request, Animal $animal): JsonResponse
     {
-        // Adoption records must not disappear with the animal
+        // Adoption records must not disappear with the animal.
         if ($animal->adoptionApplications()->exists()) {
-            return response()->json(['message' => 'This animal has adoption applications and cannot be deleted.'], 422);
+            return response()->json([
+                'message' => 'This animal has adoption applications and cannot be deleted.',
+            ], 422);
+        }
+        if ($animal->missingPetReport()->exists()) {
+            return response()->json([
+                'message' => 'This animal is linked to a missing pet report and cannot be deleted.',
+            ], 422);
         }
 
         $code = $animal->animal_code;
-        Storage::disk('public')->deleteDirectory("animals/{$animal->id}");
-        $animal->delete();
+        $animalId = $animal->id;
 
-        Audit::record($request, 'animal.deleted', $animal, ['animal_code' => $code]);
+        DB::transaction(function () use ($animal) {
+            // Check again before deleting.
+            if ($animal->adoptionApplications()->exists()) {
+                throw ValidationException::withMessages([
+                    'animal' => 'This animal has adoption applications and cannot be deleted.',
+                ]);
+            }
+            if ($animal->missingPetReport()->exists()) {
+                throw ValidationException::withMessages([
+                    'animal' => 'This animal is linked to a missing pet report and cannot be deleted.',
+                ]);
+            }
+            $animal->delete();
+        });
 
-        return response()->json(['message' => 'Animal deleted.']);
+        // Delete Supabase photos after the database deletion succeeds.
+        try {
+            Storage::disk('s3')->deleteDirectory("animals/{$animalId}");
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        Audit::record($request, 'animal.deleted', $animal, [
+            'animal_code' => $code,
+        ]);
+
+        return response()->json([
+            'message' => 'Animal deleted.',
+        ]);
     }
 
     // Everything recorded about one animal: its own changes, vaccinations and adoption decisions
@@ -205,7 +337,7 @@ class AnimalController extends Controller
     {
         $url = rtrim(config('app.frontend_url'), '/').'/stray/'.$animal->qr_token;
 
-        $writer = new Writer(new ImageRenderer(new RendererStyle(260, 2), new SvgImageBackEnd()));
+        $writer = new Writer(new ImageRenderer(new RendererStyle(260, 2), new SvgImageBackEnd));
 
         return response($writer->writeString($url), 200, ['Content-Type' => 'image/svg+xml']);
     }

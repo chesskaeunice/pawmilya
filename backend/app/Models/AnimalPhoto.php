@@ -17,6 +17,6 @@ class AnimalPhoto extends Model
 
     public function url(): string
     {
-        return PublicFile::url($this->path);
+        return PublicFile::url($this->path, 's3');
     }
 }

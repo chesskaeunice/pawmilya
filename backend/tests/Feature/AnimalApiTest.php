@@ -6,6 +6,7 @@ use App\Models\AdoptionApplication;
 use App\Models\Animal;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Models\Vaccine;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -72,7 +73,8 @@ class AnimalApiTest extends TestCase
 
     public function test_pound_staff_creates_an_animal_with_photos_code_and_audit_entry(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
+
         $staff = $this->actingAsRole('pound_staff');
 
         $response = $this->post('/api/animals', $this->payload(), ['Accept' => 'application/json']);
@@ -83,11 +85,18 @@ class AnimalApiTest extends TestCase
             ->assertJsonCount(3, 'data.images');
 
         $animal = Animal::first();
+
         $this->assertSame(sprintf('PAW-%04d', $animal->id), $animal->animal_code);
         $this->assertNotEmpty($animal->qr_token);
         $this->assertCount(3, $animal->photos);
-        Storage::disk('public')->assertExists($animal->photos->first()->path);
-        $this->assertDatabaseHas('audit_logs', ['user_id' => $staff->id, 'action' => 'animal.created', 'entity_id' => $animal->id]);
+
+        Storage::disk('s3')->assertExists($animal->photos->first()->path);
+
+        $this->assertDatabaseHas('audit_logs', [
+            'user_id' => $staff->id,
+            'action' => 'animal.created',
+            'entity_id' => $animal->id,
+        ]);
     }
 
     public function test_create_needs_three_to_four_photos(): void
@@ -394,7 +403,7 @@ class AnimalApiTest extends TestCase
         $this->patchJson("/api/animals/{$other->id}", ['location' => 'Elsewhere'])->assertOk();
 
         $this->actingAsRole('vet_tech');
-        $this->postJson('/api/vaccinations', ['animal_id' => $animal->id, 'records' => [['vaccine_id' => \App\Models\Vaccine::where('name', 'Anti-rabies')->value('id'), 'administered_at' => '2026-01-01']]])->assertCreated();
+        $this->postJson('/api/vaccinations', ['animal_id' => $animal->id, 'records' => [['vaccine_id' => Vaccine::where('name', 'Anti-rabies')->value('id'), 'administered_at' => '2026-01-01']]])->assertCreated();
 
         // the kennel manager reads the history (overview) without changing anything
         $this->actingAsRole('kennel_manager');

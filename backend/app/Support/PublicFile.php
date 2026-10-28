@@ -2,16 +2,30 @@
 
 namespace App\Support;
 
-// Absolute URL of a file on the public disk (storage/app/public), the way the browser reaches it:
-// <backend>/storage/<path>, served through the public/storage link (`php artisan storage:link`).
-//
-// asset() builds the address from the request that is being answered, so the photo URL always
-// has the same host and port the frontend used to call the API, even when APP_URL is missing or
-// different. (Storage::url() would use the fixed APP_URL instead.)
+use Illuminate\Support\Facades\Storage;
+
 class PublicFile
 {
-    public static function url(string $path): string
+    public static function url(string $path, string $disk = 'public'): string
     {
-        return asset('storage/'.ltrim($path, '/'));
+        $path = ltrim($path, '/');
+
+        if ($disk === 's3') {
+            $baseUrl = rtrim(
+                (string) config('filesystems.disks.s3.url'),
+                '/'
+            );
+
+            if ($baseUrl !== '') {
+                return $baseUrl.'/'.implode(
+                    '/',
+                    array_map('rawurlencode', explode('/', $path))
+                );
+            }
+
+            return Storage::disk('s3')->url($path);
+        }
+
+        return asset('storage/'.$path);
     }
 }
