@@ -6,9 +6,11 @@ use App\Http\Requests\MissingPet\StoreMissingPetRequest;
 use App\Http\Resources\AnimalResource;
 use App\Http\Resources\MissingPetResource;
 use App\Http\Resources\StaffMissingPetResource;
+use App\Mail\ReportSubmitted;
 use App\Models\Animal;
 use App\Models\MissingPetReport;
 use App\Support\Audit;
+use App\Support\SafeMail;
 use App\Support\PoundMatcher;
 use App\Support\PublicCache;
 use App\Support\ReleaseUnclaimedReports;
@@ -75,7 +77,7 @@ class MissingPetReportController extends Controller
                 $report->save();
 
                 foreach (['pet' => 'pet_images', 'last_seen' => 'last_seen_images'] as $kind => $field) {
-                    foreach ($request->file($field) as $position => $file) {
+                    foreach ($request->file($field) ?? [] as $position => $file) {
                         $path = $file->store("missing-pets/{$report->id}", 'public');
                         $paths[] = $path;
                         $report->photos()->create(['path' => $path, 'kind' => $kind, 'position' => $position]);
@@ -103,6 +105,9 @@ class MissingPetReportController extends Controller
         if ($animal) {
             $registrar->audit($request, $animal, $report, true);
         }
+
+        // The confirmation goes out after the response; if the mail server is down it is only logged
+        SafeMail::send($report->contact_email, new ReportSubmitted($report->load('photos')));
 
         return (new MissingPetResource($report->refresh()->load('photos')))->response()->setStatusCode(201);
     }

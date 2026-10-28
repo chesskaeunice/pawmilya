@@ -9,8 +9,6 @@ import {
 } from "react-router-dom";
 
 import {
-  ChevronLeft,
-  ChevronRight,
   CircleCheck,
   CircleX,
   Clipboard,
@@ -25,6 +23,7 @@ import { listApplications } from "../../../services/adoptionService.js";
 
 import "./AdoptionApplications.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import Pagination from "../../../components/common/Pagination.jsx";
 
 
 const APPLICATIONS_PER_PAGE = 10;
@@ -829,91 +828,17 @@ function AdoptionApplications() {
                 PAGINATION
             ===================================== */}
 
-            <div className="adoption-applications__pagination">
-
-              <span>
-                {filteredApplications.length > 0
-                  ? `Showing ${
-                      startIndex + 1
-                    }-${endIndex} of ${
-                      filteredApplications.length
-                    } applications`
-                  : "Showing 0 applications"}
-              </span>
-
-
-              <div className="adoption-applications__pages">
-
-                {/* PREVIOUS */}
-
-                <button
-                  type="button"
-                  disabled={currentPage === 1}
-                  onClick={() =>
-                    setCurrentPage((page) =>
-                      Math.max(
-                        1,
-                        page - 1
-                      )
-                    )
-                  }
-                  aria-label="Previous page"
-                >
-                  <ChevronLeft size={13} />
-                </button>
-
-
-                {/* PAGE NUMBERS */}
-
-                {Array.from(
-                  {
-                    length: totalPages,
-                  },
-                  (_, index) =>
-                    index + 1
-                ).map((page) => (
-
-                  <button
-                    type="button"
-                    key={page}
-                    className={
-                      currentPage === page
-                        ? "active"
-                        : ""
-                    }
-                    onClick={() =>
-                      setCurrentPage(page)
-                    }
-                  >
-                    {page}
-                  </button>
-
-                ))}
-
-
-                {/* NEXT */}
-
-                <button
-                  type="button"
-                  disabled={
-                    currentPage === totalPages
-                  }
-                  onClick={() =>
-                    setCurrentPage((page) =>
-                      Math.min(
-                        totalPages,
-                        page + 1
-                      )
-                    )
-                  }
-                  aria-label="Next page"
-                >
-                  <ChevronRight size={13} />
-                </button>
-
-              </div>
-
-            </div>
+            <Pagination
+              summary={
+                filteredApplications.length > 0
+                  ? `Showing ${startIndex + 1}-${endIndex} of ${filteredApplications.length} applications`
+                  : "Showing 0 applications"
+              }
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onChange={setCurrentPage}
+              label="Application pages"
+            />
 
       </div>
 

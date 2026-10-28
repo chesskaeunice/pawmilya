@@ -1,7 +1,7 @@
 import { Menu } from "lucide-react";
 
-// Staff header: just the menu button (the sidebar's hamburger). The staff member's name and role
-// are at the bottom of the sidebar, next to Log out.
+// Staff header: just the menu button, shown on phones only (on desktop the hamburger is inside the
+// sidebar). The staff member's name and role are at the top of the sidebar.
 //   expanded: true while the sidebar is open (drawer open on phones, not collapsed on desktop)
 function AdminHeader({ expanded, onToggleMenu, buttonRef }) {
   return (

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-// Staff view of an animal. Key names (type, sex, ageLabel, dateAdded) match what the UI already uses.
+// Staff view of an animal. Key names (type, sex, dateAdded) match what the UI already uses.
 class AnimalResource extends JsonResource
 {
     public function toArray(Request $request): array
@@ -21,8 +21,6 @@ class AnimalResource extends JsonResource
             'other_species' => $this->other_species,
             'breed' => $this->breed,
             'sex' => $this->sex,
-            'age_months' => $this->age_months,
-            'ageLabel' => $this->ageLabel(),
             'color' => $this->color,
             'location' => $this->location,
             'status' => $this->status,

@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import UserNavbar from "../components/user/UserNavbar.jsx";
 import UserFooter from "../components/user/UserFooter.jsx";
 import EmergencyButton from "../components/landing/EmergencyButton.jsx";
+import MascotWelcome from "../components/common/MascotWelcome/MascotWelcome.jsx";
 import { ModalProvider } from "../context/ModalProvider.jsx";
 import { useScrollOnNavigate } from "../hooks/useSectionScroll.js";
 
@@ -44,6 +45,8 @@ function UserLayout() {
         {!bare && <UserFooter />}
 
         <EmergencyButton />
+
+        {!bare && <MascotWelcome />}
 
       </div>
       </ModalProvider>

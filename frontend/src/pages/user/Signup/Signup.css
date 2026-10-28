@@ -1,4 +1,6 @@
 .signup {
+  position: relative;
+
   min-height: calc(100vh - 72px);
 
   display: flex;
@@ -30,6 +32,8 @@
 /* LEFT SIDE */
 
 .signup__intro {
+  position: relative;
+
   max-width: 560px;
 }
 
@@ -67,7 +71,18 @@
   line-height: 1.7;
 }
 
+.signup__image-placeholder img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
 .signup__image-placeholder {
+  overflow: hidden;
+
   height: 200px;
 
   margin-top: 32px;

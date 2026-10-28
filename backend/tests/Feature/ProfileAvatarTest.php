@@ -24,6 +24,7 @@ class ProfileAvatarTest extends TestCase
     {
         $user = new User(['name' => 'Maria Santos', 'email' => 'maria@email.com', 'phone' => '09171234567', 'password' => 'Str0ng!Passw0rd']);
         $user->role = 'citizen';
+        $user->email_verified_at = now();
         $user->save();
 
         return $user;

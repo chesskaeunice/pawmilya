@@ -6,6 +6,8 @@ import { PasswordHelp, PasswordInput } from "../../../components/user/PasswordIn
 import FieldError, { FormError } from "../../../components/common/FieldError.jsx";
 import { moveConfirmationError } from "../../../utils/formErrors.js";
 import { formatApiError } from "../../../services/authService.js";
+import AuthBackButton from "../../../components/common/AuthBackButton.jsx";
+import { loginPlaceholder } from "../../../assets/images/placeholders/index.js";
 
 import "./Signup.css";
 
@@ -43,7 +45,7 @@ function Signup() {
     setSubmitting(true);
 
     try {
-      await register({
+      const created = await register({
         first_name: values.firstName.trim(),
         last_name: values.lastName.trim(),
         email: values.email.trim().toLowerCase(),
@@ -52,7 +54,8 @@ function Signup() {
         password_confirmation: form.get("confirmPassword"),
         terms: form.get("terms") === "on",
       });
-      navigate("/", { replace: true });
+      // the account exists but is not verified: the next step is the emailed code
+      navigate("/verify-email", { replace: true, state: { email: created.email } });
     } catch (err) {
       const { message, fields } = formatApiError(err);
       setErrors(moveConfirmationError(fields));
@@ -66,6 +69,7 @@ function Signup() {
       <section className="signup__container">
 
         <div className="signup__intro">
+          <AuthBackButton inline />
           <p className="signup__eyebrow">
             Join PAWmilya
           </p>
@@ -80,7 +84,7 @@ function Signup() {
           </p>
 
           <div className="signup__image-placeholder">
-            <span>Image Placeholder</span>
+            <img src={loginPlaceholder} alt="" />
           </div>
         </div>
 

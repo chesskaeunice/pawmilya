@@ -1,0 +1,309 @@
+PAWmilya — Pet Photo Descriptions
+Demo names and sections only. No age field.
+
+01. Mochi (Cat)
+Suggested section: Adoptable Pets
+Description: A close-up photo of a light-colored cat with darker shading around its face, large dark eyes, and a small dark nose.
+Photo: 854529904_1118146980602054_7445856317810637607_n.jpg
+
+02. Miso (Cat)
+Suggested section: Missing Pets
+Description: A light orange-and-white cat photographed near a window, with its head turned toward the camera.
+Photo: 856238997_1137105122212492_5545379849433471921_n.jpg
+
+03. Mittens (Cat)
+Suggested section: Found Pets
+Description: A slender light orange tabby cat with large upright ears, sitting on a dark chair.
+Photo: 856334071_2431563350910577_7299721577400290028_n.jpg
+
+04. Luna (Cat)
+Suggested section: Adoptable Pets
+Description: A black cat with bright yellow-green eyes, resting on a light-colored surface.
+Photo: 856670211_28805548825721886_103087284524291964_n.jpg
+
+05. Oreo (Cat)
+Suggested section: Missing Pets
+Description: A black cat wearing a pink knitted outfit, sitting indoors with its ears upright.
+Photo: 857225048_1607245857815973_7889620523070290250_n.jpg
+Note: Possible same cat as photo 6.
+
+06. Nala (Cat)
+Suggested section: Found Pets
+Description: A black cat wearing a pink knitted outfit, photographed from the front near a white door.
+Photo: 857743066_1576938267803743_7179051749705413404_n.jpg
+Note: Possible same cat as photo 5.
+
+07. Pebbles (Cat)
+Suggested section: Adoptable Pets
+Description: A light cream-colored tabby cat resting its front paws on a raised surface, with its eyes partly closed.
+Photo: 857885088_1431252509113753_8071236408745040679_n.jpg
+
+08. Coco (Cat)
+Suggested section: Missing Pets
+Description: A small orange-and-white kitten being gently held up outdoors against a blue sky.
+Photo: 857976125_1436972288527678_5937296440420173870_n.jpg
+Note: Possible same kitten as photos 10 and 15.
+
+09. Mimi (Cat)
+Suggested section: Found Pets
+Description: An orange-and-white cat sitting upright indoors, with pale fur on its chest and paws.
+Photo: 857994784_1111598865071896_2366712700107666247_n.jpg
+
+10. Toby (Cat)
+Suggested section: Adoptable Pets
+Description: A small orange-and-white kitten being held close to a person outdoors, with a blue sky in the background.
+Photo: 859144052_2038480096854267_2617063094501566726_n.jpg
+Note: Possible same kitten as photos 8 and 15.
+
+11. Ash (Cat)
+Suggested section: Missing Pets
+Description: A gray-brown tabby cat sitting indoors, with dark stripes and alert eyes.
+Photo: 860779911_2294500007967725_8117351326256477477_n.jpg
+
+12. Biscuit (Cat)
+Suggested section: Found Pets
+Description: A light-colored cat wearing a pink knitted outfit, photographed indoors against a patterned background.
+Photo: 861094274_4738607949794060_7458924150534689404_n.jpg
+
+13. Pip (Cat)
+Suggested section: Adoptable Pets
+Description: A gray-brown tabby cat with large round eyes and a collar, sitting upright near a doorway.
+Photo: 861132704_1118245760970335_8477747162769772019_n.jpg
+
+14. Olive (Cat)
+Suggested section: Missing Pets
+Description: A close-up photo of a black cat with yellow-green eyes and its pink tongue slightly visible.
+Photo: 861420693_1149608624262619_3854490794010717703_n.jpg
+
+15. Smokey (Cat)
+Suggested section: Found Pets
+Description: A small orange-and-white kitten being held outdoors, with its legs stretched forward.
+Photo: 861896490_2089033398396099_1332824336184266189_n.jpg
+Note: Possible same kitten as photos 8 and 10.
+
+16. Pumpkin (Cat)
+Suggested section: Adoptable Pets
+Description: A black cat resting under furniture on a wooden floor.
+Photo: 863738630_1084275984430414_6533006258277745728_n.jpg
+
+17. Buggy (Cat)
+Suggested section: Missing Pets
+Description: A gray tabby cat standing on tiled flooring, looking directly toward the camera.
+Photo: Buggy.jpg
+
+18. Charles (Cat)
+Suggested section: Found Pets
+Description: A white-and-brown cat with a darker patch around one eye, photographed in close-up.
+Photo: Charles.jpg
+
+19. Cookie (Cat)
+Suggested section: Adoptable Pets
+Description: A white-and-gray cat curled up on a tiled floor near an entrance.
+Photo: Cookie.jpg
+
+20. Garfield (Cat)
+Suggested section: Missing Pets
+Description: A brown tabby cat sitting on wooden decking, facing the camera with upright ears.
+Photo: Garfield.jpg
+
+21. Lili (Cat)
+Suggested section: Found Pets
+Description: A gray-brown tabby cat shown close-up outdoors, with green leaves in the background.
+Photo: Lili.jpg
+
+22. Pao (Cat)
+Suggested section: Adoptable Pets
+Description: A light cream-colored dog sitting on a road, with floppy ears and a dark nose.
+Photo: Pao.jpg
+
+23. Potato (Cat)
+Suggested section: Missing Pets
+Description: A small white-and-orange kitten standing on bare ground outdoors.
+Photo: Potato.jpg
+
+24. Shiro (Cat)
+Suggested section: Found Pets
+Description: A white cat with pale eyes sitting beside a metal grate, facing slightly to the side.
+Photo: Shiro.jpg
+
+25. Snow (Cat)
+Suggested section: Adoptable Pets
+Description: A white cat standing outdoors on rough pavement, with pale eyes and pink ears.
+Photo: Snow.jpg
+
+26. Toothless (Cat)
+Suggested section: Missing Pets
+Description: A black cat shown in close-up, with large yellow eyes and pointed ears.
+Photo: Toothless.jpg
+
+27. Buddy (Dog)
+Suggested section: Adoptable Pets
+Description: A dark fluffy dog resting on tiled flooring beside someone’s legs.
+Photo: 851709015_1716158530122869_200914899674902995_n.jpg
+
+28. Max (Dog)
+Suggested section: Missing Pets
+Description: A small tan dog photographed from above while sitting on a gray floor.
+Photo: 851709020_1102255505757731_5574960157448660528_n (1).jpg
+Note: Appears identical to photo 29; verify.
+
+29. Bella (Dog)
+Suggested section: Found Pets
+Description: A small tan dog photographed from above while sitting on a gray floor.
+Photo: 851709020_1102255505757731_5574960157448660528_n.jpg
+Note: Appears identical to photo 28; verify.
+
+30. Charlie (Dog)
+Suggested section: Adoptable Pets
+Description: A small shaggy tan dog resting on a bed, with long fur around its face.
+Photo: 855439472_1138620671948123_8525749463116455835_n.jpg
+
+31. Daisy (Dog)
+Suggested section: Missing Pets
+Description: A small black-and-tan dog with a white chest, sitting indoors and looking toward the camera.
+Photo: 856883872_1146164388379888_1913542566013113201_n.jpg
+
+32. Rocky (Dog)
+Suggested section: Found Pets
+Description: A small light-colored dog with upright ears, photographed behind a metal gate.
+Photo: 856883872_1626036565820626_6087303861394416392_n.jpg
+
+33. Lola (Dog)
+Suggested section: Adoptable Pets
+Description: A small black, white, and tan dog resting on a bright green surface.
+Photo: 857187109_29283351627944451_2902355746283100230_n.jpg
+
+34. Cooper (Dog)
+Suggested section: Missing Pets
+Description: A fluffy light brown dog photographed indoors, with a thick coat and small pointed ears.
+Photo: 857599111_3296885857170672_349169259184842268_n.jpg
+
+35. Bailey (Dog)
+Suggested section: Found Pets
+Description: A small fluffy cream-colored dog resting beside a person on a bed.
+Photo: 857976125_1977830739559049_278865652746310899_n.jpg
+
+36. Milo (Dog)
+Suggested section: Adoptable Pets
+Description: A reddish-brown dog standing near a gate, photographed from the side.
+Photo: 858178683_1838373247317978_6931758537050317640_n.jpg
+
+37. Lucky (Dog)
+Suggested section: Missing Pets
+Description: A fluffy orange-brown dog shown indoors in profile, with pointed ears.
+Photo: 858251325_1771109491332305_1339004286215541595_n.jpg
+
+38. Rosie (Dog)
+Suggested section: Found Pets
+Description: A small black-and-tan dog wearing a pink patterned outfit, sitting on a bed.
+Photo: 858473066_1873430470689379_2023109326888118024_n.jpg
+Note: Appears identical to photo 43; verify.
+
+39. Bingo (Dog)
+Suggested section: Adoptable Pets
+Description: A black-and-tan dog with floppy ears lying on a light-colored floor.
+Photo: 858544056_2334672650632915_5942805673512427229_n.jpg
+
+40. Teddy (Dog)
+Suggested section: Missing Pets
+Description: A small black-and-tan dog lying on a dark seat, facing the camera.
+Photo: 858762120_2658167221280725_2760422769068670870_n.jpg
+
+41. Poppy (Dog)
+Suggested section: Found Pets
+Description: A fluffy cream-colored dog resting on bedding, photographed from above.
+Photo: 858979235_2015738845785145_1012812517297429463_n.jpg
+
+42. Bruno (Dog)
+Suggested section: Adoptable Pets
+Description: A scruffy light tan dog with long facial fur and upright ears, looking to the side.
+Photo: 860030935_1438961234236362_6902780743402176754_n.jpg
+
+43. Sunny (Dog)
+Suggested section: Missing Pets
+Description: A small black-and-tan dog wearing a pink patterned outfit, shown in profile.
+Photo: 860995560_2626000154515460_6777019832105233627_n.jpg
+Note: Appears identical to photo 38; verify.
+
+44. Patches (Dog)
+Suggested section: Found Pets
+Description: A fluffy tan dog with its tongue out, photographed indoors in close-up.
+Photo: 861229347_1431299068429025_7044382442062408510_n.jpg
+
+45. Choco (Dog)
+Suggested section: Adoptable Pets
+Description: A small reddish-brown dog with upright ears and round dark eyes, photographed indoors.
+Photo: 862183605_1695754355557109_780582319910457756_n.jpg
+
+46. Rex (Dog)
+Suggested section: Missing Pets
+Description: A golden-brown dog looking up toward the camera outdoors, with its mouth open.
+Photo: 862226497_1096070760061350_2440384624234739087_n.jpg
+
+47. Bambi (Dog)
+Suggested section: Found Pets
+Description: A shaggy tan dog photographed from behind while walking on tiled flooring.
+Photo: 862226497_1782774009657117_8639393313372566317_n.jpg
+
+48. Cloud (Dog)
+Suggested section: Adoptable Pets
+Description: A fluffy golden retriever puppy sitting on green grass with its mouth open.
+Photo: Adorable Golden Retriever Puppy with a Big Smile – Cute Dog Photo Inspiration.jpg
+Note: Appears identical to photo 50; verify.
+
+49. Goldie (Dog)
+Suggested section: Missing Pets
+Description: A small fluffy white dog sitting outdoors, wearing a light blue neck accessory.
+Photo: Maltese puppy.jpg
+
+50. Fluffy (Dog)
+Suggested section: Found Pets
+Description: A fluffy golden retriever puppy sitting on green grass with its mouth open.
+Photo: Shih Tzu Lovers Club.jpg
+Note: Appears identical to photo 48; verify.
+
+51. Cookie (Dog)
+Suggested section: Adoptable Pets
+Description: A fluffy brown-and-white husky-like puppy sitting on grass with its mouth open.
+Photo: That look when he thinks I’m hiding snacks behind the camera😭💗.jpg
+
+52. Peanut (Dog)
+Suggested section: Missing Pets
+Description: A small white fluffy dog resting on a cushion indoors.
+Photo: cute white fluffy dog.jpg
+
+53. Brownie (Dog)
+Suggested section: Found Pets
+Description: A small white fluffy dog sitting on a rug in front of a door.
+Photo: download (1).jpg
+
+54. Pochi (Dog)
+Suggested section: Adoptable Pets
+Description: A fluffy white spitz-type dog sitting on patterned floor tiles with its tongue out.
+Photo: download (2).jpg
+
+55. Snowy (Dog)
+Suggested section: Missing Pets
+Description: A short-haired golden-brown dog sitting on green grass outdoors.
+Photo: download (3).jpg
+
+56. Kiko (Dog)
+Suggested section: Found Pets
+Description: A small fluffy white dog sitting on wooden flooring with its tongue out.
+Photo: download (4).jpg
+
+57. Puppy (Dog)
+Suggested section: Adoptable Pets
+Description: A small black-and-white fluffy dog with long facial fur, looking up toward the camera.
+Photo: download (5).jpg
+
+58. Archie (Dog)
+Suggested section: Missing Pets
+Description: A fluffy golden puppy sitting on a light tiled floor, looking toward the camera.
+Photo: download.jpg
+
+59. Finn (Dog)
+Suggested section: Found Pets
+Description: A small cream-and-tan fluffy dog outdoors, with its tongue out and greenery in the background.
+Photo: 💛💛.jpg
+

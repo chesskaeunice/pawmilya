@@ -1,0 +1,80 @@
+/* PARTICLE BACKGROUND (floating paw prints) */
+
+.particles {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+  pointer-events: none;
+
+  /* lets particles move using the container's own width and height */
+  container-type: size;
+
+  /* soft fade at the edges so paws do not pop in and out */
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 18%,
+      #000 82%,
+      transparent 100%
+    );
+}
+
+.particles__item {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: var(--p-size);
+  height: var(--p-size);
+
+  opacity: var(--p-opacity);
+
+  animation:
+    particles-rise var(--p-duration) linear infinite;
+
+  animation-delay: var(--p-delay);
+
+  will-change: transform;
+}
+
+.particles__paw {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  fill: var(--p-color);
+
+  /* each paw is turned a little differently */
+  rotate: var(--p-tilt);
+
+  animation:
+    particles-pulse var(--p-pulse-duration) ease-in-out infinite;
+
+  animation-delay: var(--p-pulse-delay);
+}
+
+@keyframes particles-rise {
+  from {
+    transform: translate3d(var(--p-x0), 105cqh, 0);
+  }
+
+  to {
+    transform: translate3d(var(--p-x1), -15cqh, 0);
+  }
+}
+
+@keyframes particles-pulse {
+  0%,
+  100% {
+    transform: scale3d(0.85, 0.85, 1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale3d(1.15, 1.15, 1);
+    opacity: 1;
+  }
+}

@@ -7,7 +7,7 @@ import { sectionLinks, siteInfo } from "../../data/siteInfo.js";
 import { useGoToSection } from "../../hooks/useSectionScroll.js";
 import usePoundInfo from "../../hooks/usePoundInfo.js";
 import DonateInKindModal from "./DonateInKindModal.jsx";
-import donationQr from "../../assets/images/placeholders/donation-qr-placeholder.svg";
+import donationQr from "../../assets/images/bankqr.jpg";
 
 import "./UserFooter.css";
 
@@ -44,7 +44,7 @@ function UserFooter() {
 
           <img
             src={donationQr}
-            alt="Donation QR code (placeholder)"
+            alt="Donation QR code"
             className="site-footer__qr"
             width="120"
             height="120"

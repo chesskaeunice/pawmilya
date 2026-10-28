@@ -68,7 +68,7 @@ class VaccinationController extends Controller
 
     public function update(UpdateVaccinationRequest $request, HealthLog $log): VaccinationResource
     {
-        $data = $request->validated();
+        $data =$request->validated();
 
         // a new vaccine (from the list, or typed): the name stored with the record follows it
         if ($request->changesVaccine()) {

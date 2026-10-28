@@ -164,9 +164,16 @@
 .vaccinations__add-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
 
-  gap: 10px;
+  gap: 12px;
+}
+
+.vaccinations__add-actions .staff-button {
+  min-height: 40px;
+
+  font-size: var(--font-xs);
 }
 
 .vaccinations__readonly {

@@ -20,6 +20,7 @@ class AuthSecurityTest extends TestCase
     {
         $user = new User(['name' => 'Test '.$role, 'email' => $role.'@test.com', 'password' => self::GOOD]);
         $user->role = $role;
+        $user->email_verified_at = now();
         foreach ($extra as $key => $value) {
             $user->{$key} = $value;
         }
@@ -66,7 +67,7 @@ class AuthSecurityTest extends TestCase
         $this->postJson('/api/register', $this->payload([
             'role' => 'kennel_manager', 'is_active' => false, 'is_admin' => true, 'must_change_password' => true,
             'email' => '  ANA@Email.com ', 'first_name' => '  Ana ',
-        ]))->assertCreated()->assertJsonPath('user.role', 'citizen')->assertJsonMissingPath('user.password');
+        ]))->assertCreated()->assertJsonMissingPath('token');
 
         $user = User::where('email', 'ana@email.com')->firstOrFail();
         $this->assertSame('citizen', $user->role);

@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
-  ChevronLeft,
-  ChevronRight,
+  Eye,
   Plus,
   QrCode,
 } from "lucide-react";
@@ -21,6 +20,7 @@ import {
 
 import "./Animals.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import Pagination from "../../../components/common/Pagination.jsx";
 import SafeImage from "../../../components/common/SafeImage.jsx";
 
 const SORTS = {
@@ -94,7 +94,7 @@ function Animals() {
       </div>
 
 
-      <div className="staff-filters">
+      <div className="staff-filters animals__filters">
 
         <input
           type="text"
@@ -220,16 +220,12 @@ function Animals() {
 
 
                 <td>
-                  <div className="staff-table__photo">
-                    {pet.image ? (
-                      <SafeImage type={pet.type}
-                        src={pet.image}
-                        alt={pet.name || "Animal"}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }}
-                      />
-                    ) : (
-                      "Photo"
-                    )}
+                  <div className="staff-table__photo animals__photo">
+                    <SafeImage
+                      type={pet.type}
+                      src={pet.image}
+                      alt={pet.name || "Animal"}
+                    />
                   </div>
                 </td>
 
@@ -237,8 +233,7 @@ function Animals() {
                 <td>
                   <strong>
                     {pet.name || "Unnamed"}
-                  </strong>
-                </td>
+                  </strong>                </td>
 
 
                 <td>
@@ -283,17 +278,18 @@ function Animals() {
 
                     <Link
                       to={`/admin/animals/${pet.id}`}
-                      className="animals__view"
+                      className="staff-button staff-button--outline animals__view"
                     >
+                      <Eye size={14} aria-hidden="true" />
                       View
                     </Link>
 
                     {can("qr.view") && (
                       <Link
                         to={`/admin/animals/${pet.id}/collar-tag`}
-                        className="animals__view"
+                        className="staff-button animals__view animals__view--qr"
                       >
-                        <QrCode size={14} />
+                        <QrCode size={14} aria-hidden="true" />
                         View QR
                       </Link>
                     )}
@@ -318,51 +314,13 @@ function Animals() {
         </table>
 
 
-        <div className="staff-pagination">
-
-          <span>
-            {meta
-              ? `Showing ${meta.from ?? 0}-${meta.to ?? 0} of ${meta.total} animals`
-              : "Loading..."}
-          </span>
-
-
-          <div className="staff-pagination__pages">
-
-            <button
-              type="button"
-              disabled={page <= 1}
-              onClick={() => setPage(page - 1)}
-              aria-label="Previous page"
-            >
-              <ChevronLeft size={12} />
-            </button>
-
-            {Array.from({ length: meta?.last_page ?? 1 }, (_, index) => index + 1).map(
-              (number) => (
-                <button
-                  type="button"
-                  key={number}
-                  className={number === page ? "active" : undefined}
-                  onClick={() => setPage(number)}
-                >
-                  {number}
-                </button>
-              )
-            )}
-
-            <button
-              type="button"
-              disabled={page >= (meta?.last_page ?? 1)}
-              onClick={() => setPage(page + 1)}
-              aria-label="Next page"
-            >
-              <ChevronRight size={12} />
-            </button>
-
-          </div>
-
-        </div>
+        <Pagination
+          summary={meta ? `Showing ${meta.from ?? 0}-${meta.to ?? 0} of ${meta.total} animals` : "Loading..."}
+          currentPage={page}
+          totalPages={meta?.last_page ?? 1}
+          onChange={setPage}
+          label="Animals pages"
+        />
 
       </div>
 

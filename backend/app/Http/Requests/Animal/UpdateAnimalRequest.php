@@ -15,7 +15,6 @@ class UpdateAnimalRequest extends FormRequest
         'species' => ['animals.edit'],
         'breed' => ['animals.edit'],
         'sex' => ['animals.edit'],
-        'age_months' => ['animals.edit'],
         'color' => ['animals.edit'],
         'rescued_at' => ['animals.edit'],
         'personality' => ['animals.edit', 'animals.adoptionUpdate', 'animals.husbandryUpdate'],
@@ -24,6 +23,8 @@ class UpdateAnimalRequest extends FormRequest
         'owner_contact' => ['animals.edit'],
         'status' => ['animals.edit', 'animals.adoptionUpdate', 'animals.healthUpdate'],
         'health_status' => ['animals.edit', 'animals.healthUpdate'],
+        // a health field: vet tech and kennel manager edit it, everyone else only views it
+        'neutered' => ['animals.healthUpdate', 'animals.neuteredUpdate'],
         'location' => ['animals.edit', 'animals.husbandryUpdate'],
         'description' => ['animals.edit', 'animals.adoptionUpdate', 'animals.husbandryUpdate'],
     ];
@@ -89,8 +90,8 @@ class UpdateAnimalRequest extends FormRequest
             'species' => ['sometimes', Rule::in(['Dog', 'Cat', 'Other'])],
             'breed' => ['sometimes', 'required', 'string', 'max:100'],
             'sex' => ['sometimes', Rule::in(['Male', 'Female', 'Unknown'])],
-            'age_months' => ['sometimes', 'integer', 'min:0', 'max:360'],
             'color' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'neutered' => ['sometimes', 'boolean'],
             'location' => ['sometimes', 'required', 'string', 'max:255'],
             'status' => ['sometimes', Rule::in(Animal::STATUSES)],
             'health_status' => ['sometimes', Rule::in(Animal::HEALTH_STATUSES)],

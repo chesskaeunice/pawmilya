@@ -49,7 +49,7 @@ class ReportApiTest extends TestCase
     private function animal(array $override = []): Animal
     {
         return Animal::create(array_merge([
-            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 24,
+            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male',
             'location' => 'Main', 'status' => 'Rescued', 'health_status' => 'Under Observation', 'personality' => ['Calm'],
             'rescued_at' => '2026-10-16',
         ], $override));

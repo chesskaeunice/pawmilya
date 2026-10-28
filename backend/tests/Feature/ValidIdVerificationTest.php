@@ -38,7 +38,7 @@ class ValidIdVerificationTest extends TestCase
     private function animal(): Animal
     {
         return Animal::create([
-            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 24,
+            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male',
             'location' => 'Main Animal Pound', 'status' => 'Available for Adoption', 'health_status' => 'Cleared',
             'description' => 'Friendly dog.', 'personality' => ['Friendly'],
         ]);

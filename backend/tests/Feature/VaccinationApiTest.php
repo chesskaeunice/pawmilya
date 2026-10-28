@@ -44,7 +44,7 @@ class VaccinationApiTest extends TestCase
     private function animal(string $name = 'Milo', string $species = 'Dog'): Animal
     {
         return Animal::create([
-            'name' => $name, 'species' => $species, 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 24,
+            'name' => $name, 'species' => $species, 'breed' => 'Aspin', 'sex' => 'Male',
             'location' => 'Main', 'status' => 'Rescued', 'health_status' => 'Under Observation', 'personality' => ['Calm'],
         ]);
     }

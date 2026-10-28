@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Support\Audit;
+use App\Support\EmailOtpService;
 use App\Support\LoginGuard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -34,7 +35,14 @@ class AuthController extends Controller
 
         Audit::record($request, 'auth.registered', $user, [], $user);
 
-        return $this->tokenResponse($request, $user, 201);
+        // No token yet: the email must be verified with the code that was just sent
+        app(EmailOtpService::class)->send($user);
+
+        return response()->json([
+            'message' => 'Account created. Enter the code we emailed you to verify your email.',
+            'email' => $user->email,
+            'requiresVerification' => true,
+        ], 201);
     }
 
     // Same login for citizens and staff; the role in the response decides where the app goes
@@ -70,6 +78,18 @@ class AuthController extends Controller
         }
 
         $guard->clear();
+
+        // A citizen must verify the email first (staff accounts are created verified)
+        if (! $user->isStaff() && ! $user->email_verified_at) {
+            app(EmailOtpService::class)->send($user);
+
+            return response()->json([
+                'message' => 'Please verify your email. We sent you a code.',
+                'code' => 'email_not_verified',
+                'email' => $user->email,
+            ], 403);
+        }
+
         Audit::record($request, 'auth.login', $user, [], $user);
 
         return $this->tokenResponse($request, $user);

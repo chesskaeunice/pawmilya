@@ -35,18 +35,19 @@ class AuthTest extends TestCase
         ], $override);
     }
 
-    public function test_register_creates_a_citizen_and_returns_a_token(): void
+    public function test_register_creates_an_unverified_citizen_and_returns_no_token(): void
     {
         $response = $this->postJson('/api/register', $this->registerPayload());
 
-        $response->assertCreated()->assertJsonPath('user.role', 'citizen')->assertJsonStructure(['token']);
-        $this->assertDatabaseHas('users', ['email' => 'ana@email.com', 'role' => 'citizen']);
+        $response->assertCreated()->assertJsonPath('requiresVerification', true)->assertJsonMissingPath('token');
+        $this->assertDatabaseHas('users', ['email' => 'ana@email.com', 'role' => 'citizen', 'email_verified_at' => null]);
     }
 
     public function test_register_cannot_choose_a_role(): void
     {
         $this->postJson('/api/register', $this->registerPayload(['role' => 'kennel_manager']))
-            ->assertCreated()->assertJsonPath('user.role', 'citizen');
+            ->assertCreated();
+        $this->assertSame('citizen', User::where('email', 'ana@email.com')->value('role'));
     }
 
     public function test_register_validates_input(): void

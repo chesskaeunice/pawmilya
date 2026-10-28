@@ -4,8 +4,6 @@ import { useSearchParams } from "react-router-dom";
 import {
   Check,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   Pencil,
   Plus,
   Trash2,
@@ -27,6 +25,7 @@ import { formatApiError } from "../../../services/authService.js";
 
 import "./Vaccinations.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import Pagination from "../../../components/common/Pagination.jsx";
 import FieldError from "../../../components/common/FieldError.jsx";
 
 /* ---------- constants ---------- */
@@ -847,6 +846,10 @@ function Vaccinations() {
               const isOpen = openIds.has(group.petId);
               const panelId = `vaccines-of-${group.petId}`;
 
+              // one record is shown right in the row; two or more can be expanded
+              const hasSeveral = group.records.length >= 2;
+              const onlyRecord = group.records[0];
+
               return (
                 <Fragment key={group.petId}>
                   <tr className={isOpen ? "vaccinations__animal vaccinations__animal--open" : "vaccinations__animal"}>
@@ -861,7 +864,9 @@ function Vaccinations() {
                       {group.petBreed ? ` · ${group.petBreed}` : ""}
                     </td>
 
-                    <td>{group.records.length}</td>
+                    <td>
+                      {group.records.length} {group.records.length === 1 ? "vaccine" : "vaccines"}
+                    </td>
 
                     <td>
                       {group.latest.vaccine}
@@ -878,16 +883,32 @@ function Vaccinations() {
 
                     <td>
                       <div className="vaccinations__actions">
-                        <button
-                          type="button"
-                          className="vaccinations__action"
-                          onClick={() => toggleOpen(group.petId)}
-                          aria-expanded={isOpen}
-                          aria-controls={panelId}
-                        >
-                          View vaccines
-                          <ChevronDown size={14} className="vaccinations__chevron" aria-hidden="true" />
-                        </button>
+                        {hasSeveral && (
+                          <button
+                            type="button"
+                            className="vaccinations__action"
+                            onClick={() => toggleOpen(group.petId)}
+                            aria-expanded={isOpen}
+                            aria-controls={panelId}
+                          >
+                            View vaccines
+                            <ChevronDown size={14} className="vaccinations__chevron" aria-hidden="true" />
+                          </button>
+                        )}
+
+                        {!hasSeveral && canEdit && (
+                          <button type="button" className="vaccinations__action" onClick={() => openEdit(onlyRecord)}>
+                            <Pencil size={14} />
+                            Edit
+                          </button>
+                        )}
+
+                        {!hasSeveral && canDelete && (
+                          <button type="button" className="vaccinations__action vaccinations__action--danger" onClick={() => setDeleting(onlyRecord)}>
+                            <Trash2 size={14} />
+                            Delete
+                          </button>
+                        )}
 
                         {canCreate && (
                           <button
@@ -903,7 +924,8 @@ function Vaccinations() {
                     </td>
                   </tr>
 
-                  {/* every vaccine given to this animal, newest first */}
+                  {/* every vaccine given to this animal, newest first (only for animals with 2 or more) */}
+                  {hasSeveral && (
                   <tr className="vaccinations__detail-row">
                     <td colSpan={8}>
                       <div
@@ -981,6 +1003,7 @@ function Vaccinations() {
                       </div>
                     </td>
                   </tr>
+                  )}
                 </Fragment>
               );
             })}
@@ -1004,45 +1027,17 @@ function Vaccinations() {
           </tbody>
         </table>
 
-        <div className="staff-pagination">
-          <span>
-            {filteredGroups.length === 0
+        <Pagination
+          summary={
+            filteredGroups.length === 0
               ? "Showing 0 animals"
-              : `Showing ${startIndex + 1}-${startIndex + pageGroups.length} of ${filteredGroups.length} animals`}
-          </span>
-
-          <div className="staff-pagination__pages">
-            <button
-              type="button"
-              aria-label="Previous page"
-              disabled={currentPage === 1}
-              onClick={() => setPage(currentPage - 1)}
-            >
-              <ChevronLeft size={12} />
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-              <button
-                type="button"
-                key={n}
-                className={n === currentPage ? "active" : ""}
-                aria-current={n === currentPage ? "page" : undefined}
-                onClick={() => setPage(n)}
-              >
-                {n}
-              </button>
-            ))}
-
-            <button
-              type="button"
-              aria-label="Next page"
-              disabled={currentPage === totalPages}
-              onClick={() => setPage(currentPage + 1)}
-            >
-              <ChevronRight size={12} />
-            </button>
-          </div>
-        </div>
+              : `Showing ${startIndex + 1}-${startIndex + pageGroups.length} of ${filteredGroups.length} animals`
+          }
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onChange={setPage}
+          label="Vaccinations pages"
+        />
       </div>
 
       {/* Edit modal */}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\UpdateAddressRequest;
 use App\Http\Requests\Auth\UpdateAvatarRequest;
 use App\Http\Requests\Auth\UpdateEmailRequest;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Support\Audit;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -15,6 +16,21 @@ use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
+    // Full name and phone number of the logged-in user (citizen or staff). Returns the updated user like /api/me.
+    public function update(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        $before = $user->only(['name', 'phone']);
+
+        $user->forceFill($request->validated())->save();
+
+        if ($user->wasChanged(['name', 'phone'])) {
+            Audit::record($request, 'profile.updated', $user, ['from' => $before]);
+        }
+
+        return response()->json(['user' => (new UserResource($user))->resolve()]);
+    }
+
     // Returns the updated user in the same shape as /api/me, so the app can use it right away
     public function updateEmail(UpdateEmailRequest $request): JsonResponse
     {

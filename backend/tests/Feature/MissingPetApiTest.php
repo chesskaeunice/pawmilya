@@ -48,7 +48,7 @@ class MissingPetApiTest extends TestCase
         return array_merge([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
             'location' => 'Katipunan, Quezon City', 'last_seen_at' => '2026-10-18 01:15:00',
-            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'reporter_type' => 'Citizen',
+            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'contact_email' => 'reporter@example.com', 'reporter_type' => 'Citizen',
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
         ], $override);
@@ -63,7 +63,7 @@ class MissingPetApiTest extends TestCase
     {
         $report = new MissingPetReport(array_merge([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray', 'sex' => 'Unknown',
-            'location' => 'Katipunan', 'last_seen_at' => '2026-10-18 01:15:00', 'contact_name' => 'A', 'contact_number' => '0919 555 0166',
+            'location' => 'Katipunan', 'last_seen_at' => '2026-10-18 01:15:00', 'contact_name' => 'A', 'contact_number' => '0919 555 0166', 'contact_email' => 'reporter@example.com',
         ], $override));
         $report->status = $override['status'] ?? 'Lost';
         $report->fingerprint = $override['fingerprint'] ?? sha1(uniqid('', true));
@@ -164,13 +164,22 @@ class MissingPetApiTest extends TestCase
         Storage::fake('public');
 
         $this->report(['pet_images' => [$this->png()]])->assertUnprocessable()->assertJsonValidationErrors(['pet_images']);
-        $this->report(['last_seen_images' => []])->assertUnprocessable()->assertJsonValidationErrors(['last_seen_images']);
         $this->report(['status' => 'Reunited'])->assertUnprocessable()->assertJsonValidationErrors(['status']);
         $this->report(['status' => 'Sighted'])->assertUnprocessable()->assertJsonValidationErrors(['status']);
         $this->report(['status' => 'Found'])->assertUnprocessable()->assertJsonValidationErrors(['status']);
         $this->report(['last_seen_at' => now()->addDay()->toDateTimeString()])->assertUnprocessable()->assertJsonValidationErrors(['last_seen_at']);
         $this->report(['species' => 'Other'])->assertUnprocessable()->assertJsonValidationErrors(['other_species']);
         $this->assertDatabaseCount('missing_pet_reports', 0);
+    }
+
+    public function test_last_seen_images_are_optional_but_must_be_images_when_sent(): void
+    {
+        Storage::fake('public');
+
+        $this->report(['last_seen_images' => []])->assertCreated()->assertJsonPath('data.lastSeenImages', []);
+
+        $pdf = UploadedFile::fake()->create('area.pdf', 10, 'application/pdf');
+        $this->report(['name' => 'Otis', 'last_seen_images' => [$pdf]])->assertUnprocessable()->assertJsonValidationErrors(['last_seen_images.0']);
     }
 
     public function test_other_species_is_shown_by_its_own_name(): void

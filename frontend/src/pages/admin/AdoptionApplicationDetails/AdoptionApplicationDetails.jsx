@@ -1030,10 +1030,6 @@ Reason (shown to the applicant, optional):`
                   {
                     application.petType
                   }
-                  {" · "}
-                  {
-                    application.petAge
-                  }
                 </span>
 
 

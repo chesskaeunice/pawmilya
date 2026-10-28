@@ -47,7 +47,7 @@ class RegisterAnimalFromReportTest extends TestCase
         $report = new MissingPetReport(array_merge([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Orange', 'sex' => 'Female',
             'location' => 'Hidalgo Street, Barangay 306, Quiapo, Manila', 'last_seen_at' => '2026-10-20 08:00:00',
-            'details' => 'Wears a red collar.', 'contact_name' => 'Maria Santos', 'contact_number' => '0917 123 4567',
+            'details' => 'Wears a red collar.', 'contact_name' => 'Maria Santos', 'contact_number' => '0917 123 4567', 'contact_email' => 'reporter@example.com',
         ], $override));
         $report->status = $status;
         $report->fingerprint = sha1(uniqid('', true));
@@ -84,7 +84,6 @@ class RegisterAnimalFromReportTest extends TestCase
             $this->assertSame('Orange', $animal->color);
             $this->assertSame('Hidalgo Street, Barangay 306, Quiapo, Manila', $animal->location);
             $this->assertSame('Wears a red collar.', $animal->description);
-            $this->assertNull($animal->age_months);
 
             // a new stray in the pound
             $this->assertSame('Rescued', $animal->status);

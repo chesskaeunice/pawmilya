@@ -69,7 +69,7 @@ class MissingPetPublicVisibilityTest extends TestCase
         $this->as($citizen)->post('/api/missing-pets', [
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
             'location' => 'Katipunan, Quezon City', 'last_seen_at' => '2026-10-30 01:15:00',
-            'details' => 'Friendly.', 'reporter_type' => 'Citizen',
+            'details' => 'Friendly.', 'reporter_type' => 'Citizen', 'contact_email' => 'reporter@example.com',
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
         ], ['Accept' => 'application/json'])->assertCreated();

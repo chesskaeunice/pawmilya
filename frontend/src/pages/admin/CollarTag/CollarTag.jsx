@@ -64,29 +64,33 @@ function CollarTag() {
 
         <BackButton fallback={`/admin/animals/${animal.id}`} />
 
-        <label>
-          Copies
-          <select
-            value={copies}
-            onChange={(event) => setCopies(Number(event.target.value))}
-          >
-            {COPY_OPTIONS.map((count) => (
-              <option key={count} value={count}>
-                {count}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="collar-page__actions">
 
-        <button type="button" className="staff-button staff-button--outline" onClick={downloadQr} disabled={!qrSvg}>
-          <Download size={13} />
-          Download QR (SVG)
-        </button>
+          <label>
+            Copies
+            <select
+              value={copies}
+              onChange={(event) => setCopies(Number(event.target.value))}
+            >
+              {COPY_OPTIONS.map((count) => (
+                <option key={count} value={count}>
+                  {count}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        <button type="button" className="staff-button" onClick={() => window.print()} disabled={!qrSvg}>
-          <Printer size={13} />
-          Print Tag
-        </button>
+          <button type="button" className="staff-button staff-button--outline" onClick={downloadQr} disabled={!qrSvg}>
+            <Download size={13} />
+            Download QR (SVG)
+          </button>
+
+          <button type="button" className="staff-button" onClick={() => window.print()} disabled={!qrSvg}>
+            <Printer size={13} />
+            Print Tag
+          </button>
+
+        </div>
 
       </div>
 

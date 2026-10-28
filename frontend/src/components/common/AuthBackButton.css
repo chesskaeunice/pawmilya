@@ -1,0 +1,59 @@
+/* Sits in the top padding of the page, on the left edge of the content, so nothing moves */
+.auth-back {
+  position: absolute;
+  top: 18px;
+  left: max(20px, calc((100% - 1100px) / 2));
+  z-index: 1;
+
+  width: 44px;
+  height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 2px solid var(--color-gold);
+  border-radius: 50%;
+
+  background-color: var(--color-cream);
+  color: var(--color-brown);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.auth-back:hover {
+  background-color: var(--color-gold);
+
+  transform: translateX(-2px);
+}
+
+.auth-back:focus-visible {
+  outline: 3px solid var(--color-brown);
+  outline-offset: 2px;
+}
+
+/* Above the welcome text, on its left edge, 20px clear of it; out of the flow so nothing moves */
+.auth-back--intro {
+  top: -64px;
+  left: 0;
+}
+
+@media (max-width: 600px) {
+  .auth-back {
+    top: 2px;
+  }
+
+  /* the columns stack on a phone: the button takes its own row above the text */
+  .auth-back--intro {
+    position: static;
+
+    margin-bottom: 18px;
+  }
+}

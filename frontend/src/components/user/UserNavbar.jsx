@@ -5,6 +5,7 @@ import { LogOut, Settings, User } from "lucide-react";
 import { sectionLinks, siteInfo } from "../../data/siteInfo.js";
 import useActiveSection from "../../hooks/useActiveSection.js";
 import useAuth from "../../hooks/useAuth.js";
+import websiteLogo from "../../assets/images/logo.js";
 import { useGoToSection } from "../../hooks/useSectionScroll.js";
 
 import "./UserNavbar.css";
@@ -132,13 +133,11 @@ function UserNavbar() {
           className="user-navbar__brand"
           onClick={(event) => handleLinkClick(event, sectionLinks[0])}
         >
-          <span className="user-navbar__logo">
-            P
-          </span>
-
-          <span>
-            {siteInfo.brandName}
-          </span>
+          <img
+            src={websiteLogo}
+            alt={siteInfo.brandName}
+            className="user-navbar__logo"
+          />
         </Link>
 
 

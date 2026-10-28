@@ -15,9 +15,11 @@ import {
   loginRequest,
   logoutRequest,
   registerRequest,
+  verifyEmailRequest,
   removeAvatarRequest,
   updateAddressRequest,
   updateEmailRequest,
+  updateProfileRequest,
   uploadAvatarRequest,
 } from "../services/authService.js";
 
@@ -45,9 +47,20 @@ export function AuthProvider({ children }) {
     return next;
   }, []);
 
-  const register = useCallback(async (payload) => {
-    const next = await registerRequest(payload);
+  // Sign up only creates the account; the person is logged in by verifyEmail (the emailed code)
+  const register = useCallback((payload) => registerRequest(payload), []);
+
+  const verifyEmail = useCallback(async (email, code) => {
+    const next = await verifyEmailRequest(email, code);
     setLoggedOutByUser(false);
+    setUser(next);
+    return next;
+  }, []);
+
+  // Full name and phone number: throws an Axios error on failure (422 with the field errors);
+  // the new name is in `user` at once (navbar, staff sidebar and header, My Account)
+  const updateProfile = useCallback(async (profile) => {
+    const next = await updateProfileRequest(profile);
     setUser(next);
     return next;
   }, []);
@@ -104,6 +117,8 @@ export function AuthProvider({ children }) {
       can: (permission) => hasPermission(role, permission),
       login,
       register,
+      verifyEmail,
+      updateProfile,
       updateEmail,
       updateAddress,
       uploadAvatar,
@@ -112,7 +127,7 @@ export function AuthProvider({ children }) {
       logout,
     };
   }, [
-    user, loading, loggedOutByUser, login, register, updateEmail, updateAddress, uploadAvatar, removeAvatar,
+    user, loading, loggedOutByUser, login, register, verifyEmail, updateProfile, updateEmail, updateAddress, uploadAvatar, removeAvatar,
     changePassword, logout,
   ]);
 

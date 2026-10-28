@@ -9,8 +9,6 @@ import {
 } from "react-router-dom";
 
 import {
-  ChevronLeft,
-  ChevronRight,
   Search,
 } from "lucide-react";
 
@@ -19,6 +17,7 @@ import { listStaffReports } from "../../../services/missingPetService.js";
 
 import "./MissingPetReports.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import Pagination from "../../../components/common/Pagination.jsx";
 import SafeImage from "../../../components/common/SafeImage.jsx";
 import { reportStatusLabel } from "../../../utils/reportStatusLabel.js";
 
@@ -516,7 +515,6 @@ function MissingPetReports() {
                             <strong>
                               {pet.name}
                             </strong>
-
                             <span>
                               {pet.breed || "Breed not given"}
                             </span>
@@ -617,100 +615,17 @@ function MissingPetReports() {
             NUMBERED PAGINATION
         ====================================== */}
 
-        <div className="missing-admin__pagination">
-
-          <span>
-
-            {filteredPets.length > 0
-              ? `Showing ${
-                  startIndex + 1
-                }-${endIndex} of ${
-                  filteredPets.length
-                } reports`
-              : "Showing 0 reports"}
-
-          </span>
-
-
-          <div className="missing-admin__pages">
-
-            <button
-              type="button"
-              disabled={
-                currentPage === 1
-              }
-              onClick={() =>
-                setCurrentPage(
-                  (page) =>
-                    Math.max(
-                      1,
-                      page - 1
-                    )
-                )
-              }
-              aria-label="Previous page"
-            >
-              <ChevronLeft
-                size={14}
-              />
-            </button>
-
-
-            {Array.from(
-              {
-                length:
-                  totalPages,
-              },
-              (_, index) =>
-                index + 1
-            ).map((page) => (
-
-              <button
-                type="button"
-                key={page}
-                className={
-                  currentPage ===
-                  page
-                    ? "active"
-                    : ""
-                }
-                onClick={() =>
-                  setCurrentPage(
-                    page
-                  )
-                }
-              >
-                {page}
-              </button>
-
-            ))}
-
-
-            <button
-              type="button"
-              disabled={
-                currentPage ===
-                totalPages
-              }
-              onClick={() =>
-                setCurrentPage(
-                  (page) =>
-                    Math.min(
-                      totalPages,
-                      page + 1
-                    )
-                )
-              }
-              aria-label="Next page"
-            >
-              <ChevronRight
-                size={14}
-              />
-            </button>
-
-          </div>
-
-        </div>
+        <Pagination
+          summary={
+            filteredPets.length > 0
+              ? `Showing ${startIndex + 1}-${endIndex} of ${filteredPets.length} reports`
+              : "Showing 0 reports"
+          }
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onChange={setCurrentPage}
+          label="Missing pet report pages"
+        />
 
       </div>
 

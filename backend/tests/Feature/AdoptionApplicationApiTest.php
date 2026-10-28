@@ -36,7 +36,7 @@ class AdoptionApplicationApiTest extends TestCase
     private function animal(array $override = []): Animal
     {
         return Animal::create(array_merge([
-            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 24,
+            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male',
             'location' => 'Main Animal Pound', 'status' => 'Available for Adoption', 'health_status' => 'Cleared',
             'description' => 'Friendly dog.', 'personality' => ['Friendly'],
         ], $override));
@@ -352,7 +352,7 @@ class AdoptionApplicationApiTest extends TestCase
 
         // nothing private: no reviewer, files, other personal data, or anybody else's number
         $row = $response->json('data.0');
-        foreach (['reviewedBy', 'reviewedAt', 'validId', 'valid_id_path', 'homePhotos', 'email', 'address', 'birthDate', 'whyAdopt', 'howCare', 'petAge'] as $private) {
+        foreach (['reviewedBy', 'reviewedAt', 'validId', 'valid_id_path', 'homePhotos', 'email', 'address', 'birthDate', 'whyAdopt', 'howCare'] as $private) {
             $this->assertArrayNotHasKey($private, $row);
         }
         $this->assertStringNotContainsString('0999 111 2222', $response->getContent());

@@ -45,7 +45,7 @@ function EditAnimal() {
 
   if (loading) {
     return (
-      <div className="staff-page">
+      <div className="staff-page edit-animal">
       <BackButton fallback="/admin/animals" />
 
         <p>Loading...</p>
@@ -166,6 +166,11 @@ function EditAnimalForm({ pet }) {
     can("animals.edit") ||
     can("animals.healthUpdate");
 
+  // Spayed / Neutered is a health field: Vet Tech and Kennel Manager edit it, the others only see it
+  const canEditNeutered =
+    can("animals.healthUpdate") ||
+    can("animals.neuteredUpdate");
+
   // Kennel location: Pound Staff only
   const canEditLocation =
     can("animals.edit") ||
@@ -222,7 +227,7 @@ function EditAnimalForm({ pet }) {
       </div>
 
 
-      <section className="staff-form__section">
+      <section className="staff-form__section edit-photos">
         <div className="staff-form__section-header">
           <h2>{canManagePhotos ? "Photos" : "Main Photo"}</h2>
           <p>
@@ -233,53 +238,72 @@ function EditAnimalForm({ pet }) {
         </div>
 
         {canManagePhotos ? (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+          <ul className="edit-photos__grid">
             {photos.map((item, index) => (
-              <div key={item.id} style={{ width: 150 }}>
-                <SafeImage
-                  src={item.url}
-                  alt={`${index === 0 ? "Main photo" : `Photo ${index + 1}`} of ${petName}`}
-                  style={{ width: "100%", height: 110, objectFit: "cover", borderRadius: 12 }}
-                />
+              <li key={item.id} className="edit-photos__card">
+                <div className="edit-photos__image">
+                  <SafeImage
+                    src={item.url}
+                    alt={`${index === 0 ? "Main photo" : `Photo ${index + 1}`} of ${petName}`}
+                  />
+                </div>
 
-                <p style={{ margin: "4px 0" }}>{index === 0 ? "Main photo" : `Photo ${index + 1}`}</p>
+                <div className="edit-photos__meta">
+                  <span className={index === 0 ? "edit-photos__label edit-photos__label--main" : "edit-photos__label"}>
+                    {index === 0 ? "Main photo" : `Photo ${index + 1}`}
+                  </span>
 
-                <button
-                  type="button"
-                  className="staff-button staff-button--outline"
-                  disabled={photos.length <= MIN_PHOTOS}
-                  title={photos.length <= MIN_PHOTOS ? `Keep at least ${MIN_PHOTOS} photos` : "Remove this photo"}
-                  onClick={() => removePhoto(item.id)}
-                >
-                  Remove
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    className="staff-button staff-button--outline edit-photos__remove"
+                    disabled={photos.length <= MIN_PHOTOS}
+                    title={photos.length <= MIN_PHOTOS ? `Keep at least ${MIN_PHOTOS} photos` : "Remove this photo"}
+                    onClick={() => removePhoto(item.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </li>
             ))}
-          </div>
+          </ul>
         ) : (
           photo && (
-            <SafeImage src={photo} alt={`Main photo of ${petName}`} style={{ maxWidth: 180, borderRadius: 12 }} />
+            <div className="edit-photos__grid">
+              <div className="edit-photos__card">
+                <div className="edit-photos__image">
+                  <SafeImage src={photo} alt={`Main photo of ${petName}`} />
+                </div>
+              </div>
+            </div>
           )
         )}
 
-        <label>
-          Replace main photo
-          <input type="file" accept="image/jpeg,image/png,image/webp" onChange={changePhoto} />
-        </label>
-
-        {canManagePhotos && (
-          <label>
-            Add a photo {photos.length >= MAX_PHOTOS && `(maximum of ${MAX_PHOTOS} reached)`}
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              onChange={addPhoto}
-              disabled={photos.length >= MAX_PHOTOS}
-            />
+        <div className="edit-photos__controls">
+          <label className="edit-photos__upload">
+            <span className="edit-photos__upload-title">Replace main photo</span>
+            <span className="edit-photos__upload-hint">Swaps the first photo. JPG, PNG or WebP, up to 5 MB.</span>
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={changePhoto} />
           </label>
-        )}
 
-        {photoMessage && <p role="status">{photoMessage}</p>}
+          {canManagePhotos && (
+            <label className="edit-photos__upload">
+              <span className="edit-photos__upload-title">Add a photo</span>
+              <span className="edit-photos__upload-hint">
+                {photos.length >= MAX_PHOTOS
+                  ? `Maximum of ${MAX_PHOTOS} photos reached.`
+                  : "Adds one more photo. JPG, PNG or WebP, up to 5 MB."}
+              </span>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={addPhoto}
+                disabled={photos.length >= MAX_PHOTOS}
+              />
+            </label>
+          )}
+        </div>
+
+        {photoMessage && <p role="status" className="edit-photos__status">{photoMessage}</p>}
       </section>
 
 
@@ -422,6 +446,22 @@ function EditAnimalForm({ pet }) {
                 {HEALTH_STATUSES.map((value) => (
                   <option key={value}>{value}</option>
                 ))}
+              </select>
+            </Field>
+
+            <Field
+              label="Spayed / Neutered"
+              htmlFor="neutered"
+              locked={!canEditNeutered}
+            >
+              <select
+                id="neutered"
+                name="neutered"
+                defaultValue={pet.neutered ? "1" : "0"}
+                disabled={!canEditNeutered}
+              >
+                <option value="0">No</option>
+                <option value="1">Yes</option>
               </select>
             </Field>
 

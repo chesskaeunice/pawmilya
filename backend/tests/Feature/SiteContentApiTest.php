@@ -36,7 +36,7 @@ class SiteContentApiTest extends TestCase
     private function animal(array $override = []): Animal
     {
         return Animal::create(array_merge([
-            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 24,
+            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male',
             'location' => 'Main Animal Pound', 'status' => 'Rescued', 'health_status' => 'Under Observation',
             'description' => 'Friendly dog.', 'personality' => ['Friendly'],
         ], $override));

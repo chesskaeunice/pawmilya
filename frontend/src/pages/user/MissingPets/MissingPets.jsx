@@ -7,7 +7,6 @@ import {
 import { Link } from "react-router-dom";
 
 import {
-  ChevronLeft,
   ChevronRight,
   Filter,
   RotateCcw,
@@ -32,6 +31,7 @@ import missingPetsHero from "../../../assets/images/users/missing-pets/missing-p
 
 import "./MissingPets.css";
 import BackButton from "../../../components/common/BackButton.jsx";
+import Pagination from "../../../components/common/Pagination.jsx";
 import SafeImage from "../../../components/common/SafeImage.jsx";
 
 
@@ -1027,101 +1027,12 @@ function MissingPets() {
             PAGINATION
         ====================================== */}
 
-        {totalPages > 1 && (
-
-          <nav
-            className="missing-pets__pagination"
-            aria-label="Missing pet pages"
-          >
-
-            {/* PREVIOUS */}
-
-            <button
-              type="button"
-              className="missing-pets__page-arrow"
-              disabled={
-                currentPage === 1
-              }
-              onClick={() =>
-                setCurrentPage(
-                  (page) =>
-                    Math.max(
-                      1,
-                      page - 1
-                    )
-                )
-              }
-            >
-              <ChevronLeft size={15} />
-
-              Previous
-            </button>
-
-
-            {/* PAGE NUMBERS */}
-
-            <div className="missing-pets__page-numbers">
-
-              {Array.from(
-                {
-                  length:
-                    totalPages,
-                },
-                (_, index) =>
-                  index + 1
-              ).map((page) => (
-
-                <button
-                  type="button"
-                  key={page}
-                  className={
-                    currentPage === page
-                      ? "missing-pets__page-number missing-pets__page-number--active"
-                      : "missing-pets__page-number"
-                  }
-                  onClick={() =>
-                    setCurrentPage(
-                      page
-                    )
-                  }
-                >
-                  {page}
-                </button>
-
-              ))}
-
-            </div>
-
-
-            {/* NEXT */}
-
-            <button
-              type="button"
-              className="missing-pets__page-arrow"
-              disabled={
-                currentPage ===
-                totalPages
-              }
-              onClick={() =>
-                setCurrentPage(
-                  (page) =>
-                    Math.min(
-                      totalPages,
-                      page + 1
-                    )
-                )
-              }
-            >
-              Next
-
-              <ChevronRight
-                size={15}
-              />
-            </button>
-
-          </nav>
-
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onChange={setCurrentPage}
+          label="Missing pet pages"
+        />
 
       </section>
 

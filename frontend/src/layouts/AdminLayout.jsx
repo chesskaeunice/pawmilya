@@ -128,6 +128,8 @@ function AdminLayout() {
           collapsed={collapsed && !isPhone}
           hidden={isPhone && !drawerOpen}
           onNavigate={closeDrawer}
+          expanded={isPhone ? drawerOpen : !collapsed}
+          onToggleMenu={toggle}
         />
 
         {drawerOpen && (

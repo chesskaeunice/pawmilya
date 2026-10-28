@@ -24,12 +24,12 @@ import {
 import "./Settings.css";
 import BackButton from "../../../components/common/BackButton.jsx";
 import PoundInfoForm from "./PoundInfoForm.jsx";
+import AccountForm from "../../../components/common/AccountForm/AccountForm.jsx";
 
 
 function Settings() {
   const {
     user,
-    roleLabel,
     can,
   } = useAuth();
 
@@ -141,53 +141,7 @@ function Settings() {
           MY ACCOUNT (ALL ROLES)
       ====================================== */}
 
-      <section className="settings__grid">
-        <div className="staff-detail-card">
-          <h2 className="staff-detail-card__title">
-            My Account
-          </h2>
-
-          <div className="settings__fields">
-            <label>
-              Full Name
-              <input
-                defaultValue={user.name}
-              />
-            </label>
-
-            <label>
-              Email Address
-              <input
-                type="email"
-                defaultValue={user.email}
-              />
-            </label>
-
-            <label>
-              Role
-              <input
-                value={roleLabel}
-                readOnly
-                disabled
-              />
-            </label>
-
-            <label>
-              Contact Number
-              <input
-                placeholder="Contact number"
-              />
-            </label>
-          </div>
-        </div>
-      </section>
-
-      <div className="settings__actions">
-        <button className="staff-button">
-          <Save size={13} />
-          Save My Account
-        </button>
-      </div>
+      <AccountForm />
 
 
       {/* =====================================

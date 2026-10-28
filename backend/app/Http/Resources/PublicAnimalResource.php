@@ -18,7 +18,6 @@ class PublicAnimalResource extends JsonResource
             'type' => $this->species,
             'breed' => $this->breed,
             'sex' => $this->sex,
-            'ageLabel' => $this->ageLabel(),
             'location' => $this->location,
             'status' => $this->status,
             'personality' => $this->personality ?? [],

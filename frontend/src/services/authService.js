@@ -32,6 +32,12 @@ export async function loginRequest(email, password) {
   return data.user;
 }
 
+// My Account: the logged-in user's full name and phone number { name, phone } (returns the updated user)
+export async function updateProfileRequest(profile) {
+  const { data } = await api.patch("/api/profile", profile);
+  return data.user;
+}
+
 // Profile page: change the logged-in user's email (returns the updated user)
 export async function updateEmailRequest(email) {
   const { data } = await api.patch("/api/profile/email", { email });
@@ -58,10 +64,21 @@ export async function removeAvatarRequest() {
   return data.user;
 }
 
+// Creates an unverified citizen: no token yet, the email must be verified with the emailed code
 export async function registerRequest(payload) {
   const { data } = await api.post("/api/register", payload);
+  return data;
+}
+
+// A right code verifies the email and signs the person in (returns the user)
+export async function verifyEmailRequest(email, code) {
+  const { data } = await api.post("/api/email/otp/verify", { email, code });
   storeToken(data.token);
   return data.user;
+}
+
+export async function resendEmailCodeRequest(email) {
+  await api.post("/api/email/otp/resend", { email });
 }
 
 export async function logoutRequest() {

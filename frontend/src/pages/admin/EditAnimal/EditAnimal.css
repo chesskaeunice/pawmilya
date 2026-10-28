@@ -49,7 +49,7 @@
 
   color: var(--color-muted);
 
-  font-size: 12px;
+  font-size: 13px;
 }
 
 
@@ -168,7 +168,7 @@
 
   color: #6f6252;
 
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -213,4 +213,222 @@
   color: #a12a2a;
 
   font-size: var(--font-xs);
+}
+
+
+/* =========================================
+   PHOTOS (same card, dashed upload boxes and gold badge as Add Animal)
+========================================= */
+
+/* nothing on this page may be wider than the content area */
+.edit-animal {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.edit-photos {
+  max-width: 860px;
+  box-sizing: border-box;
+
+  margin-bottom: 20px;
+
+  background: white;
+
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+}
+
+.edit-photos__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+
+  margin: 0 0 20px;
+  padding: 0;
+
+  list-style: none;
+}
+
+.edit-photos__card {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  background: #fffdf9;
+}
+
+.edit-photos__image {
+  aspect-ratio: 4 / 3;
+
+  overflow: hidden;
+
+  background: #faf7f1;
+}
+
+.edit-photos__image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.edit-photos__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding: 10px;
+}
+
+.edit-photos__label {
+  padding: 3px 10px;
+
+  border-radius: 999px;
+
+  background: #f0ebe3;
+  color: var(--color-brown);
+
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.edit-photos__label--main {
+  background: #f5a800;
+}
+
+.edit-photos .edit-photos__remove {
+  min-height: 34px;
+
+  padding: 0 12px;
+
+  font-size: 13px;
+}
+
+.edit-photos .edit-photos__remove:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+}
+
+.edit-photos__controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.edit-photos__upload {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  padding: 14px;
+
+  border: 1px dashed var(--color-border);
+  border-radius: 12px;
+
+  background: #faf7f1;
+}
+
+.edit-photos__upload-title {
+  color: var(--color-brown);
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.edit-photos__upload-hint {
+  color: var(--color-muted);
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.edit-photos__upload input[type="file"] {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-top: 4px;
+  padding: 8px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  background: white;
+  color: var(--color-text);
+
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.edit-photos__upload input[type="file"]::file-selector-button {
+  margin-right: 10px;
+  padding: 7px 14px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: var(--color-gold);
+  color: var(--color-brown);
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.edit-photos__upload input[type="file"]:disabled {
+  background: #f6f2ea;
+
+  cursor: not-allowed;
+}
+
+.edit-photos__upload input[type="file"]:disabled::file-selector-button {
+  background: #e4dccd;
+  color: var(--color-muted);
+
+  cursor: not-allowed;
+}
+
+.edit-photos__upload input[type="file"]:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+.edit-photos__status {
+  margin: 14px 0 0;
+
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  background: #fffaf2;
+  color: var(--color-brown);
+
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .edit-photos__controls {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-photos__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

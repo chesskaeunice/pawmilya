@@ -34,7 +34,7 @@ class RbacMatrixTest extends TestCase
     private function animal(): Animal
     {
         return Animal::create([
-            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 24,
+            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male',
             'location' => 'Kennel A', 'status' => 'Rescued', 'health_status' => 'Under Observation',
             'description' => 'Friendly.', 'personality' => ['Friendly'],
         ]);
@@ -88,7 +88,7 @@ class RbacMatrixTest extends TestCase
         $animal = $this->animal();
 
         foreach (['kennel_manager', 'adoption_counselor', 'vet_tech'] as $role) {
-            foreach (['name' => 'X', 'species' => 'Cat', 'breed' => 'Y', 'sex' => 'Female', 'age_months' => 5, 'color' => 'Red', 'rescued_at' => '2026-01-01'] as $field => $value) {
+            foreach (['name' => 'X', 'species' => 'Cat', 'breed' => 'Y', 'sex' => 'Female', 'color' => 'Red', 'rescued_at' => '2026-01-01'] as $field => $value) {
                 $this->as($role)->patchJson("/api/animals/{$animal->id}", [$field => $value])->assertForbidden();
             }
         }
@@ -180,7 +180,7 @@ class RbacMatrixTest extends TestCase
     private function createPayload(): array
     {
         return [
-            'name' => 'Biscuit', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 18,
+            'name' => 'Biscuit', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'neutered' => 0,
             'location' => 'Main Animal Pound', 'status' => 'Rescued', 'health_status' => 'Under Observation',
             'rescued_at' => '2026-10-01', 'description' => 'A friendly dog.', 'ideal_home' => 'A home with a yard.',
             'personality' => ['Friendly'],
@@ -192,7 +192,7 @@ class RbacMatrixTest extends TestCase
     {
         $report = new MissingPetReport([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray', 'sex' => 'Unknown',
-            'location' => 'Katipunan', 'last_seen_at' => '2026-10-18 01:15:00', 'contact_name' => 'A', 'contact_number' => '0919 555 0166',
+            'location' => 'Katipunan', 'last_seen_at' => '2026-10-18 01:15:00', 'contact_name' => 'A', 'contact_number' => '0919 555 0166', 'contact_email' => 'reporter@example.com',
         ]);
         $report->status = 'Lost';
         $report->fingerprint = sha1(uniqid('', true));

@@ -14,6 +14,7 @@ import {
   ForgotPassword,
   ResetPassword,
 } from "../pages/user/PasswordPages/PasswordPages.jsx";
+import VerifyEmail from "../pages/user/VerifyEmail/VerifyEmail.jsx";
 import StrayInfo from "../pages/user/StrayInfo/StrayInfo.jsx";
 
 import AdoptablePets from "../pages/user/AdoptablePets/AdoptablePets.jsx";
@@ -84,6 +85,7 @@ function AppRoutes() {
           element={<Signup />}
         />
 
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/change-password" element={<ChangePassword />} />
@@ -245,7 +247,7 @@ function AppRoutes() {
 
         <Route
           path="/admin/animals/:animalId/edit"
-          element={<RequirePermission anyOf={["animals.edit", "animals.photo"]}><EditAnimal /></RequirePermission>}
+          element={<RequirePermission anyOf={["animals.edit", "animals.photo", "animals.neuteredUpdate"]}><EditAnimal /></RequirePermission>}
         />
 
 

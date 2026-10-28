@@ -59,18 +59,18 @@ The frontend (citizen side + staff/admin side) is merged and runs on **mock data
 
 ### Data rules
 - Animal `status`: Rescued, Available for Adoption, Pending Adoption, Adopted, Reunited with Owner. Staff-only `health_status`: Under Observation, Under Treatment, Cleared. Citizen pages only show "Available for Adoption"; staff can set it only when `health_status` is "Cleared".
+- Animals have no age anywhere (the `age_months` column was dropped). Animals have `neutered` (Spayed / Neutered, Yes/No, a health field: the vet tech and the kennel manager edit it, the others only view it).
 - Missing pets: no `age`; statuses Lost, Rescued, Reunited.
 - Adoption applications: Pending, Approved, Rejected; no income fields; `employmentStatus`, `work`, `selfEmployedField`, `selfEmployedFieldOther`, `civilStatus`; valid ID upload; home photos min 2, max 3.
 
 ### Differences from Proposal Documentation.pdf
 - Role names: `vet_tech` instead of `veterinary_staff`; `kennel_manager` is the admin; extra `adoption_counselor`.
-- New `health_status` column on animals; no `age` on missing pets; no `monthly_income`.
+- New `health_status` column on animals; no `age` on animals or missing pets; no `monthly_income`.
 - New employment fields on applications; missing-pet statuses in the UI are Lost, Rescued, Reunited.
 
 ### Known issues (not fixed yet)
 - Reports links like `/admin/animals?status=...` are not read by `Animals.jsx`.
 - `VetTechDashboard.css` has no style for the Under Observation badge.
-- Staff application details still shows the pet's age (`petAge`).
 - Existing lint warnings and a bundle-size warning (~620 kB chunk).
 - `routes/UserRoutes.jsx` and `routes/AdminRoutes.jsx` are unused.
 - Phase 8 (final polish) is still to do. See `CLAUDE.md`.
@@ -95,6 +95,7 @@ graphify-out/       knowledge graph
 
 - CORS allows only `FRONTEND_URL` (default `http://localhost:5173`), set in `backend/.env`.
 - Auth uses Sanctum **personal access tokens** (Bearer header), not cookies.
+- Email: put your Gmail address and App Password in `backend/.env` (`MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`; the rest of the `MAIL_*` keys are in `.env.example`), then `php artisan config:clear`. Never commit `.env`. Use `MAIL_MAILER=log` to write emails to `storage/logs/laravel.log` instead. Sign Up verification codes, password reset links and the "You reported a pet" confirmation use it. Preview the templates at `http://localhost:8000/dev/mail-preview/verify-otp` (also `reset-password`, `report-submitted`; local only).
 - Deployment (Vercel / Aiven per the proposal) is intentionally not set up yet.
 
 ## Manual test checklist
@@ -130,3 +131,10 @@ Without a system scheduler (XAMPP), run `php artisan schedule:work` in `backend`
 **Accounts management and audit**
 - [ ] In Settings the kennel manager adds a staff account, changes a role and disables an account (that person is signed out). You cannot change your own role.
 - [ ] Audit Logs can be filtered by area and date.
+
+## Before a public deployment (hosting is not chosen yet)
+
+- **Real uploaded pictures need persistent storage.** Pet photos, avatars and adoption/claim files are written to `storage/app` (public and private disks). Many hosts wipe local files on every redeploy: use a persistent disk or an S3-compatible disk before real users upload anything.
+- On the server run `php artisan migrate --force` and `php artisan storage:link`; set `APP_URL`, `FRONTEND_URL`, `APP_ENV=production`, `APP_DEBUG=false` and the real `MAIL_*` values in the server's own environment (never commit them).
+- Run the scheduler (`php artisan schedule:run` every minute) for `reports:release-unclaimed`.
+- Pets are added through the Add Animal form; nothing is seeded except the test accounts, shifts and settings.

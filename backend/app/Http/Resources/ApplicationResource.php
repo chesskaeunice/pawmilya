@@ -22,7 +22,6 @@ class ApplicationResource extends JsonResource
             'petName' => $animal->name,
             'petType' => $animal->species,
             'petBreed' => $animal->breed,
-            'petAge' => $animal->ageLabel(),
             'petSex' => $animal->sex,
             'petLocation' => $animal->location,
             'petImage' => $petPhotos->first(),

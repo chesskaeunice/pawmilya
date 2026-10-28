@@ -1,0 +1,82 @@
+/* Verify email: one centred card, styled by Login.css */
+.verify {
+  width: min(460px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.verify__boxes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.verify__box {
+  width: 100%;
+  max-width: 54px;
+  height: 60px;
+
+  padding: 0;
+
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  background-color: var(--color-white);
+  color: var(--color-brown);
+
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.verify__box:focus {
+  border-color: var(--color-gold);
+  outline: 3px solid var(--color-gold);
+  outline-offset: 0;
+}
+
+.verify__box[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.verify__timer {
+  margin: 0 0 18px;
+
+  color: var(--color-muted);
+
+  font-size: var(--font-sm);
+  text-align: center;
+}
+
+.verify__resend {
+  padding: 0;
+
+  border: 0;
+  background: none;
+  color: var(--color-orange);
+
+  font: inherit;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.verify__resend:disabled {
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+.verify__resend:not(:disabled):hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 400px) {
+  .verify__boxes {
+    gap: 6px;
+  }
+
+  .verify__box {
+    height: 52px;
+  }
+}

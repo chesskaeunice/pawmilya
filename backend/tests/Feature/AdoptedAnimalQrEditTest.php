@@ -41,7 +41,7 @@ class AdoptedAnimalQrEditTest extends TestCase
     private function adopted(int $photos = 3): Animal
     {
         $animal = Animal::create([
-            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 24,
+            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male',
             'location' => 'Main Animal Pound', 'status' => 'Adopted', 'health_status' => 'Cleared',
             'description' => 'Friendly dog.', 'personality' => ['Friendly'],
             'owner_name' => 'Maria Santos', 'owner_contact' => '0917 555 0187',

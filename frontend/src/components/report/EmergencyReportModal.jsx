@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 
 import Modal from "../common/Modal.jsx";
 import ImageDropzone from "./ImageDropzone.jsx";
@@ -94,8 +94,10 @@ function validate(values) {
     errors.contactNumber = "Enter a valid contact number, for example 0917 123 4567.";
   }
 
-  if (values.contactEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.contactEmail.trim())) {
-    errors.contactEmail = "Enter a valid email address, or leave it empty.";
+  if (!values.contactEmail.trim()) {
+    errors.contactEmail = "Please enter your email address.";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.contactEmail.trim())) {
+    errors.contactEmail = "Enter a valid email address, for example name@email.com.";
   }
 
   return errors;
@@ -150,7 +152,7 @@ function EmergencyReportFlow({ onClose }) {
   if (errors.firstName) step2Missing.push("your first name");
   if (errors.lastName) step2Missing.push("your last name");
   if (errors.contactNumber) step2Missing.push(values.contactNumber.trim() ? "a valid contact number" : "a contact number");
-  if (errors.contactEmail) step2Missing.push("a valid email (or leave it empty)");
+  if (errors.contactEmail) step2Missing.push(values.contactEmail.trim() ? "a valid email" : "your email");
 
   const step1Ready = step1Missing.length === 0;
   const step2Ready = step2Missing.length === 0;
@@ -448,7 +450,6 @@ function EmergencyReportFlow({ onClose }) {
           disabled={!step1Ready}
         >
           Next
-          <ArrowRight size={18} aria-hidden="true" />
         </button>
       </section>
 
@@ -627,7 +628,7 @@ function EmergencyReportFlow({ onClose }) {
 
         <div className={fieldClass("contactEmail")}>
           <label className="mform__label" htmlFor="er-contact-email">
-            Email <span className="mform__optional">(optional)</span>
+            Email
           </label>
           <input
             id="er-contact-email"

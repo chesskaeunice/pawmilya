@@ -6,6 +6,8 @@ import { PasswordInput } from "../../../components/user/PasswordInput.jsx";
 import FieldError, { FormError } from "../../../components/common/FieldError.jsx";
 import { formatApiError } from "../../../services/authService.js";
 import { CITIZEN } from "../../../config/rolePermissions.js";
+import AuthBackButton from "../../../components/common/AuthBackButton.jsx";
+import { loginPlaceholder } from "../../../assets/images/placeholders/index.js";
 
 import "./Login.css";
 
@@ -41,6 +43,15 @@ function Login() {
         : user.role === CITIZEN ? location.state?.from || "/" : "/admin";
       navigate(home, { replace: true });
     } catch (err) {
+      // the account exists but its email is not verified yet: go to the code step (a new code was sent)
+      if (err.response?.status === 403 && err.response.data?.code === "email_not_verified") {
+        navigate("/verify-email", {
+          replace: true,
+          state: { email: err.response.data.email, from: location.state?.from },
+        });
+        return;
+      }
+
       const { message, fields } = formatApiError(err);
 
       if (fields.email && String(form.get("email")).trim()) {
@@ -60,6 +71,7 @@ function Login() {
       <section className="login__container">
 
         <div className="login__intro">
+          <AuthBackButton inline />
           <p className="login__eyebrow">
             Welcome Back
           </p>
@@ -75,7 +87,8 @@ function Login() {
           </p>
 
           <div className="login__image-placeholder">
-          </div>    
+            <img src={loginPlaceholder} alt="" />
+          </div>
         </div>
 
 

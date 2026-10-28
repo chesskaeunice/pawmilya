@@ -1,21 +1,36 @@
 .animals__actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
-  gap: 6px;
+  gap: 8px;
 }
 
 
-.animals__view {
-  color: var(--color-orange);
+/* View (outline) and View QR (soft) are two same-size buttons */
+.staff-table .animals__view {
+  min-height: 34px;
 
-  font-size: 10px;
-  font-weight: 700;
+  padding: 0 12px;
+
+  font-size: var(--font-xs);
+
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 
-.animals__view:hover {
-  text-decoration: underline;
+.staff-table .animals__view--qr {
+  background-color: var(--color-cream);
+
+  color: var(--color-brown);
+}
+
+
+.staff-table .animals__view--qr:hover {
+  background-color: var(--color-orange);
+
+  color: white;
 }
 
 
@@ -39,4 +54,75 @@
   background-color: #f7f1e7;
 
   color: var(--color-brown);
+}
+
+
+/* SEARCH AND FILTER ROW: search box and dropdowns on clean rows, Add Animal at the end;
+   wraps instead of overflowing on a phone */
+
+.staff-filters.animals__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.animals__filters input {
+  flex: 1 1 160px;
+
+  min-width: 0;
+}
+
+.animals__filters select {
+  flex: 0 1 172px;
+
+  min-width: 0;
+}
+
+.animals__filters .staff-button {
+  flex: 0 0 auto;
+
+  margin-left: auto;
+}
+
+@media (max-width: 600px) {
+  .animals__filters input {
+    flex-basis: 100%;
+  }
+
+  .animals__filters select {
+    flex: 1 1 calc(50% - 10px);
+  }
+
+  .animals__filters .staff-button {
+    flex: 1 1 100%;
+
+    justify-content: center;
+
+    margin-left: 0;
+  }
+}
+
+
+/* ANIMAL PHOTO: every photo the same size and shape, cropped to fit, never stretched */
+
+.staff-table__photo.animals__photo {
+  width: 48px;
+  height: 48px;
+
+  display: block;
+
+  overflow: hidden;
+
+  border-radius: 8px;
+}
+
+.animals__photo img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
 }

@@ -31,7 +31,7 @@ class AnimalApiTest extends TestCase
     private function animal(array $override = []): Animal
     {
         return Animal::create(array_merge([
-            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 24,
+            'name' => 'Milo', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male',
             'location' => 'Main Animal Pound', 'status' => 'Rescued', 'health_status' => 'Under Observation',
             'description' => 'Friendly dog.', 'personality' => ['Friendly'],
         ], $override));
@@ -49,7 +49,7 @@ class AnimalApiTest extends TestCase
     private function payload(array $override = []): array
     {
         return array_merge([
-            'name' => 'Biscuit', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'age_months' => 18,
+            'name' => 'Biscuit', 'species' => 'Dog', 'breed' => 'Aspin', 'sex' => 'Male', 'neutered' => 0,
             'location' => 'Main Animal Pound', 'status' => 'Rescued', 'health_status' => 'Under Observation',
             'rescued_at' => '2026-10-01', 'description' => 'A friendly dog.', 'ideal_home' => 'A home with a yard.',
             'personality' => ['Friendly', 'Playful'],
@@ -336,12 +336,10 @@ class AnimalApiTest extends TestCase
     public function test_public_filters(): void
     {
         $base = ['status' => 'Available for Adoption', 'health_status' => 'Cleared'];
-        $this->animal($base + ['name' => 'Puppy', 'age_months' => 6, 'sex' => 'Male', 'breed' => 'Aspin']);
-        $this->animal($base + ['name' => 'Cat1', 'species' => 'Cat', 'age_months' => 48, 'sex' => 'Female', 'breed' => 'Puspin']);
+        $this->animal($base + ['name' => 'Puppy', 'sex' => 'Male', 'breed' => 'Aspin']);
+        $this->animal($base + ['name' => 'Cat1', 'species' => 'Cat', 'sex' => 'Female', 'breed' => 'Puspin']);
 
         $this->getJson('/api/pets?type=Cat')->assertJsonCount(1, 'data')->assertJsonPath('data.0.name', 'Cat1');
-        $this->getJson('/api/pets?age=baby')->assertJsonCount(1, 'data')->assertJsonPath('data.0.name', 'Puppy');
-        $this->getJson('/api/pets?age=adult')->assertJsonCount(1, 'data')->assertJsonPath('data.0.name', 'Cat1');
         $this->getJson('/api/pets?sex=Female')->assertJsonCount(1, 'data');
         $this->getJson('/api/pets?breed=Aspin')->assertJsonCount(1, 'data')->assertJsonPath('data.0.name', 'Puppy');
         $this->getJson('/api/pets')->assertJsonPath('breeds', ['Aspin', 'Puspin']);
@@ -368,7 +366,7 @@ class AnimalApiTest extends TestCase
             ->assertJsonMissingPath('data.health_status');
         $this->getJson("/api/stray/{$stray->qr_token}")->assertOk()->assertJsonPath('data.owner', null);
 
-        // the scan page never shows or receives the age
+        // the animal has no age anywhere
         $this->getJson("/api/stray/{$withOwner->qr_token}")->assertOk()
             ->assertJsonMissingPath('data.ageLabel')->assertJsonMissingPath('data.age_months');
         $this->getJson('/api/stray/not-a-real-token')->assertNotFound();

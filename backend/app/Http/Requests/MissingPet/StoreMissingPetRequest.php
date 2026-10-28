@@ -29,6 +29,8 @@ class StoreMissingPetRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         app(ReportPostingLimit::class)->ensureWithinLimit($this->reporter());
+
+        $this->merge(['contact_email' => strtolower(trim((string) $this->input('contact_email')))]);
     }
 
     public function rules(): array
@@ -55,11 +57,11 @@ class StoreMissingPetRequest extends FormRequest
             // Guests must leave a contact name and number; citizens default to their account details
             'contact_name' => [Rule::requiredIf($isGuest), 'nullable', 'string', 'max:255'],
             'contact_number' => [Rule::requiredIf($isGuest), 'nullable', 'string', 'max:30', 'regex:/^[0-9+()\s-]{7,}$/'],
-            'contact_email' => ['nullable', 'email', 'max:255'],
+            'contact_email' => ['required', 'email', 'max:255'],
 
             'pet_images' => ['required', 'array', 'min:2', 'max:3'],
             'pet_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'last_seen_images' => ['required', 'array', 'min:1', 'max:3'],
+            'last_seen_images' => ['nullable', 'array', 'max:3'],
             'last_seen_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }

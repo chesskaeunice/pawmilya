@@ -49,7 +49,7 @@ class AutoRegisterOnFoundTest extends TestCase
         $report = new MissingPetReport([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Orange', 'sex' => 'Female',
             'location' => 'Hidalgo Street, Quiapo, Manila', 'last_seen_at' => '2026-10-20 08:00:00',
-            'details' => 'Wears a red collar.', 'contact_name' => 'Maria Santos', 'contact_number' => '0917 123 4567',
+            'details' => 'Wears a red collar.', 'contact_name' => 'Maria Santos', 'contact_number' => '0917 123 4567', 'contact_email' => 'reporter@example.com',
         ]);
         $report->status = $status;
         $report->fingerprint = sha1(uniqid('', true));
@@ -137,7 +137,7 @@ class AutoRegisterOnFoundTest extends TestCase
         $this->post('/api/missing-pets', [
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
             'location' => 'Quiapo, Manila', 'last_seen_at' => '2026-10-18 01:15:00', 'status' => 'Sighted',
-            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'reporter_type' => 'Citizen',
+            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'contact_email' => 'reporter@example.com', 'reporter_type' => 'Citizen',
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
         ], ['Accept' => 'application/json'])->assertUnprocessable()->assertJsonValidationErrors('status');

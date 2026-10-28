@@ -16,13 +16,6 @@ class Animal extends Model
     public const STATUSES = ['Rescued', 'Available for Adoption', 'Pending Adoption', 'Adopted', 'Reunited with Owner'];
     public const HEALTH_STATUSES = ['Under Observation', 'Under Treatment', 'Cleared'];
 
-    // Age groups used by the public filter (in months)
-    public const AGE_GROUPS = [
-        'baby' => [0, 11],
-        'young' => [12, 35],
-        'adult' => [36, null],
-    ];
-
     // Same as the column defaults, so a freshly created model returns them too
     protected $attributes = [
         'vaccinated' => false,
@@ -30,7 +23,7 @@ class Animal extends Model
     ];
 
     protected $fillable = [
-        'animal_code', 'name', 'species', 'other_species', 'breed', 'sex', 'age_months', 'color', 'location',
+        'animal_code', 'name', 'species', 'other_species', 'breed', 'sex', 'color', 'location',
         'status', 'health_status', 'personality', 'vaccinated', 'neutered', 'description', 'ideal_home',
         'rescued_at', 'owner_name', 'owner_contact', 'created_by',
     ];
@@ -38,7 +31,6 @@ class Animal extends Model
     protected function casts(): array
     {
         return [
-            'age_months' => 'integer',
             'personality' => 'array',
             'vaccinated' => 'boolean',
             'neutered' => 'boolean',
@@ -101,21 +93,5 @@ class Animal extends Model
     public function scopeAdoptable(Builder $query): Builder
     {
         return $query->where('status', self::ADOPTABLE);
-    }
-
-    // "3 years old" / "8 months old"
-    public function ageLabel(): ?string
-    {
-        if ($this->age_months === null) {
-            return null;
-        }
-
-        if ($this->age_months < 12) {
-            return $this->age_months.' '.Str::plural('month', $this->age_months).' old';
-        }
-
-        $years = intdiv($this->age_months, 12);
-
-        return $years.' '.Str::plural('year', $years).' old';
     }
 }

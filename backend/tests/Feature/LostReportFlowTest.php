@@ -71,7 +71,7 @@ class LostReportFlowTest extends TestCase
         return $this->as($as)->post('/api/missing-pets', array_merge([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
             'location' => 'Katipunan, Quezon City', 'last_seen_at' => '2026-10-30 01:15:00',
-            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166',
+            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'contact_email' => 'reporter@example.com',
             'contact_email' => 'liza@example.com', 'reporter_type' => $type,
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
@@ -119,7 +119,6 @@ class LostReportFlowTest extends TestCase
     public function test_an_owner_report_still_needs_the_photos_and_the_contact_details(): void
     {
         $this->submit('Owner', null, ['pet_images' => [$this->png()]])->assertUnprocessable()->assertJsonValidationErrors('pet_images');
-        $this->submit('Owner', null, ['last_seen_images' => []])->assertUnprocessable()->assertJsonValidationErrors('last_seen_images');
         $this->submit('Owner', null, ['contact_name' => null, 'contact_number' => null])->assertUnprocessable()->assertJsonValidationErrors(['contact_name', 'contact_number']);
 
         $this->assertSame(0, MissingPetReport::count());
@@ -158,7 +157,7 @@ class LostReportFlowTest extends TestCase
         $citizen = $this->user('citizen');
 
         $this->as($citizen)->post("/api/missing-pets/{$report->id}/claims", [
-            'contact_name' => 'Maria Owner', 'contact_number' => '0917 123 4567',
+            'contact_name' => 'Maria Owner', 'contact_number' => '0917 123 4567', 'contact_email' => 'reporter@example.com',
             'pickup_date' => $this->start->copy()->addDays(2)->toDateString(),
             'proof_images' => [$this->png('a.png'), $this->png('b.png')],
         ], ['Accept' => 'application/json'])

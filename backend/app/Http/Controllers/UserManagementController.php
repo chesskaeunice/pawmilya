@@ -46,6 +46,7 @@ class UserManagementController extends Controller
         $user = new User(['name' => $data['name'], 'email' => $data['email'], 'phone' => $data['phone'] ?? null, 'password' => $data['password']]);
         $user->role = $data['role'];
         $user->is_active = true;
+        $user->email_verified_at = now(); // staff accounts do not need the sign-up code
         $user->must_change_password = true; // temporary password: replaced at first login
         $user->save();
 

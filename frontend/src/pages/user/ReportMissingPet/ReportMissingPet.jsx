@@ -39,7 +39,7 @@ function Required() {
 /* Multiple-image upload: choose 2–3 images.
    Files picked in separate selections are added together, and each one
    can be removed individually. */
-function ImageUpload({ id, label }) {
+function ImageUpload({ id, label, optional = false, hint }) {
   const inputRef = useRef(null);
 
   const [files, setFiles] = useState([]);
@@ -60,7 +60,7 @@ function ImageUpload({ id, label }) {
     input.files = transfer.files;
 
     const message =
-      next.length < MIN_IMAGES
+      !optional && next.length < MIN_IMAGES
         ? `Please upload at least ${MIN_IMAGES} images.`
         : "";
 
@@ -99,13 +99,13 @@ function ImageUpload({ id, label }) {
       <label htmlFor={id}>
         <span>
           {label}
-          <Required />
+          {!optional && <Required />}
         </span>
       </label>
 
       <p className="report-pet__hint">
-        Please provide {MIN_IMAGES}–{MAX_IMAGES} images. You can select
-        multiple files at once, or add them one at a time.
+        {hint ??
+          `Please provide ${MIN_IMAGES}–${MAX_IMAGES} images. You can select multiple files at once, or add them one at a time.`}
       </p>
 
       <input
@@ -115,7 +115,7 @@ function ImageUpload({ id, label }) {
         type="file"
         accept="image/*"
         multiple
-        required
+        required={!optional}
         onChange={handleChange}
       />
 
@@ -360,7 +360,12 @@ function ReportMissingPet() {
             </p>
           )}
 
-          <ImageUpload id="lastSeenImages" label="Upload Images" />
+          <ImageUpload
+            id="lastSeenImages"
+            label="Upload images (optional)"
+            optional
+            hint={`If you have a photo of where the pet was last seen, you can add ${MIN_IMAGES}–${MAX_IMAGES} images. You can select multiple files at once, or add them one at a time.`}
+          />
 
           <label>
             <span>Additional Details (optional)</span>

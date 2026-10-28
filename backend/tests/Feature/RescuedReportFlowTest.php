@@ -40,7 +40,7 @@ class RescuedReportFlowTest extends TestCase
         return $this->post('/api/missing-pets', array_merge([
             'name' => 'Miming', 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
             'location' => 'Katipunan, Quezon City', 'last_seen_at' => '2026-10-18 01:15:00',
-            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'reporter_type' => 'Citizen',
+            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'contact_email' => 'reporter@example.com', 'reporter_type' => 'Citizen',
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
         ], $override), ['Accept' => 'application/json']);

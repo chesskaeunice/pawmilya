@@ -8,6 +8,7 @@ import ScrollStrip from "../../../components/landing/ScrollStrip.jsx";
 import PetPreviewCard from "../../../components/landing/PetPreviewCard.jsx";
 import ArticleCard from "../../../components/landing/ArticleCard.jsx";
 import ClaimPetModal from "../../../components/report/ClaimPetModal.jsx";
+import ParticleBackground from "../../../components/common/ParticleBackground/ParticleBackground.jsx";
 
 import useAuth from "../../../hooks/useAuth.js";
 import useFetch from "../../../hooks/useFetch.js";
@@ -69,6 +70,8 @@ function Home() {
     <div className="home">
 
       <section className="home__hero" id="home">
+        <ParticleBackground />
+
         <div className="home__hero-container">
 
           <div className="home__hero-content">
@@ -323,3 +326,4 @@ function Home() {
 }
 
 export default Home;
+

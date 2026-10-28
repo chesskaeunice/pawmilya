@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
 import useFetch from "../../../hooks/useFetch.js";
 import { listAuditLogs } from "../../../services/adminService.js";
 import { ROLE_LABELS } from "../../../config/rolePermissions.js";
 import BackButton from "../../../components/common/BackButton.jsx";
+import Pagination from "../../../components/common/Pagination.jsx";
 
 // Filters by what the entry is about (the action starts with it, for example "animal.created")
 const AREAS = [
@@ -151,39 +150,13 @@ function AuditLogs() {
         </table>
 
 
-        <div className="staff-pagination">
-
-          <span>
-            {meta ? `${meta.total} entries` : "Loading..."}
-          </span>
-
-          <div className="staff-pagination__pages">
-
-            <button
-              type="button"
-              disabled={page <= 1}
-              onClick={() => setPage(page - 1)}
-              aria-label="Previous page"
-            >
-              <ChevronLeft size={12} />
-            </button>
-
-            <button type="button" className="active">
-              {page} / {meta?.last_page ?? 1}
-            </button>
-
-            <button
-              type="button"
-              disabled={page >= (meta?.last_page ?? 1)}
-              onClick={() => setPage(page + 1)}
-              aria-label="Next page"
-            >
-              <ChevronRight size={12} />
-            </button>
-
-          </div>
-
-        </div>
+        <Pagination
+          summary={meta ? `${meta.total} entries` : "Loading..."}
+          currentPage={page}
+          totalPages={meta?.last_page ?? 1}
+          onChange={setPage}
+          label="Audit log pages"
+        />
 
       </div>
 

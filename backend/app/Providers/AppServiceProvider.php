@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         RateLimiter::for('register', fn (Request $request) => Limit::perHour(5)->by($request->ip()));
+        RateLimiter::for('email-otp', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
         RateLimiter::for('password-reset', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
 
         // Staff changes clear the short public cache right away

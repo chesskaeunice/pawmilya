@@ -36,9 +36,11 @@
   min-height: 78px;
 
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 
-  gap: 10px;
+  gap: 4px;
 
   padding: 18px 20px;
 
@@ -47,22 +49,16 @@
 
 
 .staff-sidebar__logo {
-  width: 34px;
-  height: 34px;
+  width: auto;
+  max-width: 100%;
+  height: 28px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 
   flex-shrink: 0;
 
-  border-radius: 9px;
-
-  background-color: var(--color-brown);
-  color: var(--color-cream);
-
-  font-size: 13px;
-  font-weight: 800;
+  object-fit: contain;
+  object-position: left center;
 }
 
 
@@ -120,7 +116,7 @@
 
   color: #5f574e;
 
-  font-size: 12px;
+  font-size: 13px;
 
   transition:
     background-color 0.18s ease,
@@ -256,41 +252,111 @@
 }
 
 
-/* COLLAPSED SIDEBAR (desktop): icons only, the name is the link's title tooltip */
+/* COLLAPSED SIDEBAR (desktop): icons only (and the photo), the name is the tooltip.
+   The labels shrink and fade instead of vanishing, so the toggle animates. */
+
+.staff-sidebar__brand > div:last-child,
+.staff-sidebar__link span,
+.staff-sidebar__identity,
+.staff-sidebar__logout span {
+  max-width: 200px;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  transition:
+    max-width 0.22s ease,
+    opacity 0.15s ease;
+}
+
+.staff-sidebar__link,
+.staff-sidebar__profile,
+.staff-sidebar__logout,
+.staff-sidebar__brand {
+  transition:
+    gap 0.22s ease,
+    padding 0.22s ease,
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
 
 @media (min-width: 901px) {
+  .staff-header {
+    display: none;
+  }
+
   .staff-layout--collapsed {
     grid-template-columns: 72px 1fr;
   }
 
   .staff-layout--collapsed .staff-sidebar__brand {
-    justify-content: center;
+    gap: 0;
 
-    padding-inline: 0;
+    padding-inline: 19px;
   }
 
   .staff-layout--collapsed .staff-sidebar__brand > div:last-child,
   .staff-layout--collapsed .staff-sidebar__link span,
   .staff-layout--collapsed .staff-sidebar__identity,
   .staff-layout--collapsed .staff-sidebar__logout span {
-    display: none;
+    max-width: 0;
+
+    opacity: 0;
+  }
+
+  /* the wordmark does not fit in 72px: the small logo (a different file) takes its place */
+  .staff-layout--collapsed .staff-sidebar__logo {
+    width: 34px;
+    height: 34px;
+
+    object-fit: contain;
+  }
+
+  .staff-layout--collapsed .staff-sidebar__brand > div:last-child {
+    max-height: 0;
   }
 
   .staff-layout--collapsed .staff-sidebar__link {
+    gap: 0;
+
     justify-content: center;
 
     padding: 0;
+  }
+
+  .staff-layout--collapsed .staff-sidebar__toggle {
+    justify-content: center;
+
+    padding: 0;
+  }
+
+  .staff-layout--collapsed .staff-sidebar__profile {
+    gap: 0;
+
+    justify-content: center;
+
+    padding: 8px 0;
+  }
+
+  .staff-layout--collapsed .staff-sidebar__avatar {
+    width: 36px;
+    height: 36px;
+
+    font-size: 14px;
+  }
+
+  .staff-layout--collapsed .staff-sidebar__identity {
+    max-height: 0;
   }
 
   .staff-layout--collapsed .staff-sidebar__role {
     padding-inline: 12px;
   }
 
-  .staff-layout--collapsed .staff-sidebar__profile {
-    justify-content: center;
-  }
-
   .staff-layout--collapsed .staff-sidebar__logout {
+    gap: 0;
+
     padding: 0;
   }
 }
@@ -344,26 +410,80 @@
 
 @media (prefers-reduced-motion: reduce) {
   .staff-layout,
-  .staff-sidebar {
-    transition: none;
+  .staff-sidebar,
+  .staff-sidebar * {
+    transition: none !important;
   }
 }
 
 
-/* WHO IS LOGGED IN (bottom of the sidebar, above Log out) */
+/* HAMBURGER IN THE SIDEBAR (under the logo; same left edge as the menu icons below it) */
 
-.staff-sidebar__profile {
+.staff-sidebar__toggle-row {
+  flex-shrink: 0;
+
+  padding: var(--space-3) var(--space-3) 0;
+}
+
+.staff-sidebar__toggle {
+  width: 100%;
+  min-height: 39px;
+
   display: flex;
   align-items: center;
 
-  gap: 10px;
+  padding: 0 12px;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #5f574e;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.staff-sidebar__toggle:hover {
+  background-color: #fbf4e5;
+
+  color: var(--color-brown);
+}
+
+.staff-sidebar__toggle:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: -2px;
+}
+
+
+/* WHO IS LOGGED IN (top of the sidebar, under the hamburger) */
+
+.staff-sidebar__profile {
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 8px;
 
   min-width: 0;
+
+  margin: var(--space-3) var(--space-3) 0;
+  padding: 12px 12px 16px;
+
+  border-bottom: 1px solid var(--color-border);
+
+  text-align: center;
 }
 
 .staff-sidebar__avatar {
-  width: 34px;
-  height: 34px;
+  width: 72px;
+  height: 72px;
 
   flex-shrink: 0;
 
@@ -378,8 +498,13 @@
 
   color: var(--color-brown);
 
-  font-size: 13px;
+  font-size: 24px;
   font-weight: 700;
+
+  transition:
+    width 0.22s ease,
+    height 0.22s ease,
+    font-size 0.22s ease;
 }
 
 .staff-sidebar__photo {
@@ -392,29 +517,38 @@
 .staff-sidebar__identity {
   display: flex;
   flex-direction: column;
+  align-items: center;
 
+  width: 100%;
   min-width: 0;
 
   line-height: 1.3;
 }
 
-.staff-sidebar__role .staff-sidebar__identity strong {
+.staff-sidebar__identity strong {
   overflow: hidden;
 
-  font-size: 12px;
+  color: var(--color-brown);
+
+  font-size: 14px;
 
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.staff-sidebar__role .staff-sidebar__identity span {
+.staff-sidebar__identity span {
   overflow: hidden;
 
-  font-size: 10px;
+  color: var(--color-muted);
+
+  font-size: 13px;
 
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+
+/* LOG OUT (bottom of the sidebar) */
 
 .staff-sidebar__role {
   flex-shrink: 0;
@@ -424,51 +558,12 @@
   border-top:
     1px solid
     var(--color-border);
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 3px;
-}
-
-
-.staff-sidebar__role span {
-  color:
-    var(--color-muted);
-
-  font-size: 11px;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.7px;
-}
-
-
-.staff-sidebar__role strong {
-  color:
-    var(--color-brown);
-
-  font-size: 11px;
-
-  font-weight: 700;
-}
-
-
-.staff-sidebar__role em {
-  color:
-    var(--color-muted);
-
-  font-size: 9px;
-
-  font-style: normal;
 }
 
 
 .staff-sidebar__logout {
   width: 100%;
   min-height: 40px;
-
-  margin-top: var(--space-3);
 
   display: flex;
   align-items: center;
@@ -496,12 +591,4 @@
 
 .staff-sidebar__logout:hover {
   background: var(--color-cream);
-}
-
-
-.staff-sidebar__logout span {
-  color: inherit;
-  font-size: inherit;
-  text-transform: none;
-  letter-spacing: 0;
 }

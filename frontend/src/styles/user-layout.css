@@ -68,27 +68,13 @@
 
 
 .user-navbar__logo {
-  width: 36px;
+  width: auto;
 
   height: 36px;
 
-  display: flex;
+  display: block;
 
-  align-items: center;
-
-  justify-content: center;
-
-  border-radius: 10px;
-
-  background-color:
-    var(--color-brown);
-
-  color:
-    var(--color-cream);
-
-  font-size: 14px;
-
-  font-weight: 700;
+  object-fit: contain;
 }
 
 
@@ -375,9 +361,7 @@
 
 
   .user-navbar__logo {
-    width: 32px;
-
-    height: 32px;
+    height: 30px;
   }
 
 

@@ -35,12 +35,6 @@ class PublicAnimalController extends Controller
             ->when($request->query('breed'), fn ($q, $v) => $q->where('breed', $v))
             ->when($request->query('sex'), fn ($q, $v) => $q->where('sex', $v));
 
-        if ($range = Animal::AGE_GROUPS[$request->query('age')] ?? null) {
-            [$min, $max] = $range;
-            $query->where('age_months', '>=', $min)
-                ->when($max !== null, fn ($q) => $q->where('age_months', '<=', $max));
-        }
-
         $perPage = min(max((int) $request->query('per_page', 6), 1), 50);
         $page = $query->orderByDesc('rescued_at')->orderByDesc('id')->paginate($perPage);
 
@@ -63,8 +57,7 @@ class PublicAnimalController extends Controller
         $animal = Animal::with('photos')->where('qr_token', $token)->firstOrFail();
 
         return response()->json([
-            // no age on the scan page
-            'data' => array_merge(Arr::except((new PublicAnimalResource($animal))->resolve(), ['ageLabel']), [
+            'data' => array_merge((new PublicAnimalResource($animal))->resolve(), [
                 'color' => $animal->color,
                 'owner' => $animal->owner_name || $animal->owner_contact
                     ? ['name' => $animal->owner_name, 'contact' => $animal->owner_contact]

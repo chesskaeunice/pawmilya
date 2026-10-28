@@ -41,6 +41,7 @@ export const rolePermissions = {
     "dashboard.view",
 
     "animals.view",
+    "animals.neuteredUpdate",
     "qr.view",
 
     "adoptionApplications.view",

@@ -135,7 +135,8 @@ function AnimalDetails() {
     can("animals.edit") ||
     can("animals.adoptionUpdate") ||
     can("animals.healthUpdate") ||
-    can("animals.husbandryUpdate");
+    can("animals.husbandryUpdate") ||
+    can("animals.neuteredUpdate");
 
   return (
     <div className="staff-page">
@@ -231,15 +232,15 @@ function AnimalDetails() {
             />
 
             <DetailRow
-              icon={<CalendarDays size={13} />}
-              label="Age"
-              value={pet.ageLabel || "-"}
+              icon={<PawPrint size={13} />}
+              label="Gender"
+              value={pet.sex}
             />
 
             <DetailRow
               icon={<PawPrint size={13} />}
-              label="Gender"
-              value={pet.sex}
+              label="Spayed / Neutered"
+              value={pet.neutered ? "Yes" : "No"}
             />
 
             <DetailRow

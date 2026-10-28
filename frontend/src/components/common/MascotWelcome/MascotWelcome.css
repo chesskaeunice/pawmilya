@@ -1,0 +1,354 @@
+/* MASCOT WELCOME */
+
+.mascot-welcome {
+  position: fixed;
+  right: clamp(12px, 2.5vw, 32px);
+  /* starts above the red Emergency button, which sits in the same corner */
+  bottom: calc(clamp(12px, 2.5vw, 28px) + 64px);
+  z-index: 90;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+
+  pointer-events: none;
+}
+
+/* only the bubble and the puppy catch clicks, not the empty space around them */
+.mascot-welcome > * {
+  pointer-events: auto;
+}
+
+
+/* SPEECH BUBBLE */
+
+.mascot-welcome__bubble {
+  position: relative;
+
+  width: min(270px, calc(100vw - 32px));
+
+  padding: 18px 20px 18px;
+
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+
+  box-shadow: 0 14px 34px rgba(77, 42, 0, 0.18);
+
+  transform-origin: calc(100% - 70px) 100%;
+
+  animation: mascot-bubble-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) 1s both;
+}
+
+.mascot-welcome__bubble--reopened {
+  animation-delay: 0s;
+}
+
+/* little tail pointing down at the puppy's head */
+.mascot-welcome__bubble::after {
+  content: "";
+
+  position: absolute;
+  right: 62px;
+  bottom: -9px;
+
+  width: 18px;
+  height: 18px;
+
+  background-color: var(--color-white);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+
+  transform: rotate(45deg);
+}
+
+.mascot-welcome__title {
+  margin: 0 22px 6px 0;
+
+  color: var(--color-brown);
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.mascot-welcome__text {
+  margin: 0 0 14px;
+
+  color: var(--color-muted);
+
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.mascot-welcome__cta {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 38px;
+
+  padding: 0 18px;
+
+  background-color: var(--color-orange);
+  color: var(--color-white);
+
+  border-radius: 999px;
+
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition: background-color 0.2s ease;
+}
+
+.mascot-welcome__cta:hover {
+  background-color: var(--color-brown);
+}
+
+.mascot-welcome__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 28px;
+  height: 28px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  background: transparent;
+  color: var(--color-muted);
+
+  border: 0;
+  border-radius: 50%;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.mascot-welcome__speech {
+  display: grid;
+}
+
+.mascot-welcome__ghost,
+.mascot-welcome__typed {
+  grid-area: 1 / 1;
+}
+
+.mascot-welcome__ghost {
+  visibility: hidden;
+}
+
+.mascot-welcome__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.mascot-welcome__voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  min-height: 38px;
+  padding: 0 14px;
+
+  background: transparent;
+  color: var(--color-brown);
+
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: background-color 0.2s ease;
+}
+
+.mascot-welcome__voice:hover {
+  background-color: var(--color-background);
+}
+
+.mascot-welcome__voice:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.mascot-welcome__close:hover {
+  background-color: var(--color-background);
+  color: var(--color-brown);
+}
+
+.mascot-welcome__cta:focus-visible,
+.mascot-welcome__close:focus-visible,
+.mascot-welcome__pup:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+
+/* PUPPY */
+
+.mascot-welcome__pup {
+  width: 150px;
+
+  padding: 0;
+
+  /* dragged with a finger or the mouse: the page must not scroll or select instead */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+
+  background: transparent;
+  border: 0;
+
+  animation: mascot-enter 0.7s ease-out 0.3s both;
+}
+
+/* the three mouth frames sit on top of each other; one is visible at a time */
+.mascot-welcome__sprite {
+  position: relative;
+  display: block;
+
+  filter: drop-shadow(0 8px 10px rgba(77, 42, 0, 0.22));
+
+  transform-origin: 50% 100%;
+
+  transition: rotate 0.25s ease;
+
+  animation: mascot-bob 3.2s ease-in-out 1.2s infinite;
+}
+
+.mascot-welcome__pup:active {
+  cursor: grabbing;
+}
+
+.mascot-welcome__sprite img {
+  -webkit-user-drag: none;
+
+  display: block;
+
+  width: 100%;
+  height: auto;
+}
+
+.mascot-welcome__sprite img + img {
+  position: absolute;
+  inset: 0;
+
+  opacity: 0;
+}
+
+.mascot-welcome__sprite[data-mouth="closed"] img[data-frame="closed"],
+.mascot-welcome__sprite[data-mouth="mid"] img[data-frame="mid"],
+.mascot-welcome__sprite[data-mouth="open"] img[data-frame="open"] {
+  opacity: 1;
+}
+
+.mascot-welcome__sprite:not([data-mouth="closed"]) img[data-frame="closed"] {
+  opacity: 0;
+}
+
+.mascot-welcome__pup:hover .mascot-welcome__sprite {
+  rotate: -4deg;
+}
+
+
+/* Wait for the intro video: while it is on screen, hide the mascot and keep
+   its animations paused, so they start the moment the intro closes. */
+
+.intro ~ .user-layout__content .mascot-welcome {
+  visibility: hidden;
+}
+
+.intro ~ .user-layout__content .mascot-welcome,
+.intro ~ .user-layout__content .mascot-welcome * {
+  animation-play-state: paused;
+}
+
+
+@keyframes mascot-enter {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mascot-bubble-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes mascot-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Phones: smaller puppy and a compact bubble so the page stays visible */
+@media (max-width: 650px) {
+  .mascot-welcome {
+    gap: 12px;
+  }
+
+  .mascot-welcome__pup {
+    width: 96px;
+  }
+
+  .mascot-welcome__bubble {
+    width: min(210px, calc(100vw - 24px));
+
+    padding: 14px 16px;
+
+    transform-origin: calc(100% - 46px) 100%;
+  }
+
+  .mascot-welcome__bubble::after {
+    right: 40px;
+  }
+
+  .mascot-welcome__title {
+    margin: 0 20px 10px 0;
+
+    font-size: 15px;
+  }
+
+  .mascot-welcome__ghost .mascot-welcome__text,
+  .mascot-welcome__typed .mascot-welcome__text,
+  .mascot-welcome__voice {
+    display: none;
+  }
+}
+
+/* Reduced motion: no bobbing or pop-in, the mascot just appears */
+@media (prefers-reduced-motion: reduce) {
+  .mascot-welcome__pup,
+  .mascot-welcome__sprite,
+  .mascot-welcome__bubble {
+    animation: none;
+  }
+}

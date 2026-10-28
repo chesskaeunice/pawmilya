@@ -72,7 +72,7 @@ class ReportPostingLimitTest extends TestCase
         return $this->post('/api/missing-pets', [
             'name' => "Pet {$this->n}", 'species' => 'Cat', 'breed' => 'Puspin', 'color' => 'Gray',
             'location' => "Katipunan {$this->n}", 'last_seen_at' => '2026-11-01 10:00:00',
-            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'reporter_type' => $type,
+            'details' => 'Friendly.', 'contact_name' => 'Liza Ramos', 'contact_number' => '0919 555 0166', 'contact_email' => 'reporter@example.com', 'reporter_type' => $type,
             'pet_images' => [$this->png('p1.png'), $this->png('p2.png')],
             'last_seen_images' => [$this->png('l1.png')],
         ], ['Accept' => 'application/json']);

@@ -9,7 +9,7 @@ return [
     // Users, Audit Logs and the website settings (settings.system)
     'kennel_manager' => [
         'dashboard.view',
-        'animals.view', 'qr.view',
+        'animals.view', 'animals.neuteredUpdate', 'qr.view',
         'adoptionApplications.view', 'adoptionApplications.export',
         'missingPets.view', 'claims.view',
         'vaccinations.view',

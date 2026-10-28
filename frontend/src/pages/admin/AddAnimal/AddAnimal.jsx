@@ -193,9 +193,8 @@ function AddAnimal() {
     name: "",
     type: "",
     breed: "",
-    ageValue: "",
-    ageUnit: "years",
     gender: "",
+    neutered: "No",
     status: DEFAULT_STATUS,
     healthStatus: DEFAULT_HEALTH_STATUS,
     dateRescued: todayISO(),
@@ -287,15 +286,12 @@ function AddAnimal() {
     }
 
     // Sent as multipart because of the photos; the first photo is the main one
-    const months =
-      Number(form.ageValue) * (form.ageUnit === "years" ? 12 : 1);
-
     const body = new FormData();
     body.append("name", animalName);
     body.append("species", form.type);
     body.append("breed", form.breed.trim());
     body.append("sex", form.gender);
-    body.append("age_months", months);
+    body.append("neutered", form.neutered === "Yes" ? 1 : 0);
     body.append("status", form.status);
     body.append("health_status", form.healthStatus);
     body.append("rescued_at", form.dateRescued);
@@ -420,37 +416,6 @@ function AddAnimal() {
               />
             </label>
 
-            <div className="add-animal__field">
-              <label htmlFor="ageValue">
-                <span>
-                  Age
-                  <Required />
-                </span>
-              </label>
-
-              <div className="add-animal__age">
-                <input
-                  id="ageValue"
-                  type="number"
-                  min="0"
-                  max="30"
-                  step="1"
-                  value={form.ageValue}
-                  onChange={update("ageValue")}
-                  required
-                />
-
-                <select
-                  value={form.ageUnit}
-                  onChange={update("ageUnit")}
-                  aria-label="Age unit"
-                >
-                  <option value="months">months</option>
-                  <option value="years">years</option>
-                </select>
-              </div>
-            </div>
-
             <label>
               <span>
                 Gender
@@ -462,6 +427,17 @@ function AddAnimal() {
                 </option>
                 <option>Male</option>
                 <option>Female</option>
+              </select>
+            </label>
+
+            <label>
+              <span>
+                Spayed / Neutered
+                <Required />
+              </span>
+              <select value={form.neutered} onChange={update("neutered")} required>
+                <option>No</option>
+                <option>Yes</option>
               </select>
             </label>
 

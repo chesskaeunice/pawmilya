@@ -5,6 +5,7 @@ use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MyShiftController;
+use App\Http\Controllers\EmailOtpController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PetClaimController;
 use App\Http\Controllers\PetCareArticleController;
@@ -30,6 +31,8 @@ Route::get('/health', fn () => response()->json([
 // Login has its own email+IP lockout (LoginGuard); register is 5 per hour per IP.
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register');
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/email/otp/verify', [EmailOtpController::class, 'verify'])->middleware('throttle:email-otp');
+Route::post('/email/otp/resend', [EmailOtpController::class, 'resend'])->middleware('throttle:email-otp');
 Route::post('/forgot-password', [PasswordController::class, 'forgot'])->middleware('throttle:password-reset');
 Route::post('/reset-password', [PasswordController::class, 'reset'])->middleware('throttle:password-reset');
 
@@ -38,6 +41,7 @@ Route::middleware(['auth:sanctum', 'password.changed'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/change-password', [PasswordController::class, 'change'])->middleware('throttle:5,1');
+    Route::patch('/profile', [ProfileController::class, 'update'])->middleware('throttle:10,1');
     Route::patch('/profile/email', [ProfileController::class, 'updateEmail'])->middleware('throttle:10,1');
     Route::patch('/profile/address', [ProfileController::class, 'updateAddress'])->middleware('throttle:10,1');
     Route::post('/me/avatar', [ProfileController::class, 'updateAvatar'])->middleware('throttle:10,1');
