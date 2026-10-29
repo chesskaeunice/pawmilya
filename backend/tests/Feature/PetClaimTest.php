@@ -27,7 +27,7 @@ class PetClaimTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake('public');
+        Storage::fake('s3');
         Storage::fake('local');
         $this->start = Carbon::create(2026, 11, 2, 9, 0, 0, 'Asia/Manila');
         Carbon::setTestNow($this->start);
@@ -311,7 +311,7 @@ class PetClaimTest extends TestCase
         // stored on the private disk only
         foreach ($claim->photos as $photo) {
             Storage::disk('local')->assertExists($photo->path);
-            Storage::disk('public')->assertMissing($photo->path);
+            Storage::disk('s3')->assertMissing($photo->path);
         }
 
         // nothing about claims in the public endpoints

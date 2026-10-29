@@ -22,7 +22,7 @@ class AutoRegisterOnFoundTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake('public');
+        Storage::fake('s3');
     }
 
     private function as(?string $role): ?User
@@ -56,7 +56,7 @@ class AutoRegisterOnFoundTest extends TestCase
         $report->save();
 
         $path = "missing-pets/{$report->id}/pet-a.jpg";
-        Storage::disk('public')->put($path, 'photo');
+        Storage::disk('s3')->put($path, 'photo');
         $report->photos()->create(['path' => $path, 'kind' => 'pet', 'position' => 0]);
 
         return $report;
@@ -90,6 +90,7 @@ class AutoRegisterOnFoundTest extends TestCase
         $this->assertSame('Rescued', $animal->status);
         $this->assertSame($user->id, $animal->created_by);
         $this->assertCount(1, $animal->photos);
+        Storage::disk('s3')->assertExists($animal->photos->first()->path);
 
         // the 7-day claim period starts the first time the report is Rescued
         $this->assertNotNull($report->fresh()->claim_deadline_at);

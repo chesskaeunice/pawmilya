@@ -600,9 +600,6 @@ function MissingPets() {
                   Transfer
                 </option>
 
-                <option value="Adoptable">
-                  Adoptable
-                </option>
               </select>
 
             </div>

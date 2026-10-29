@@ -23,7 +23,7 @@ class RescuedReportFlowTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake('public');
+        Storage::fake('s3');
     }
 
     private function png(string $name): UploadedFile
@@ -170,7 +170,7 @@ class RescuedReportFlowTest extends TestCase
 
         $this->assertSame(0, MissingPetReport::count());
         $this->assertSame(0, Animal::count());
-        $this->assertSame([], Storage::disk('public')->allFiles());
+        $this->assertSame([], Storage::disk('s3')->allFiles());
     }
 
     public function test_staff_changing_a_rescued_report_to_rescued_again_creates_no_second_animal(): void

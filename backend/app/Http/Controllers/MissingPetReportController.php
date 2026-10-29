@@ -78,7 +78,11 @@ class MissingPetReportController extends Controller
 
                 foreach (['pet' => 'pet_images', 'last_seen' => 'last_seen_images'] as $kind => $field) {
                     foreach ($request->file($field) ?? [] as $position => $file) {
-                        $path = $file->store("missing-pets/{$report->id}", 'public');
+                        $path = $file->store("missing-pets/{$report->id}", 's3');
+
+if (! $path) {
+    throw new \RuntimeException('Failed to upload missing pet photo.');
+}
                         $paths[] = $path;
                         $report->photos()->create(['path' => $path, 'kind' => $kind, 'position' => $position]);
                     }
@@ -91,12 +95,12 @@ class MissingPetReportController extends Controller
             });
         } catch (UniqueConstraintViolationException) {
             // Two identical submits at the same moment: the database keeps only one
-            Storage::disk('public')->delete($paths);
+            Storage::disk('s3')->delete($paths);
 
             throw ValidationException::withMessages(['name' => [StoreMissingPetRequest::DUPLICATE_MESSAGE]]);
         } catch (Throwable $e) {
             // the transaction rolled the rows back; do not leave the uploaded files behind
-            Storage::disk('public')->delete($paths);
+            Storage::disk('s3')->delete($paths);
 
             throw $e;
         }

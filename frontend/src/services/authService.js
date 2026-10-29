@@ -82,12 +82,15 @@ export async function resendEmailCodeRequest(email) {
 }
 
 export async function logoutRequest() {
+  let ok = true;
   try {
     await api.post("/api/logout");
-  } catch {
-    /* the token may already be invalid; it is cleared either way */
+  } catch (error) {
+    // 401: the token was already invalid, so the session is over anyway
+    ok = error?.response?.status === 401;
   }
   clearToken();
+  return ok;
 }
 
 export async function fetchCurrentUser() {

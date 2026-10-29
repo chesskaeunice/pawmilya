@@ -76,7 +76,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_guest_can_file_a_report_with_contact_details_and_photos(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $response = $this->report()->assertCreated()
             ->assertJsonPath('data.status', 'Rescued')
@@ -92,12 +92,15 @@ class MissingPetApiTest extends TestCase
         $this->assertNull($report->reporter_id);
         $this->assertSame('Liza Ramos', $report->contact_name);
         $this->assertCount(3, $report->photos);
+        foreach ($report->photos as $photo) {
+    Storage::disk('s3')->assertExists($photo->path);
+}
         $this->assertDatabaseHas('audit_logs', ['action' => 'missing_pet.reported', 'entity_id' => $report->id]);
     }
 
     public function test_reporter_type_is_required_and_must_be_owner_or_citizen(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         // missing, empty and unknown values are refused with the same message
         foreach ([null, '', 'Vet', 'owner', 'Pet owner'] as $value) {
@@ -118,7 +121,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_both_reporter_types_are_saved_and_shown_to_staff_only(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $owner = $this->report(['name' => 'Miming', 'reporter_type' => 'Owner'])->assertCreated();
         $citizen = $this->report(['name' => 'Bruno', 'reporter_type' => 'Citizen'])->assertCreated();
@@ -139,7 +142,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_guest_must_leave_contact_name_and_number(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $this->report(['contact_name' => null, 'contact_number' => null])
             ->assertUnprocessable()->assertJsonValidationErrors(['contact_name', 'contact_number']);
@@ -147,7 +150,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_citizen_report_is_linked_to_the_account_and_uses_its_contact_details(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
         $citizen = $this->makeUser('citizen');
         $this->actingAs_($citizen);
 
@@ -161,7 +164,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_validation_rules(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $this->report(['pet_images' => [$this->png()]])->assertUnprocessable()->assertJsonValidationErrors(['pet_images']);
         $this->report(['status' => 'Reunited'])->assertUnprocessable()->assertJsonValidationErrors(['status']);
@@ -174,7 +177,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_last_seen_images_are_optional_but_must_be_images_when_sent(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $this->report(['last_seen_images' => []])->assertCreated()->assertJsonPath('data.lastSeenImages', []);
 
@@ -184,7 +187,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_other_species_is_shown_by_its_own_name(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $this->report(['species' => 'Other', 'other_species' => 'Rabbit'])->assertCreated()->assertJsonPath('data.type', 'Rabbit');
     }
@@ -193,7 +196,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_the_same_pet_cannot_be_reported_twice_by_the_same_reporter(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $this->report()->assertCreated();
         // same phone (written differently), pet, place and day
@@ -205,7 +208,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_a_different_place_day_or_reporter_is_not_a_duplicate(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $this->report()->assertCreated();
         $this->report(['location' => 'Cubao'])->assertCreated();
@@ -216,7 +219,7 @@ class MissingPetApiTest extends TestCase
 
     public function test_the_same_pet_can_be_reported_again_after_it_was_reunited(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
 
         $this->report()->assertCreated();
         MissingPetReport::first()->forceFill(['status' => 'Reunited'])->save();

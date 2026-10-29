@@ -42,7 +42,7 @@ class ReportAnimalRegistrar
             $animal->save();
 
             // the report's pet photos become the animal's photos (first = main)
-            $disk = Storage::disk('public');
+            $disk = Storage::disk('s3');
             $position = 0;
 
             foreach ($report->photos->where('kind', 'pet') as $photo) {
@@ -51,7 +51,9 @@ class ReportAnimalRegistrar
                 }
 
                 $path = "animals/{$animal->id}/".basename($photo->path);
-                $disk->copy($photo->path, $path);
+                if (! $disk->copy($photo->path, $path)) {
+    throw new \RuntimeException('Failed to copy rescued pet photo.');
+}
                 $animal->photos()->create(['path' => $path, 'position' => $position++]);
             }
 
@@ -59,7 +61,7 @@ class ReportAnimalRegistrar
         } catch (Throwable $e) {
             // the transaction rolls the rows back; do not leave copied files behind
             if ($animal?->id) {
-                Storage::disk('public')->deleteDirectory("animals/{$animal->id}");
+                Storage::disk('s3')->deleteDirectory("animals/{$animal->id}");
             }
 
             throw $e;

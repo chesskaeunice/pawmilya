@@ -118,9 +118,9 @@ function UserNavbar() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     closeMenu();
-    logout();
+    await logout();
     navigate("/");
   };
 

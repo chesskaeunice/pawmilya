@@ -185,11 +185,11 @@ function AdminSidebar({
     useNavigate();
 
 
-  function handleLogout() {
+  async function handleLogout() {
     // Manual logout goes to the homepage (replace: no admin page stays in the history);
     // AdminLayout also sends the guest to "/" after a manual logout, not to /login
+    await logout();
     navigate("/", { replace: true });
-    logout();
   }
 
 

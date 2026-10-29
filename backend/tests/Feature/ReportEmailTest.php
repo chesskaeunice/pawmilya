@@ -35,7 +35,7 @@ class ReportEmailTest extends TestCase
 
     public function test_a_report_without_an_email_is_rejected_and_nothing_is_sent(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
         Mail::fake();
 
         $this->report(['contact_email' => ''])->assertUnprocessable()->assertJsonValidationErrors('contact_email');
@@ -47,7 +47,7 @@ class ReportEmailTest extends TestCase
 
     public function test_a_report_with_an_email_is_saved_lowercased_and_confirmed_by_email(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
         Mail::fake();
 
         $this->report()->assertCreated();
@@ -72,7 +72,7 @@ class ReportEmailTest extends TestCase
 
     public function test_the_summary_leaves_out_empty_fields(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
         Mail::fake();
 
         $this->report(['markings' => '', 'details' => '', 'breed' => ''])->assertCreated();
@@ -88,7 +88,7 @@ class ReportEmailTest extends TestCase
 
     public function test_a_broken_mail_server_does_not_fail_the_report(): void
     {
-        Storage::fake('public');
+        Storage::fake('s3');
         config([
             'mail.default' => 'smtp',
             'mail.mailers.smtp.host' => '127.0.0.1',

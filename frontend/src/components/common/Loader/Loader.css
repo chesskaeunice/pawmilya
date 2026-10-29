@@ -1,0 +1,172 @@
+/* PAW LOADER */
+
+.loader__paw {
+  width: var(--paw-size);
+  height: var(--paw-size);
+
+  display: block;
+}
+
+/* Text only for screen readers */
+.loader__sr {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+
+/* FULL SCREEN: paw prints walking across the page */
+
+.loader--screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(249, 230, 168, 0.55),
+      transparent 60%
+    ),
+    var(--color-background);
+}
+
+.loader__trail {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--paw-size) * 0.5);
+
+  padding: calc(var(--paw-size) * 0.6) 0;
+}
+
+.loader__step {
+  display: block;
+
+  /* alternate left/right steps, toes pointing forward */
+  translate: 0 calc(var(--paw-size) * 0.4);
+  rotate: 90deg;
+
+  opacity: 0;
+
+  animation: loader-step 2.1s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.35s);
+}
+
+.loader__step:nth-child(even) {
+  translate: 0 calc(var(--paw-size) * -0.4);
+}
+
+.loader__step .loader__paw {
+  fill: var(--color-gold);
+}
+
+.loader__step:nth-child(even) .loader__paw {
+  fill: var(--color-orange);
+}
+
+.loader__label {
+  margin: 0;
+
+  color: var(--color-brown);
+
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+
+/* INLINE: three small paws blinking in turn (uses the text color) */
+
+.loader--inline {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.loader__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--paw-size) * 0.3);
+}
+
+.loader__dot {
+  display: block;
+
+  opacity: 0.25;
+
+  animation: loader-blink 1.2s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.2s);
+}
+
+.loader__dot .loader__paw {
+  fill: currentColor;
+}
+
+
+@keyframes loader-step {
+  0% {
+    opacity: 0;
+    scale: 0.5;
+  }
+
+  12% {
+    opacity: 1;
+    scale: 1.1;
+  }
+
+  20% {
+    scale: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 1;
+  }
+}
+
+@keyframes loader-blink {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+
+  40% {
+    opacity: 1;
+  }
+}
+
+@keyframes loader-fade {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Reduced motion: no scaling, just a gentle fade so it still shows activity */
+@media (prefers-reduced-motion: reduce) {
+  .loader__step,
+  .loader__dot {
+    animation-name: loader-fade;
+    animation-duration: 1.6s;
+  }
+}

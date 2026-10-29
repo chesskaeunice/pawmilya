@@ -26,7 +26,7 @@ class UnclaimedReportsTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake('public');
+        Storage::fake('s3');
         $this->start = Carbon::create(2026, 11, 2, 9, 0, 0, 'Asia/Manila');
         Carbon::setTestNow($this->start);
     }

@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { AuthContext } from "./authContext.js";
+import Loader from "../components/common/Loader/Loader.jsx";
 import {
   CITIZEN,
   hasPermission,
@@ -23,12 +24,18 @@ import {
   uploadAvatarRequest,
 } from "../services/authService.js";
 
+const LOGOUT_MESSAGE_MS = 1200;
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   // Wait for /api/me before guards decide, when a token is already stored
   const [loading, setLoading] = useState(() => Boolean(getStoredToken()));
   // true after the user pressed Log out (a session that ended by itself leaves it false)
   const [loggedOutByUser, setLoggedOutByUser] = useState(false);
+
+  // null | "loading" | "success" | "error": drives the full-screen logout loader
+  const [logoutPhase, setLogoutPhase] = useState(null);
+  const loggingOut = useRef(false);
 
   useEffect(() => {
     if (!getStoredToken()) return;
@@ -97,10 +104,22 @@ export function AuthProvider({ children }) {
     setUser((current) => (current ? { ...current, mustChangePassword: false } : current));
   }, []);
 
-  const logout = useCallback(() => {
+  // Shows the loader, calls the API, shows the result briefly, then clears the user.
+  // Resolves after the user is cleared; repeated calls while it runs are ignored.
+  const logout = useCallback(async () => {
+    if (loggingOut.current) return;
+    loggingOut.current = true;
+    setLogoutPhase("loading");
+
+    // logoutRequest clears the stored token either way
+    const ok = await logoutRequest();
+    setLogoutPhase(ok ? "success" : "error");
+    await new Promise((resolve) => setTimeout(resolve, LOGOUT_MESSAGE_MS));
+
     setLoggedOutByUser(true);
     setUser(null);
-    logoutRequest();
+    setLogoutPhase(null);
+    loggingOut.current = false;
   }, []);
 
   const value = useMemo(() => {
@@ -131,5 +150,21 @@ export function AuthProvider({ children }) {
     changePassword, logout,
   ]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      {logoutPhase && (
+        <Loader
+          fullScreen
+          label={
+            logoutPhase === "success"
+              ? "Logout Successful"
+              : logoutPhase === "error"
+                ? "Logout failed. You were signed out on this device."
+                : "Logging out"
+          }
+        />
+      )}
+    </AuthContext.Provider>
+  );
 }

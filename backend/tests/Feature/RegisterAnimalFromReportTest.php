@@ -19,7 +19,7 @@ class RegisterAnimalFromReportTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake('public');
+        Storage::fake('s3');
     }
 
     private function as(?string $role): ?User
@@ -55,7 +55,7 @@ class RegisterAnimalFromReportTest extends TestCase
 
         foreach ([['pet', 0, 'pet-a.jpg'], ['pet', 1, 'pet-b.jpg'], ['last_seen', 0, 'area.jpg']] as [$kind, $position, $file]) {
             $path = "missing-pets/{$report->id}/{$file}";
-            Storage::disk('public')->put($path, "photo {$file}");
+            Storage::disk('s3')->put($path, "photo {$file}");
             $report->photos()->create(['path' => $path, 'kind' => $kind, 'position' => $position]);
         }
 
@@ -103,13 +103,13 @@ class RegisterAnimalFromReportTest extends TestCase
             $this->assertSame([0, 1], $photos->pluck('position')->all());
             foreach ($photos as $photo) {
                 $this->assertStringStartsWith("animals/{$animal->id}/", $photo->path);
-                Storage::disk('public')->assertExists($photo->path);
+                Storage::disk('s3')->assertExists($photo->path);
             }
-            $this->assertSame('photo pet-a.jpg', Storage::disk('public')->get($photos[0]->path));
+            $this->assertSame('photo pet-a.jpg', Storage::disk('s3')->get($photos[0]->path));
 
             // the report keeps its own photos and is linked to the animal
             foreach ($report->photos as $photo) {
-                Storage::disk('public')->assertExists($photo->path);
+                Storage::disk('s3')->assertExists($photo->path);
             }
             $this->assertSame($animal->id, $report->fresh()->animal_id);
             $this->assertSame($report->id, $animal->missingPetReport->id);
@@ -219,7 +219,7 @@ class RegisterAnimalFromReportTest extends TestCase
     {
         $this->as('pound_staff');
         $report = $this->report('Rescued', ['name' => null, 'breed' => null, 'details' => null]);
-        Storage::disk('public')->delete("missing-pets/{$report->id}/pet-b.jpg");
+        Storage::disk('s3')->delete("missing-pets/{$report->id}/pet-b.jpg");
 
         $animal = Animal::findOrFail($this->register($report)->assertCreated()->json('data.id'));
 
